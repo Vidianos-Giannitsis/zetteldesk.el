@@ -1,0 +1,1 @@
+/home/vidianos/Dotfiles/emacs/.emacs.d/libs/zetteldesk.el

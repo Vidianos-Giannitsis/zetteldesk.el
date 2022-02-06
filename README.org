@@ -1,0 +1,138 @@
+#+TITLE: Zetteldesk.el a Revision and Outlining tool built on top of Org-Roam
+
+* Table of Contents                                                     :TOC:
+- [[#wip-warning][WIP Warning]]
+- [[#introduction][Introduction]]
+- [[#getting-started][Getting Started]]
+  - [[#addingremoving-things-from-the-zetteldesk][Adding/Removing things from the Zetteldesk]]
+  - [[#filter-functions][Filter Functions]]
+  - [[#on-the-zetteldesk-scratch-buffer][On the zetteldesk-scratch buffer]]
+  - [[#a-tour-of-the-predicate-functions][A tour of the predicate functions]]
+- [[#keybindings][Keybindings]]
+
+* WIP Warning
+  If you are reading this, then you somehow discovered this repository really early. You are weird, but cool. I like you. You can use this if you want, but know I haven't tested if everything works outside of my config (although for the most part it probably should, just make sure this is loaded after org-roam) and that there is no documentation. Actually, there kind of is. You can see the part of my literate config in which this is written [[https://github.com/Vidianos-Giannitsis/Dotfiles/blob/master/emacs/.emacs.d/libs/zettelkasten.org][here]], just go down to the section that says about the Zettelkasten Desktop. I have a lot of comments about what I have so far there. Also, I have tried to give very descriptive (and when I say very descriptive, I mean probably more descriptive than they need to be) docstrings to all my functions. So if you check them with C-h f, you can probably figure out some things on your own.
+
+  I held on uploading this to a seperate repo until it was usable. It now is, so sure, try it. But its definitely not complete. But I am using it right now, as I am making it, for my exams, and evolving it while studying and I can tell you it works... if you know how. Which you probably don't because I haven't explained it to you. But I have probably started writing some stuff, so you can get an idea.
+
+* Introduction
+  Welcome to zetteldesk.el, a small library I wrote on top of Org-Roam to... wait I can't exactly say why I wrote this, there are quite a lot of reasons I wanted to do this, I can't say I wrote it for one in specific. But let's say I wrote it for getting a smoother revision experience out of my zettelkasten as that was the one that pushed me to make it work properly. Or let's not, you can think of whatever weird reason you want for the purpose of this, I also have a few below. This introduction is going to be way longer than needed as I like writing stuff and I want to explain how this all came to be. You can skip it if you just want to learn how to use this, but I would recommend reading it, to have an "organic" introduction to the idea.
+
+  So, while rereading the excellent book "How to Take Smart Notes" by Sonke Ahrens (around like 8-9 months after picking the workflow up) to have a more detailed look in some details I might have ignored starting out, I noticed that one interesting thing that was mentioned (would love to leave the very quote here but its been a few months and I am not in the mood of trying to find that exact sentence) was the idea of taking your zettels and spreading them on your desk to look at multiple of them at once. I started thinking about it and I wrote this idea in an org file. 
+  
+  #+begin_quote
+    A desktop, is the top surface of a desk, or in the digital world an area in a computer screen in which some people arrange their icons, similarly to how they would arrange stuff in their desk. Now if I had an irl zettelkasten, I know for sure that my desktop would be filled with little notes with various topic when studying something. So why shouldn't I have a digital desktop where I can spread all my notes and look at them one by one, when studying. Wouldn't that be handy?
+  #+end_quote
+
+  Thus begun my planning of all this. I was originally gonna call this zettelkasten-desktop.el, but that one was quite large, so I just shortened it to zetteldesk.
+
+  This started out really slowly with me thinking how I was gonna implement that idea and how it was all gonna pan out. I started with thinking of existing solutions for something similar. For example, I considered customising [[https://github.com/nex3/perspective-el][perspective.el]] to suit my needs as that had the ability of creating "perspectives" in which you can only view certain buffers. I quickly dropped that in favour of writing something from scratch. I felt that if I do it from scratch it would work out better as I would be more knowledgeable of what I am doing. Maybe I was wrong, but its fine, this has been working well so far for me.
+
+  First thing I looked at was what kind of predicate I was gonna define and with what criteria I was going to filter things. I tried to follow a rather simple idea to do this and not overcomplicate things. Essentially, I define a buffer-local variable and give it a default value. Then I define the predicate function that shows when a buffer is part of the zettelkasten desktop. A buffer will be part of the desktop only if the value of that variable in the buffer is not equal to the default. I started planning out things by filtering buffers like this, but as I was going to use this with org-roam nodes as well, and for viewing nodes you are doing them a misservice if you do not use the commands defined from org-roam for traversing the database, I ported everything over to work with nodes as well learning a lot about the insides of org-roam in the process. 
+  
+  When this was happening, I was in the second semester during which I took notes with org-roam and the zettelkasten method. I was proud to say that I had digitalised mostly everything I had notes for and had developed a good workflow for working with these notes (if anyone's interested on the workflow, some parts of it are described over on the part of my literate emacs config concerning Org-roam which you can find [[https://github.com/Vidianos-Giannitsis/Dotfiles/blob/master/emacs/.emacs.d/libs/zettelkasten.org][here]] and I might mention some things to explain some design choices and some functions I have defined). But after some time, the exam period was starting. Having worked on some of my intial ideas for this during the christmas holidays, I was done with the basic filter functions for switch-to-buffer and org-roam-node-find filtered down to only show the buffers/nodes I selected. I was really happy with them, but I didn't really know how to continue after that. Then, I realised two important things
+
+1. My zettelkasten, having grown a lot more since the only other exam period I had used it in, was a bit harder to navigate so that I could do my revision in it.
+2. The ideas I was considering with the zetteldesk, might be able to help with that.
+
+  So I started thinking how I could combine these two. Having ran out of ideas for things to do, I thought trying to automate my revision process would be a fun puzzle. I had also not implemented the original idea, not having an idea of how I was gonna do it, but I said lets move on and I will think of something. I defined a new way of adding files to the zetteldesk besides a single buffer or a single node. That was to add a node and all its backlinks. As someone who works with big index files to sort their topics, this was very helpful, as I could add the majority of notes on a subject with a single command. Being able to have an org-roam-node-find function that shows only the nodes I am interested in, combined with org-roam UI, graphing that, was already a powerful tool. But there was basically no automation, nor had I achieved my original idea yet. All I had was a makeshift tool to filter my switch-to-buffer and org-roam-node-find to specific things. That was useful, but I wasn't really satisfied, I had to keep going. While doing revision for the first lesson, I noted down everything I did in a seperate file and was then thinking how I could automate it.
+
+  Slowly, things started coming together. I crafted a workflow which significantly eased revision for university and also managed to implement, at least as best I could, my original vision. Then I experimented a bit more. If this came out good, which it was looking to be so, I could use it for more general purpose studying. Therefore, I needed to handle org-files that were outside the org-roam directory, material handed in pdf form, web content and I even setup a way to handle Info buffers (actually as of January 24th that I am writing this I haven't, but by the time people see this I will probably have that) (as I read a lot of documentation through those and I figured it might be a good idea).
+
+  And as in the buffer that puts all of this together, I sort things with headings, I thought that maybe this could also be used as an outliner tool. I will look at how people do those and implement some stuff specifically for that, but for now, its not here. I think it might be usable for that purpose though anyways.
+
+  This is where we currently are. The main other thing I want for this before I consider it publish ready, is to play around a bit with [[https://github.com/nobiot/org-remark][org-remark]]. I believe that in such tool, the ability to highlight things and add margin notes to it might be really useful. In general I do not really use this right now, so it will take some time to do that, but I look forward to it.
+
+  And after this incredibly long, and possibly unnecessarily detailed introduction lets dive into what this package does.
+
+* Getting Started
+  This section is supposed to be the short documentation of the package. Its supposed to be an introduction to you, the person who found this randomly on the internet, so you can dive in. I will eventually also write detailed documentation for the package, but for now, for details you can check the docstrings of all the functions as I have tried to document all the functions I write with a lot of detail. If you C-h f on any of the zetteldesk functions you will see a good amount of documentation.
+  
+** Adding/Removing things from the Zetteldesk
+   There are 4 primary way to add someting to the Zetteldesk. The first two are rather obvious. Prompt for a buffer using ~zetteldesk-add-to-desktop~ or prompt for a node using ~zetteldesk-add-node-to-desktop~ and add it to the zetteldesk. The third is to add a node and all its backlinks with ~zetteldesk-add-backlinks-to-desktop~. As I explained in the intro, I work with index files for most of my topics. So adding all files under a certain index is certainly useful. Obviously the same things are implemented for removing buffers/nodes (check the functions ~zetteldesk-remove-from-desktop~, ~zetteldesk-remove-node-from-desktop~ and ~zetteldesk-remove-backlinks-from-desktop~). Lastly, there is info buffers. It has always annoyed me how there is not a very clear way (at least one that I know of, there might be one, as all the backbone needed for something like that is in the Info program's source code) for saving specific info nodes and being able to switch between them faster. The info buffer is a persistent buffer so the buffer-local shenanigans used in the others don't work in it. But it wasn't that hard to do this. All you need to worry about is that if you run ~zetteldesk-add-info-node-to-desktop~ when on an info node, that node will be added to the zetteldesk. Similarly ~zetteldesk-remove-info-node-from-desktop~ prompts you to select an info node you added to the desktop and removes it from it. 
+   
+** Filter Functions
+   The 4 primary interactive functions I have defined which are filtered version of the originals are ~zetteldesk-switch-to-buffer~ for a filtered ~switch-to-buffer~, ~zetteldesk-node-find~ for a filtered ~org-roam-node-find~, ~zetteldesk-node-insert~ for a filtered ~org-roam-node-insert~ and ~zetteldesk-info-goto-node~ for a filtered ~Info-goto-node~. Their use is I would say self explanatory because you probably already use these functions a lot. Ok maybe you don't use ~Info-goto-node~ every day. So what, I would say that if you use this, you will realise its pretty easy though. It just shows you a list of info nodes that are part of the zetteldeskm you select one and it magically takes you to that very node on the info program. But the rest are just filtered to only show buffers in the zetteldesk. One thing worth pointing out is that ~zetteldesk-switch-to-buffer~ does not display org-roam buffers, as I personally do not think its practical to use it for that. Its for buffers in the zetteldesk that are not nodes. Later on in this doc, I will explain all the predicate functions existing in the package so you can define your own filter functions, its quite easy as functions such as ~read-buffer~ and ~org-roam-node-read~ have ways to filter their results through predicate functions. In case you are not aware, ~org-roam-node-read~ is the function on which ~org-roam-node-find~ and ~org-roam-node-insert~ are based. Due to the way they are written, you can pass the predicate function directly to them, but they pass it to ~org-roam-node-read~.
+
+   There are also some more niche filter functions I have defined, but they are defined inside another function for a specific purpose and not interactive. I will mention their predicate functions on that part of the explanation
+
+** On the zetteldesk-scratch buffer
+   Now this, is where all the fun begins. The zetteldesk-scratch buffer, is a temp buffer created by activating the global minor mode ~zetteldesk-mode~. If you remember on the introduction, I mentioned my basic source of inspiration for this, was the idea of spreading notes on my desk so I can view them, but digitally. This is where all of this is implemented. Firstly, I define the low-level function ~zetteldesk--create-scratch-buffer~ which essentially initialises the scratch buffer with the correct name and major-mode (org) and a hook that attaches this function to the zetteldesk-mode-on-hook. Then, there is ~zetteldesk-switch-to-buffer~ which opens the zetteldesk-scratch in a split with the current window. Optionally, if given a C-u argument, it will switch to it. Usually, you want it in a split with something else, and that is why most of the functions defined below, use ~switch-to-buffer-other-window~ with this buffer. But this one has the option of fully switching to it. 
+
+   The function that puts it all together is ~zetteldesk-insert-node-contents~. Now this one does quite a few things, so I will explain them one by one.
+   First, choose a node that is part of the zetteldesk. Then in the current buffer insert a link to that node and after that, in the zetteldesk-scratch buffer, go to the very bottom of the buffer, insert a newline and then the contents of the file. Replace the string #+title: with a top level heading as in this buffer there will be multiple nodes, so you need a good way to navigate around (and I decided to use headings for that). If the node has only its ID in the :PROPERTIES: section, it removes that (as I think its not necessary to have in the new buffer). But unfortunately I "hardcoded" the number of characters to ignore (the number of characters it takes is 67 if anyone is interested) so if it has aliases or refs or sth, this will not fully work. But its better than having to manually remove the properties section or having it there imo. Finally, if given a universal argument (C-u), it also opens the zetteldesk-scratch buffer in a split.
+
+   Now time for an explanation of how this is meant to work (imo at least). When doing revision, I thought it was a useful tool to create an outline file where you describe the entire lesson through links to notes you have written to put them in order. Then you can check them one by one, in the sensible order you sorted them to revise. But if you add the links with ~zetteldesk-insert-node-contents~ instead of ~org-roam-node-insert~ or even ~zetteldesk-node-insert~ if you were already viewing the filtered version, now all the text of your nodes will be in the zetteldesk-scratch buffer so you will not have to look at the nodes one by one.
+
+   Alternatively, if someone wants to follow a different type of workflow where you don't insert links, but just wants to put the node contents on their scratch buffer I have defined the ~zetteldesk-insert-node-contents-without-link~ function for that purpose. Its the same function removing the part that adds the link. Plus, I made it default behaviour to open the zetteldesk-scratch buffer in a split in this situation as I felt it makes more sense.
+
+   Then, as not all your material will be in the form of org-roam nodes, I defined a similar function for general org files ~zetteldesk-insert-org-file-contents~. This one, prompts you for an org buffer which is part of the zetteldesk and inserts its contents to the zetteldesk-scratch buffer. For this one though, there is no properties section that needs to be omitted. Something that needs to be dealt with though, is the fact that we want the title to be a top level heading and all other headings to be demoted by one level. I didn't worry about that in the org-roam-node function as those typically do not have headings. But these do have headings, so I think it makes sense to demote all headings by one and make the title be the only top level heading.
+
+   But besides org files, there are other ways to distribute information such as pdf, rich text formats like MS Office, web browsers, info manuals etc.
+
+   I have setup behaviour for pdfs and info manuals. For browsers, I think org-roam-protocol does the job. Captures the web page into an org file and then you input that file to your scratch buffer. For rich text formats, they generally don't interface well with emacs so I recommend converting them to pdf.
+
+   For pdfs, I have the ~zetteldesk-insert-link-to-pdf~ function. This doesn't insert the contents of the pdf to the buffer as a lot of pdfs might be too long for that. But its got what I would say is a pretty neat behaviour. First, it prompts you for a pdf that is part of the zetteldesk and which page of the pdf do you want. I thought that as I will not be inserting anything I should at least be able to place a link to the pdf, in the page the user wants. I think it makes more sense and I like it for my own workflow as well. After taking that info, it goes to the bottom of the zetteldesk-scratch buffer, inserts a newline, and then a heading with title "Supportive Material - " description " (PDF)" where description is the file's name without the path to it and without the extension. This helps with indexing as you can search for headings with (PDF) in them if that is what you were looking for. Then, it inserts a link to the pdf, which points to the page you are interested in.
+
+   If given the universal argument (C-u) and you had selected a region of text before calling the function, it will also insert the text you had selected before the link. This is useful if you were describing what the supplementary info is supposed to do before inserting it.
+
+   For info nodes, I have made the function ~zetteldesk-insert-info-contents~. It prompts you for an info node you saved to the zetteldesk and inserts it to the scratch buffer in a way very similar to how the system handles pdfs. It inserts a heading with the name "Supportive Material - " info_node " (Info)" where info_node is the node's name as captured by ~Info-copy-current-node-name~. It also does not insert the first two lines of the Info buffer which have the contextual links of the node, as they don't really make sense when you are seeing the node in isolation in the zetteldesk-scratch buffer. However, I have also added a link inside the heading which takes you directly to the node inside the Info program so you can see the node in its context if you so desire.
+
+   Lastly, I have a function which is mostly for my convenience as if you don't use the same conventions in your zettelkasten as me you will not find much use in this. The function ~zetteldesk-node-insert-if-poi-or-moc~ inserts links to all zetteldesk nodes that have one of the tags POI or MOC. MOC stands for Map Of Contents and is used mostly for index files. POI stands for Point Of Interest and is used for "large" files (large here meaning densely linked, therefore appearing large in the graph) to show that they are the most important parts of a subject. When revising a subject, its helpful to just drop a list of links to all MOCs and POIs of the subject. They are typically not a lot, so I could do it manually, but automating is fun.  
+
+** A tour of the predicate functions
+   This package is all about filtering your material to only see what you want to see. As mentioned above, this is done mostly through the use of filtered functions, functions that take another function as an argument and use it to filter down what they show. The function taken as an argument is called a predicate function (that is why all these functions are suffixed with a p, as done in core emacs functions as well like ~bufferp~ for example). As you can expect this package has a lot of filter functions. This sections is something like a walkthrough of all of these. 
+
+   Obviously, the first and most important core predicate function of the package is ~zetteldesk-p~. It takes a buffer and checks if the value of the buffer-local variable ~zetteldesk~ in that buffer is different than its defualt value and returns the opposite boolean of that (as we want to keep only those where the value is different than the default). Then we have two other very core p-functions of the package ~zetteldesk-buffer-p~ and ~zetteldesk-node-p~. These are the functions used in the filtered versions of ~switch-to-buffer~ and ~org-roam-node-find~. ~zetteldesk-buffer-p~ is a simple ~and~ expression where BUFFER must be part of the zetteldesk, but not an org-roam-buffer (which is checked with the built-in ~org-roam-buffer-p~ function of org-roam). ~zetteldesk-node-p~ needs to translate the buffer that ~zetteldesk-p~ takes to a node, as it uses a node as its input argument. For this, I defined a new cl-defmethod inside org-roam called ~org-roam-node-buffer~ which finds the buffer a node is associated to. This is useful for a node in my opinion, but not one of the built-in access slots of an org-roam-node. Its biggest limitation is that it will return nil if the node isn't opened as there is no file buffer associated with the node's name. But in some cases, I actually take advantage of that. One such case is actually ~zetteldesk-node-p~ where if ~org-roam-node-buffer~ returns nil, the predicate function returns nil, as a node that hasn't been opened yet, can not be part of the zetteldesk. Furthermore, ~zetteldesk-add-node-to-desktop~, the function used for adding nodes to the zetteldesk, will open a buffer with the chosen node, behind the scenes so that ~zetteldesk-node-p~ can be used on it. Besides that, its essentially ~zetteldesk-p~ with BUFFER being replaced with (org-roam-node-buffer NODE).
+
+   Besides these 3, which are the most important ones, I have defined 3 more for the system, which are used for more specific filters in a function.
+
+   Firstly, there is ~zetteldesk-org-buffer-p~ which takes ~zetteldesk-buffer-p~ (~zetteldesk-buffer-p~ and not ~zetteldesk-p~ is required so that it does not display org-roam files) and issues an ~and~ expression to evaluate both that and if the major mode of said buffer is org. If yes, it returns t. This is used in ~zetteldesk-insert-org-file-contents~, which inserts the contents of an org-file in the zetteldesk-scratch buffer. Obviously, this requires the extra filter, cause if the completion menu allowed you to switch to a buffer that wasn't an org buffer and ran commands as if it was one, things will not go so well.
+
+   Then, there is also ~zetteldesk-pdf-p~ which is an ~and~ expression of ~zetteldesk-p~ and checking if the major mode is ~pdf-view-mode~, which is used in ~zetteldesk-insert-link-to-pdf~ for similar reasons as above.
+
+   Lastly, there is a more "general" org-roam predicate ~org-roam-node-poi-or-moc-p~ (I call it more general as its not about the contents of the zetteldesk) which checks if a node has the tag POI or the tag MOC, which is used in ~zetteldesk-node-insert-if-poi-or-moc~ a convenience function discussed in the above section.
+
+   There is no predicate function for info nodes, because as discussed above they use a different mechanism due to not being persistent buffers.
+   
+* Keybindings
+  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing.
+
+  For this very reason, inside the package's source code, there is no keybinding definition. Its something that I believe you should decide by yourself. However, if you just want some inspiration, I will leave the part of my config that sets up the zetteldesk keybindings below. But really, I don't think I should define anything by default for the package. 
+
+  #+BEGIN_SRC emacs-lisp
+
+    (general-define-key
+     :states 'normal
+     :keymaps 'override
+     :prefix "SPC z"
+     "b" 'zetteldesk-switch-to-buffer
+     "a" '(:ignore t :which-key "Add to Zetteldesk")
+     "a b" 'zetteldesk-add-to-desktop
+     "a n" 'zetteldesk-add-node-to-desktop
+     "a i" 'zetteldesk-add-info-node-to-desktop
+     "r" '(:ignore t :which-key "Remove from Zetteldesk")
+     "r b" 'zetteldesk-remove-from-desktop
+     "r n" 'zetteldesk-remove-node-from-desktop
+     "r i" 'zetteldesk-remove-info-node-from-desktop
+     "n" 'zetteldesk-node-find
+     "s" 'zetteldesk-switch-to-scratch-buffer
+     "i" '(:ignore t :which-key "Insert to Scratch Buffer")
+     "i n" 'zetteldesk-insert-node-contents
+     "i N" 'zetteldesk-insert-node-contents-without-link
+     "i o" 'zetteldesk-insert-org-file-contents
+     "i p" 'zetteldesk-insert-link-to-pdf
+     "i i" 'zetteldesk-insert-info-contents)
+
+    (general-define-key
+     :states 'normal
+     :keymaps 'org-mode-map
+     :prefix ", z"
+     "i" 'zetteldesk-node-insert
+     "r" 'zetteldesk-remove-backlinks-from-desktop
+     "b" 'zetteldesk-add-backlinks-to-desktop
+     "p" 'zetteldesk-node-insert-if-poi)
+
+  #+END_SRC
+
+  I use general to define all my keybindings, as I really like how easy it is to define stuff with it. As mentioned, my global leader key where most of my keybindings go is Space. z is the letter I have chosen for the zetteldesk keybindings (for obvious reasons) and luckily nothing else in my config really used it. Furthermore, some keybindings are meant to be ran in org-mode, so those are in an org-mode-map under , z. The comma is my org-mode specific leader key, so that is why these are in , z. 

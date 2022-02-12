@@ -3,8 +3,7 @@
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")))
+			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents

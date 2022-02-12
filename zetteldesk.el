@@ -25,6 +25,18 @@
 	    :and (= type "id")]
    (org-roam-node-id (org-roam-node-at-point))))
 
+(defun org-roam-backlink-query* (NODE)
+  "Run `org-roam-backlink-query', but instead of returning a list
+of the backlinks of `org-roam-node-at-point', find the backlinks
+of NODE. This is handy in cases where NODE is read through
+`org-roam-node-read' and doesn't have to be the `current-buffer'"
+  (org-roam-db-query
+	[:select [source dest]
+		 :from links
+		 :where (= dest $s1)
+		 :and (= type "id")]
+	(org-roam-node-id NODE)))
+
 ;; -- PREDICATE FUNCTIONS --
 ;; This section contains the predicate functions the package uses. The
 ;; core of the package is that it provides well filtered completion
@@ -95,21 +107,33 @@ those files"
   (with-current-buffer BUFFER
     (setq-local zetteldesk "foo")))
 
-(defun zetteldesk-add-node-to-desktop ()
-  "Add an org-roam-node to the `zetteldesk' and if there isn't a
-  buffer associated to it, create it.
-
-The node is read through `org-roam-node-read'"
-  (interactive)
-  (let* ((node (org-roam-node-read))
-	 (buffer (org-roam-node-buffer node))
-	 (file (org-roam-node-file node))
+(defun zetteldesk-add-node-to-desktop (NODE)
+  "Add NODE to the `zetteldesk' and if there isn't a buffer associated
+  to it, create it. NODE is an org-roam node read through `org-roam-node-read'"
+  (interactive (list (org-roam-node-read)))
+  (let ((buffer (org-roam-node-buffer NODE))
+	 (file (org-roam-node-file NODE))
 	 (org-startup-with-latex-preview nil))
     (if (not (eq buffer nil))
 	(with-current-buffer buffer
 	  (setq-local zetteldesk "foo"))
       (with-current-buffer (find-file-noselect file)
 	(setq-local zetteldesk "foo")))))
+
+(defun zetteldesk-add-moc-or-poi-backlink-to-desktop ()
+  "Prompts the user to select an org-roam node that has the POI
+or MOC tag (filtering done with `org-roam-node-poi-or-moc-p') and
+collects its ID and backlinks. Then, prompt the user to select
+one of its backlinks and add that to the zetteldesk."
+  (interactive)
+  (let* ((source (org-roam-node-read nil #'org-roam-node-poi-or-moc-p))
+	 (source-id (org-roam-node-id source))
+	 (backlinks (org-roam-backlink-query* source)))
+    (zetteldesk-add-node-to-desktop
+     (org-roam-node-read nil (lambda (NODE)
+			       (let* ((id (org-roam-node-id NODE))
+				      (id-list (list id source-id)))
+				 (member id-list backlinks)))))))
 
 (defun zetteldesk-add-backlinks-to-desktop ()
   "Add the current buffer and all its backlinks to the `zetteldesk'. 
@@ -145,12 +169,11 @@ list of the variable `zetteldesk-info-nodes'"
   (with-current-buffer BUFFER
     (kill-local-variable 'zetteldesk)))
 
-(defun zetteldesk-remove-node-from-desktop ()
-  "Remove an org-roam-node from the `zetteldesk'. The node is
-read through `org-roam-node-read'"
-  (interactive)
-  (let* ((node (org-roam-node-read nil #'zetteldesk-node-p))
-	 (buffer (org-roam-node-buffer node)))
+(defun zetteldesk-remove-node-from-desktop (NODE)
+  "Remove NODE from the `zetteldesk'. NODE is an org-roam node
+and is read through `org-roam-node-read'"
+  (interactive (list (org-roam-node-read nil #'zetteldesk-node-p)))
+  (let ((buffer (org-roam-node-buffer NODE)))
     (with-current-buffer buffer
       (kill-local-variable 'zetteldesk))))
 
@@ -178,7 +201,7 @@ selected through a `completing-read' menu of
 `zetteldesk-info-nodes'"
   (interactive)
   (setq zetteldesk-info-nodes (remove
-			       (completing-read "KEKW: " zetteldesk-info-nodes)
+			       (completing-read "Info Nodes: " zetteldesk-info-nodes)
 			       zetteldesk-info-nodes)))
 
 ;; -- FILTER FUNCTIONS --

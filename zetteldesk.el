@@ -1,6 +1,43 @@
+;;; zetteldesk.el --- A revision and outlining tool for org-roam
+
+;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
+;; Package-Requires: ((org-roam "2.0"))
+;; Tested on Emacs 27.2 and org-roam v2.2
+;; Created: 6th February 2022
+;; License: GPL-3.0
+;; Keywords: org-roam, revision, zettelkasten
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; For a full copy of the GNU General Public License
+;; see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; This package provides various filter functions to "traverse" your
+;; org-roam database more smoothly. I use it for doing revision in
+;; lessons and I personally find it highly efficient for this
+;; purpose. Its also good to just sort out your thoughts. In general,
+;; org-roam lacks a good framework for filtering your nodes although
+;; it has all the backend for doing that.
+
+;;; Code:
+
 ;; -- DEPENDENCIES --
 ;; These are some functions that are needed for the package to work as
 ;; it should, but that are not specific to the package
+
+(require 'org-roam)
 
 (cl-defmethod org-roam-node-buffer ((node org-roam-node))
   "Access slot \"buffer\" of org-roam-node struct CL-X"
@@ -484,3 +521,4 @@ zetteldesk-scratch buffer in a split."
       (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
 
 (provide 'zetteldesk)
+;;; zetteldesk.el ends here

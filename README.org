@@ -11,6 +11,7 @@
   - [[#a-tour-of-the-predicate-functions][A tour of the predicate functions]]
 - [[#a-sample-workflow][A Sample Workflow]]
 - [[#keybindings][Keybindings]]
+- [[#things-to-do][Things to do]]
 
 * Introduction
   Welcome to zetteldesk.el, a small library I wrote on top of Org-Roam. Now you may ask, why this was written and what purpose does it fulfill. Well, I am not sure, there are quite a lot of reasons I wanted to do this, I can't say I wrote it for one in specific. But there were two main ideas. The first being that I wanted some way to filter down my zettelkasten while doing revision for uni exams. Org-roam has a lot of tools by default to manage your nodes, even if you have a lot of them. But I needed some more to have a more frictionless revision. It came out pretty good, and I did very easy revision of all the topics I wanted, at the time of writing it. The second is a quote I read from "How to Take Smart Notes" that sparked an interest in my mind, and when I finally got the time to look into it, I made this. The two, despite divergent goals, were able to be combined very easily when I finally got to the end result. This introduction is going to be way longer than needed as I like writing stuff and I want to explain how this all came to be. You can skip it if you just want to learn how to use this, but I would recommend reading it, to have an "organic" introduction to the idea.
@@ -160,3 +161,8 @@
   #+END_SRC
 
   I use general to define all my keybindings, as I really like how easy it is to define stuff with it. As mentioned, my global leader key where most of my keybindings go is Space. z is the letter I have chosen for the zetteldesk keybindings (for obvious reasons) and luckily nothing else in my config really used it. Furthermore, some keybindings are meant to be ran in org-mode, so those are in an org-mode-map under , z. The comma is my org-mode specific leader key, so that is why these are in , z. 
+
+* Things to do
+  The main thing I am looking into doing is to set up better org-remark integration with this package as its something really interesting I haven't gone around to doing.
+
+  Other things I am thinking of are setting up the keybindings without defining a prefix key and looking more into outliner software and if there is something I want to implement from those. 

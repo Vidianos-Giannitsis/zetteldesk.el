@@ -89,12 +89,16 @@ the number of backlinks. This is the sorting function in
 ;; menus as chosen by the user, so obviously predicate functions are
 ;; core to the package
 
-(defvar-local zetteldesk "default"
+(defcustom zetteldesk
+  "default"
   "Buffer local variable that determines whether a buffer is part
   of the current zetteldesk. A buffer is part of the zetteldesk
   only if the value of this variable is not its default value in
   that buffer. Its default value is default because I am not
-  creative.")
+  creative."
+  :type 'string
+  :group 'zetteldesk
+  :local t)
 
 (defun zetteldesk-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk'"
@@ -143,9 +147,11 @@ those files"
 ;; that allow the user to add them to something. And then, you also
 ;; need ways to remove things, because people make mistakes.
 
-(defvar zetteldesk-info-nodes '()
+(defcustom zetteldesk-info-nodes '()
   "List of info nodes that are part of the
-  zetteldesk. Initialised as an empty list")
+  zetteldesk. Initialised as an empty list"
+  :type 'list
+  :group 'zetteldesk)
 
 (defun zetteldesk-add-to-desktop (BUFFER)
   "Add BUFFER to the current `zetteldesk'"
@@ -166,7 +172,7 @@ those files"
       (with-current-buffer (find-file-noselect file)
 	(setq-local zetteldesk "foo")))))
 
-(defun zetteldesk-add-moc-or-poi-backlink-to-desktop ()
+(defun zetteldesk-add-poi-or-moc-backlink-to-desktop ()
   "Prompts the user to select an org-roam node that has the POI
 or MOC tag (filtering done with `org-roam-node-poi-or-moc-p') and
 collects its ID and backlinks. Then, prompt the user to select
@@ -521,4 +527,3 @@ zetteldesk-scratch buffer in a split."
       (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
 
 (provide 'zetteldesk)
-;;; zetteldesk.el ends here

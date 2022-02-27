@@ -51,12 +51,37 @@
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath 
   
 * Debugging
-  This code is tested only on my machine, so there may be unexpected errors. If you find one, I would appreciate if you filed an issue about it. But before doing that, make sure you try reproducing it with emacs -Q. In this repository, you can find a debug.el file, if you load this, in an emacs -Q window you should have the minimal config in which this package will work. With that, try to reproduce your problem, to help me find out your issue.
+  This code is tested only on my machine, so there may be unexpected errors. If you find one, I would appreciate if you filed an issue about it. But before doing that, make sure you try reproducing it with emacs -Q. As a convenience, I use the following code to setup package.el, org-roam and finally zetteldesk.el in an emacs -Q buffer so I can test with a clean slate.
 
-  For loading debug.el during boot, I personally use the shortcut below. The -l flag makes emacs load an arbitrary lisp file on boot, so it works very well here. ~/Zetteldesk/ is my local copy of the git repo.
+  #+BEGIN_SRC elisp
 
-  #+BEGIN_SRC sh
-    emacs -Q -l "~/Zetteldesk/debug.el"
+    ;; Setup package.el
+    (require 'package)
+    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			     ("elpa" . "https://elpa.gnu.org/packages/")))
+
+    (package-initialize)
+    (unless package-archive-contents
+      (package-refresh-contents))
+
+    ;; Install and Setup Org-Roam
+    ;; Set the org-roam directory to ~/org_roam as that is what I use, if
+    ;; you need something different, change it before testing this
+    (package-install 'org-roam)
+
+    (add-hook 'after-init-hook 'org-roam-setup)
+    (setq org-roam-v2-ack t)
+
+    (use-package org-roam
+      :config
+      (setq org-roam-directory "~/org_roam"))
+
+    ;; Load zetteldesk.el and turn on zetteldesk-mode to have a
+    ;; functioning zetteldesk-scratch
+    (load-file "~/Zetteldesk/zetteldesk.el")
+    (zetteldesk-mode 1)
+
   #+END_SRC
   
 * Getting Started

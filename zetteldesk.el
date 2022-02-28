@@ -448,7 +448,8 @@ file structure or the extension and then the string
 \"(PDF)\". Then, insert a newline, the string \"Link to PDF: \"
 and then a link to the chosen pdf, in the correct page, with the
 description being the pdfs name without the file structure or the
-extension.
+extension. Note that `org-pdftools-setup-link' needs to be run
+for pdf links to work (which this uses).
 
 Optionally, if given a `\\[universal-argument]' save the
 highlighted region in a variable and insert it after the heading
@@ -459,8 +460,7 @@ something specific you want to take from the pdf. Therefore, this
 optional addition, adds that to the scratch buffer so you
 remember why it was useful."
   (interactive "P")
-  (let* ((contents (buffer-substring (mark) (point)))
-	 (pdf-buffer (set-buffer (read-buffer "Zetteldesk Pdfs: " nil nil #'zetteldesk-pdf-p)))
+  (let* ((pdf-buffer (set-buffer (read-buffer "Zetteldesk Pdfs: " nil nil #'zetteldesk-pdf-p)))
 	 (file (buffer-file-name pdf-buffer))
 	 (page (read-from-minibuffer "Page: " "1"))
 	 (description (file-name-nondirectory (file-name-sans-extension file))))
@@ -471,8 +471,9 @@ remember why it was useful."
       (insert "Supportive Material - " description " (PDF)")
       (newline)
       (when (equal arg '(4))
-	(insert contents)
-	(newline))
+	(let ((contents (buffer-substring (mark) (point))))
+	  (insert contents)
+	  (newline)))
       (insert "Link to PDF: "
 	      (org-link-make-string
 	       (concat "pdf:" file "::" page)

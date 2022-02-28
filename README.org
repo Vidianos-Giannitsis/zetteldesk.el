@@ -114,8 +114,8 @@
 
   This filter function is ~zetteldesk-info-goto-node~. Furthermore, I wouldn't consider this complete, if you couldn't insert a node you want to the zetteldesk-scratch besides switching to it in the info buffer. This is also possible with ~zetteldesk-insert-info-contents~
 
-  https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Info_scratch.gif
-
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Info_scratch.gif]]
+  
   Besides the contents, it also drops a link so you can read the node in its context (in the info buffer).
   
   And of course, as I already had all the backbone, it was very easy to add similar functionalities expanding to all emacs buffers. The functions ~zetteldesk-add-to-desktop~ and ~zetteldesk-remove-from-desktop~ are what you expect them to be. Choose a buffer and add it to the zetteldesk. The filter function for these is ~zetteldesk-switch-to-buffer~. Below is a demonstrative gif of how the filtered switch-to-buffer looks.
@@ -128,13 +128,13 @@
 
   Through ~zetteldesk-insert-org-file-contents~ you can insert all your org mode files to the zetteldesk-scratch. It follows a similar logic to ~zetteldesk-insert-node-contents~ with a major difference that it can handle headings, as most org files use them (the org-roam one doesn't as its more rare to see org-roam files with headings, as they are typically small files). But that's enough talking, I will let the gif do the rest.
 
-  https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Org_scratch.gif
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Org_scratch.gif]]
 
   In this gif, I also display another useful feature all the zetteldesk-insert functions have. If you give them a C-u argument, they will also open the zetteldesk-scratch buffer in a split. 
 
   Lastly, for pdfs, you have the equivalent ~zetteldesk-insert-link-to-pdf~. This doesn't insert a pdf, as obviously that wouldn't be practical, but a link to it. The cool thing is that the link can point to a specific page in the pdf. Here is how it works.
 
-  https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Pdf_scratch.gif
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Pdf_scratch.gif]]
   
   Note that the above functions filter to only show the appropriate files (org files that are not in org-roam or pdfs respectively) and that if they are in the zetteldesk.
 

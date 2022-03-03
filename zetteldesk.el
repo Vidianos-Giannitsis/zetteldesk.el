@@ -8,6 +8,7 @@
 ;; Created: 6th February 2022
 ;; License: GPL-3.0
 ;; Keywords: org-roam, revision, zettelkasten
+;; Version: 0.2
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -314,6 +315,11 @@ Prompts the user to select a node from the list
 ;; zetteldesk-scratch buffer is a special buffer defined here on which
 ;; you drop all your stuff. Its what molds the whole workflow together
 
+(defcustom zetteldesk-map (make-sparse-keymap)
+  "This variable is the keymap for `zetteldesk-mode'"
+  :type 'keymap
+  :group 'zetteldesk)
+
 (define-minor-mode zetteldesk-mode
   "Toggles the global zetteldesk-mode.
 
@@ -322,6 +328,7 @@ buffer, a useful part of the whole zetteldesk workflow."
   nil
   :global t
   :group 'zetteldesk
+  :keymap zetteldesk-map
   :lighter " zetteldesk")
 
 (defun zetteldesk--create-scratch-buffer ()
@@ -528,3 +535,5 @@ zetteldesk-scratch buffer in a split."
       (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
 
 (provide 'zetteldesk)
+
+;;; zetteldesk.el ends here

@@ -3,15 +3,28 @@
 * Table of Contents                                                     :TOC:
 - [[#installation][Installation]]
 - [[#debugging][Debugging]]
-- [[#introduction][Introduction]]
+- [[#introduction--background-of-the-package][Introduction & Background of the Package]]
 - [[#getting-started][Getting Started]]
 - [[#keybindings][Keybindings]]
-- [[#things-to-do][Things to do]]
+- [[#related-work--thank-yous][Related Work & Thank yous]]
 
 * Installation
   This package is currently not on MELPA. If people like it I will try to upload it, but for now I just wanted to publish the workflow I built for my exams, in case it is useful to others. To install this, simply clone this repository locally and add zetteldesk.el to your load-path.
 
-  For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath 
+  For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
+
+  You can also install the package using straight.el with the following snippet
+
+  #+BEGIN_SRC elisp
+
+    (use-package zetteldesk
+      :straight (zetteldesk
+		 :type git :host github
+		 :repo "Vidianos-Giannitsis/zetteldesk.el")
+
+  #+END_SRC
+
+  However, you need to have straight already setup for that. I personally don't use straight so I can't help with its setup, but its README is very detailed. I got this snippet from that README as well after recommendations of adding it to the install methods.
   
 * Debugging
   This code is tested only on my machine, so there may be unexpected errors. If you find one, I would appreciate if you filed an issue about it. But before doing that, make sure you try reproducing it with emacs -Q. As a convenience, I use the following code to setup package.el, org-roam and finally zetteldesk.el in an emacs -Q buffer so I can test with a clean slate.
@@ -47,7 +60,7 @@
 
   #+END_SRC
   
-* Introduction
+* Introduction & Background of the Package
   Welcome to zetteldesk.el, a small library I wrote on top of Org-Roam. Now you may ask, why this was written and what purpose does it fulfill. Well, I am not sure, there are quite a lot of reasons I wanted to do this, I can't say I wrote it for one in specific. But there were two main ideas. The first being that I wanted some way to filter down my zettelkasten while doing revision for uni exams. Org-roam has a lot of tools by default to manage your nodes, even if you have a lot of them. But I needed some more to have a more frictionless revision. It came out pretty good, and I did very easy revision of all the topics I wanted, at the time of writing it. The second is a quote I read from "How to Take Smart Notes" that sparked an interest in my mind, and when I finally got the time to look into it, I made this. The two, despite divergent goals, were able to be combined very easily when I finally got to the end result.
 
   This introduction is going to be way longer than needed as I like writing stuff and I want to explain how this all came to be. You can skip it if you just want to learn how to use this, but I would recommend reading it, to have an "organic" introduction to the idea. If however you just want to look at how to get started with the package, you can jump to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] section. Or if you want to look at more extensive documentation for the package, you can check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]]. Also feel free to check the docstrings of all the functions. They are well documented, especially those that insert things to the zetteldesk-scratch which do a lot of things. 
@@ -141,53 +154,34 @@
   And that's the core of the package, which I wanted to showcase. For more detailed docs and part of the workflow I use with this explained, do check the package's wiki. 
   
 * Keybindings
-  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing.
+  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier. 
 
-  For this very reason, inside the package's source code, there is no keybinding definition. Its something that I believe you should decide by yourself. Ok, actually I am considering adding the keybindings and just not defining the prefix key, as besides the prefix key - which is strictly my personal preference - I believe the rest probably make sense for others as well, and even if they don't, by nature of emacs you can change them. Haven't decided fully yet, so for now I will keep everything unbound.
+  For this reason, I have defined a set of hydras for the package's defaults. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
 
-  However, if you just want some inspiration, I will leave the part of my config that sets up the zetteldesk keybindings below.
-
-  #+BEGIN_SRC emacs-lisp
-
-    (general-define-key
-     :states 'normal
-     :keymaps 'override
-     :prefix "SPC z"
-     "b" 'zetteldesk-switch-to-buffer
-     "a" '(:ignore t :which-key "Add to Zetteldesk")
-     "a b" 'zetteldesk-add-to-desktop
-     "a n" 'zetteldesk-add-node-to-desktop
-     "a i" 'zetteldesk-add-info-node-to-desktop
-     "r" '(:ignore t :which-key "Remove from Zetteldesk")
-     "r b" 'zetteldesk-remove-from-desktop
-     "r n" 'zetteldesk-remove-node-from-desktop
-     "r i" 'zetteldesk-remove-info-node-from-desktop
-     "n" 'zetteldesk-node-find
-     "s" 'zetteldesk-switch-to-scratch-buffer
-     "i" '(:ignore t :which-key "Insert to Scratch Buffer")
-     "i n" 'zetteldesk-insert-node-contents
-     "i N" 'zetteldesk-insert-node-contents-without-link
-     "i o" 'zetteldesk-insert-org-file-contents
-     "i p" 'zetteldesk-insert-link-to-pdf
-     "i i" 'zetteldesk-insert-info-contents)
-
-    (general-define-key
-     :states 'normal
-     :keymaps 'org-mode-map
-     :prefix ", z"
-     "i" 'zetteldesk-node-insert
-     "r" 'zetteldesk-remove-backlinks-from-desktop
-     "b" 'zetteldesk-add-backlinks-to-desktop
-     "p" 'zetteldesk-node-insert-if-poi-or-moc
-     "s" 'zetteldesk-node-insert-sort-backlinks)
-
+  But, as I consider it fully optional it's not in the main part of the package. Its in a seperate elisp file zetteldesk-kb.el, to load it use
+  #+BEGIN_SRC elisp
+    (require 'zetteldesk-kb)
   #+END_SRC
 
-  I use general to define all my keybindings, as I really like how easy it is to define stuff with it. As mentioned, my global leader key where most of my keybindings go is Space. z is the letter I have chosen for the zetteldesk keybindings (for obvious reasons) and luckily nothing else in my config really used it. Furthermore, some keybindings are meant to be ran in org-mode, so those are in an org-mode-map under , z. The comma is my org-mode specific leader key, so that is why these are in , z. 
+  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. I have added a keybinding that calls this hydra, which is active in every buffer that has zetteldesk-mode active (which is every buffer as the minor-mode is supposed to be enabled globally). I bound it to "C-c z" by default as if I understand them correctly it follows the default keybinding conventions, however feel free to change it, or recommend a better default.
+  
+  You can change it by using the Customise menu, or in your init.el using ~setq~. Note that its value needs to be something of the form of ~(kbd "PREFIX-KEY")~.
 
-* Things to do
-  The main thing I am looking into doing is to fully revamp the README to include more visual examples as it was pointed out that its important and I agree. I also want to set up the wiki better, as that's where I will have the documentation, until I get it in texinfo format as well, which I plan doing after. Another important plan of mine is to set up better org-remark integration with this package as its something really interesting I haven't gone around to doing. 
+* Related Work & Thank yous
+  In any kind of work you do, its a good practice to cite your sources of inspiration, and how your work differentiates itself from others. Furthermore, its also a good practice to say thanks to the people that helped, either directly or inderictly to make this what it is. So here's mine
 
-  Other things I am thinking of are setting up the keybindings without defining a prefix key and looking more into outliner software and if there is something I want to implement from those.
+  Of course this list couldn't start with anything other than the exceptional book [[https://takesmartnotes.com/][How to Take Smart Notes]] by Sonke Ahrens. This book is one of the best books I have read. It is an excellent introduction to the idea of the Zettelkasten and quotes from that book was what sparked the original thoughts. Its definitely my #1 source of inspiration. In that book, a [[http://zettelkasten.danielluedecke.de/en/][slip-box program]] is recommended. Trusting the author, I decided to check it out, even though I was certain I was gonna use emacs for my zettelkasten. This program is honestly pretty decent and some stuff in zetteldesk.el was inspired by it. Especially its Outliner is a pretty good looking software. Another thing that gave me inspiration is the book [[https://www.goodreads.com/book/show/16174518-how-to-make-a-complete-map-of-every-thought-you-think][How to Make a Complete Map of Every Thought you Think]], which had some pivotal ideas for my workflow.
 
-  However, due to uni and life, I can't devote too much time on this, so development might go slow at times.
+  For the people that helped me, I didn't have any direct help. I had an idea and I just made it happen. But I wouldn't be able to get the knowledge to get here without a few people. The two main thank yous I would have to give are David Wilson from [[https://www.youtube.com/c/SystemCrafters][System Crafters on Youtube]] and the FSF for publishing the excellent book "An Introduction to Emacs Lisp" which helped me learn the language. Lastly, I would also like to thank [[https://www.reddit.com/r/emacs/][r/emacs]] on reddit. Reddit is infamous for not having a very good community. A lot of people disregard it as a rather bad social media with little use. But r/emacs, is truly a great community. Whenever I can't find an answer to a problem myself, I am certain that if I go to r/emacs and ask, someone will be able to help me, as people have in the past. Not to mention that I have gotten a lot of suggestions for this package from r/emacs, and to an extent its community helped me make this into what it is. So to everyone there, thanks for making this community what it is, its great!
+
+  Finally, for some similar projects and how this one differentiates itself. This is definitely a non-exhaustive list as I don't know much of emacs. But for what I know, here is some similar work.
+
+  - [[https://github.com/localauthor/zk][zk]] is a zettelkasten implementation for emacs that relies on a lot of low-level functions for its functionality. It has a feature called zk-desktop which is conceptually rather similar to what I have done. However, this is a solution of its own, completely independent of org-roam, while I wanted a solution to handle my org-roam repository
+  - [[https://github.com/publicimageltd/delve][Delve]] is conceptually a rather similar package to this. Its built on top of org-roam and its got the idea of gathering nodes in a seperate buffer where you can play around with each seperately, a concept rather similar to that of zetteldesk. The main difference between the two is how their system is implemented. Zetteldesk is a package made in mind with filter functions to view only parts of your zettelkasten, but view them with the same UI Org-Roam uses, while Delve seems to have its own way of doing things, with not so many similarities to the UIs Org-Roam exposes. Both have their advantages and disadvantages, so use whichever one you like. The only other major difference I could notice is that zetteldesk has behaviours for handling supplementary materials such as pdfs and info nodes, while Delve seems to handle only nodes.
+  - [[https://github.com/alphapapa/bufler.el][Bufler]] is a package made for playing around more with your buffers more. Zetteldesk also has similar functionality, but its not its core focus, so obviously I would consider it inferior in this regard. I just added the buffer stuff as it made sense conceptually to me to do more than org-roam nodes.
+  
+* COMMENT Things to do
+  An important plan of mine is to set up better org-remark integration with this package as its something really interesting I haven't gone around to doing. 
+
+  Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
+

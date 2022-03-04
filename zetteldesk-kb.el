@@ -105,9 +105,10 @@
 
 ;; Set up the keybinding to call the hydra
 
-(defcustom zetteldesk-hydra-prefix nil
+(defcustom zetteldesk-hydra-prefix (kbd "C-c z")
   "This variable stores the value of the keybinding that calls
-  the main zetteldesk hydra. Its value is nil by default"
+  the main zetteldesk hydra. By default I have it set to \"C-c
+  z\", but its very easy to change"
   :type 'string
   :group 'zetteldesk)
 

@@ -3,6 +3,7 @@
 * Table of Contents                                                     :TOC:
 - [[#installation][Installation]]
 - [[#debugging][Debugging]]
+- [[#sample-config][Sample Config]]
 - [[#introduction--background-of-the-package][Introduction & Background of the Package]]
 - [[#getting-started][Getting Started]]
 - [[#keybindings][Keybindings]]
@@ -58,7 +59,27 @@
     (load-file "~/Zetteldesk/zetteldesk.el")
     (zetteldesk-mode 1)
 
+    ;; Then for testing the hydras from the zetteldesk-kb library
+    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+    (load-file "~/Zetteldesk/zetteldesk-kb.el")
+
   #+END_SRC
+  
+* Sample Config
+  For those of you who are not so much the reading types and just want a working config, which you can explore later I will leave a config that sets everything up here. I have tried to make the keybinding hydra as self explanatory as possible, and if you check function docstrings you should be able to understand what this does, but for a better idea, you should check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] and the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]].
+
+  This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, as it relies on org-roam for a lot of things) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro. They are all on Melpa so you shouldn't have trouble finding them.
+
+  #+BEGIN_SRC elisp
+
+    (require 'zetteldesk)
+    (zetteldesk-mode 1)
+    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+    (require 'zetteldesk-kb)
+
+  #+END_SRC
+
+  After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
   
 * Introduction & Background of the Package
   Welcome to zetteldesk.el, a small library I wrote on top of Org-Roam. Now you may ask, why this was written and what purpose does it fulfill. Well, I am not sure, there are quite a lot of reasons I wanted to do this, I can't say I wrote it for one in specific. But there were two main ideas. The first being that I wanted some way to filter down my zettelkasten while doing revision for uni exams. Org-roam has a lot of tools by default to manage your nodes, even if you have a lot of them. But I needed some more to have a more frictionless revision. It came out pretty good, and I did very easy revision of all the topics I wanted, at the time of writing it. The second is a quote I read from "How to Take Smart Notes" that sparked an interest in my mind, and when I finally got the time to look into it, I made this. The two, despite divergent goals, were able to be combined very easily when I finally got to the end result.
@@ -93,7 +114,7 @@
   And after this incredibly long, and possibly unnecessarily detailed introduction lets dive into what this package does.
 
 * Getting Started
-  With that out of the way, lets do a short introduction to some core features of the package. This only scratches the surface of what this package can do however. Its just a demonstration of some of the major features, with gifs in between for a better visual representation. For more detailed documentation check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]], or the doc-strings of the functions.
+  With that out of the way, lets do a short introduction to some core features of the package. This only scratches the surface of what this package can do however. Its just a demonstration of some of the major features, with gifs in between for a better visual representation. For more detailed documentation check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]], or the doc-strings of the functions. For some reason, if you are viewing this in Firefox, the gifs will be very grainy as mentioned in this [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/issues/1][issue]]. This is unfixed as of now as I am unaware of what is causing this. For now, I recommend viewing this in a Chromium browser which renders it better, but if you have any clue of how I could fix this feel free to mention it in the issue and I will fix it as soon as possible.
   
   First things first, once you have the package in your load-path, you need to require and activate the global minor-mode zetteldesk-mode. This mode does some background work to create a buffer named zetteldesk-scratch. This essentially acts as your desktop. This is where you put everything really.
 
@@ -156,16 +177,14 @@
 * Keybindings
   Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier. 
 
-  For this reason, I have defined a set of hydras for the package's defaults. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
+  For this reason, I have defined a set of hydras for the package's defaults, but I have not defined a prefix-key for the hydra, as that is something you will have to decide yourself imo. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
 
   But, as I consider it fully optional it's not in the main part of the package. Its in a seperate elisp file zetteldesk-kb.el, to load it use
   #+BEGIN_SRC elisp
     (require 'zetteldesk-kb)
   #+END_SRC
 
-  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. I have added a keybinding that calls this hydra, which is active in every buffer that has zetteldesk-mode active (which is every buffer as the minor-mode is supposed to be enabled globally). I bound it to "C-c z" by default as if I understand them correctly it follows the default keybinding conventions, however feel free to change it, or recommend a better default.
-  
-  You can change it by using the Customise menu, or in your init.el using ~setq~. Note that its value needs to be something of the form of ~(kbd "PREFIX-KEY")~.
+  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. If you customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~), the main hydra will automatically be bound to that key in every buffer with zetteldesk-mode active (meaning every buffer as its a global minor mode). Note though that due to the structure of the package, and my decision to not define a prefix key by default, you will need to set its value before loading the library as it will signal an error otherwise (due to the ~define-key~ expecting a keybinding and getting ~nil~). 
 
 * Related Work & Thank yous
   In any kind of work you do, its a good practice to cite your sources of inspiration, and how your work differentiates itself from others. Furthermore, its also a good practice to say thanks to the people that helped, either directly or inderictly to make this what it is. So here's mine

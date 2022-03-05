@@ -13,7 +13,7 @@
 * Introduction
   Zetteldesk.el is a way to filter your buffers and org-roam repository to show only what you want to see right now. Org-Roam is often regarded as your second brain, much larger in capacity than your regular brain. A quick way of explaining this package is that it makes your second brain see only what your regular brain is thinking, and then allow you to view and organise all those thoughts in a simple manner. Another way of putting it is that this package tries to make a digital analog of spreading your notes in your desk to view them together. That is a big plus of handwritten notes, and as such a digital analog for this is helpful. I consider it an effective workflow originally meant for revising various topics for uni exams, but also useful for making things such as outlines or manuscripts.
 
-  If this sounds interesting to you, read on.
+  If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section
   
 * Installation
   This package is currently not on MELPA. I would like to add it eventually however. To install this, simply clone this repository locally and add zetteldesk.el to your load-path.
@@ -58,6 +58,14 @@
   #+END_SRC
 
   Then, I have prepared a few demos of the main features of the package, for you to look at to get an idea. For more detailed documentation, check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] of the package and the function docstrings. This is a short showcase of the main features.
+
+  But first, here is a list of the main features of the package: 
+  - Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of a node
+  - Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
+  - Save specific parts of a manual inside the Info program to seamlessly jump between specific info nodes, even if unrelated
+  - Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
+  - Insert the contents of an org-file or an Info-node to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) and Info-nodes in the zetteldesk respectively. 
+  - Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
   
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/demos/Adding_Zetteldesk.gif]]

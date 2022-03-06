@@ -11,7 +11,7 @@
 - [[#related-work--thank-yous][Related Work & Thank yous]]
 
 * Introduction
-  Zetteldesk.el is a way to filter your buffers and org-roam repository to show only what you want to see right now. Org-Roam is often regarded as your second brain, much larger in capacity than your regular brain. A quick way of explaining this package is that it makes your second brain see only what your regular brain is thinking, and then allow you to view and organise all those thoughts in a simple manner. Another way of putting it is that this package tries to make a digital analog of spreading your notes in your desk to view them together. That is a big plus of handwritten notes, and as such a digital analog for this is helpful. I consider it an effective workflow originally meant for revising various topics for uni exams, but also useful for making things such as outlines or manuscripts.
+  Zetteldesk.el exposes a workflow where you select buffers and org-roam nodes from a completion menu and filter generic functions such as ~switch-to-buffer~ and ~org-roam-node-find~ to show only the ones you selected. Then it allows you to insert their contents in a seperate buffer and make an outline of the topic in question. Org-Roam is often regarded as your second brain, much larger in capacity than your regular brain. This package makes your second brain see only what your regular brain is thinking, and then allow you to view and organise all those thoughts in a simple manner. Essentially it tries to make a digital analog of spreading your notes in your desk to view them all at once. That is a big plus of handwritten notes, and as such a digital analog for this is helpful. I consider it an effective workflow originally meant for revising various topics for uni exams, but also useful for making things such as outlines or manuscripts.
 
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section
   
@@ -213,4 +213,10 @@
   An important plan of mine is to set up better org-remark integration with this package as its something really interesting I haven't gone around to doing. 
 
   Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
+
+  Saving the current state of the Zetteldesk. Although I have no clue how. Maybe if I am able to save the value of a buffer local variable between sessions its possible. 
+
+  Create a variable that controls whether insertions happen in the current buffer or the zetteldesk-scratch buffer as its been recommended to me.
+
+  Consider making a video showing all the features to avoid having to use large sized gifs in the README
 

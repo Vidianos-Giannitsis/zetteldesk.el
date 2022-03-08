@@ -320,6 +320,16 @@ Prompts the user to select a node from the list
   :type 'keymap
   :group 'zetteldesk)
 
+(defcustom zetteldesk-insert-scratch-or-current-buffer t
+  "Customization variable which decides whether the
+  zetteldesk-insert functions will insert to the
+  *zetteldesk-scratch* buffer or the current buffer. Default
+  value is t which makes those functions insert to the
+  scratch. Setting it to nil will make those functions insert to
+  the current buffer, for whichever usecase you might want"
+  :type 'string
+  :group 'zetteldesk)
+
 (define-minor-mode zetteldesk-mode
   "Toggles the global zetteldesk-mode.
 
@@ -382,11 +392,14 @@ in a split."
   (interactive "P")
   (let* ((node (org-roam-node-read nil #'zetteldesk-node-p))
 	 (file (org-roam-node-file node))
-	 (description (org-roam-node-formatted node)))
+	 (description (org-roam-node-formatted node))
+	 (location (if zetteldesk-insert-scratch-or-current-buffer
+		       "*zetteldesk-scratch*"
+		     (current-buffer))))
     (insert (org-link-make-string
 	     (concat "id:" (org-roam-node-id node))
 	     description))
-    (with-current-buffer "*zetteldesk-scratch*"
+    (with-current-buffer location
       (goto-char (point-max))
       (newline)
       (insert-file-contents file nil 67)
@@ -411,8 +424,11 @@ buffer. But sometimes its not handy, and so, I just made this
 second iteration to fix that issue."
   (interactive)
   (let* ((node (org-roam-node-read nil #'zetteldesk-node-p))
+	 (location (if zetteldesk-insert-scratch-or-current-buffer
+		       "*zetteldesk-scratch*"
+		     (current-buffer)))
 	 (file (org-roam-node-file node)))
-    (with-current-buffer "*zetteldesk-scratch*"
+    (with-current-buffer location
       (goto-char (point-max))
       (newline)
       (insert-file-contents file nil 67)
@@ -430,8 +446,11 @@ If given a `\\[universal-argument]' also switch to the
 *zetteldesk-scratch* buffer in a split"
   (interactive "P")
   (let* ((buffer (set-buffer (read-buffer "Zetteldesk Buffers: " nil nil #'zetteldesk-org-buffer-p)))
+	 (location (if zetteldesk-insert-scratch-or-current-buffer
+		       "*zetteldesk-scratch*"
+		     (current-buffer)))
 	 (file (buffer-file-name buffer)))
-    (set-buffer "*zetteldesk-scratch*")
+    (set-buffer location)
     (goto-char (point-max))
     (save-excursion
       (newline)
@@ -469,9 +488,12 @@ remember why it was useful."
   (interactive "P")
   (let* ((pdf-buffer (set-buffer (read-buffer "Zetteldesk Pdfs: " nil nil #'zetteldesk-pdf-p)))
 	 (file (buffer-file-name pdf-buffer))
+	 (location (if zetteldesk-insert-scratch-or-current-buffer
+		       "*zetteldesk-scratch*"
+		     (current-buffer)))
 	 (page (read-from-minibuffer "Page: " "1"))
 	 (description (file-name-nondirectory (file-name-sans-extension file))))
-    (with-current-buffer "*zetteldesk-scratch*"
+    (with-current-buffer location
       (goto-char (point-max))
       (newline)
       (org-insert-heading)
@@ -516,9 +538,12 @@ Optionally, with a `\\[universal-argument]' switch to the
 zetteldesk-scratch buffer in a split."
   (interactive "P")
   (let ((info_node (completing-read "Nodes: " zetteldesk-info-nodes))
+	(location (if zetteldesk-insert-scratch-or-current-buffer
+		      "*zetteldesk-scratch*"
+		    (current-buffer)))
 	(buffer (current-buffer)))
     (Info-goto-node info_node)
-    (with-current-buffer "*zetteldesk-scratch*"
+    (with-current-buffer location
       (goto-char (point-max))
       (newline)
       (org-insert-heading)
@@ -535,5 +560,3 @@ zetteldesk-scratch buffer in a split."
       (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
 
 (provide 'zetteldesk)
-
-;;; zetteldesk.el ends here

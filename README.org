@@ -92,7 +92,7 @@
   
   And of course, as I already had all the backbone, it was very easy to add similar functionalities expanding to all emacs buffers. The functions ~zetteldesk-add-to-desktop~ and ~zetteldesk-remove-from-desktop~ are what you expect them to be. Choose a buffer and add it to the zetteldesk. The filter function for these is ~zetteldesk-switch-to-buffer~. Below is a demonstrative gif of how the filtered switch-to-buffer looks.
 
-  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/buffers.gif]]
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/buffer.gif]]
 
   Last thing I consider super useful to showcase, is how the system handles references you want to insert to the zetteldesk besides the aforementioned org-roam files and info buffers.
 

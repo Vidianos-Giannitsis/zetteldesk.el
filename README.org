@@ -69,29 +69,30 @@
   
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
-  Add/Remove
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/add_zetteldesk.gif]]
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/remove_zetteldesk.gif]]
 
   You typically start with ~zetteldesk-add-backlinks-to-desktop~ which is for bulk adding of nodes, adding a node and all its backlinks as its very helpful to add everything related to a subject and them some things that were missed can be added with  ~zetteldesk-add-node-to-desktop~ or some things that in the end don't belong there can be removed with ~zetteldesk-remove-node-from-desktop~. For bulk removing ~zetteldesk-remove-backlinks-from-desktop~ is the main function you use. The other thing displayed here is the filtered version of ~org-roam-node-find~, ~zetteldesk-node-find~ which filters to show only files in the zetteldesk.
   
   With this, you can start working on your desktop. Unfortunately, I can't show you any real examples I have, as all my lesson nodes are in Greek which is illegible for most. So for demonstration purposes I will show you the process of dropping a note in your desktop, namely the zetteldesk-scratch buffer.
 
-  Desktop
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/desktop.gif]]
 
   The first function shown is ~zetteldesk-insert-node-contents-without-link~, which prompts for a node and inserts its contents to the zetteldesk-scratch. It specifies its without a link, as the one I primarily use ~zetteldesk-insert-node-contents~ also inserts an ID link to that node in the scratch buffer. My typical workflow (described shortly [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][here]]) includes me writing an outline of the subject, linking every subject I mention. These links are inserted with this function so their contents are added to the scratch. There is also ~zetteldesk-switch-to-scratch-buffer~ to open the scratch buffer in a split with the current buffer. The version that doesn't insert a link (shown in the gif) does that by default, but the original ~zetteldesk-insert-node-contents~ doesn't do that by default, so this function is generally useful. 
 
   Another thing I want to showcase is how this package interfaces with the Info program, the built-in documentation viewer of Emacs. Info buffers are unique in the way that there aren't multiple. There is a single persistent buffer for Info. So besides the use of info buffers in the zetteldesk, for its own purposes, it needs to define a way to save the info buffers you want to be viewing. And also as this package defines a lot of filter functions, it needs a way to allow you to select a single info node and jump to it (which is done through a ~completing-read~). This is in my opinion useful even on its own. Check the gif below for a demonstation of the feature.
 
-  info
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info.gif]]
   
   The function that does the adding is ~zetteldesk-add-info-node-to-desktop~ (and of course there is an equivalent ~zetteldesk-remove-info-node-from-desktop~), while the filter function is ~zetteldesk-info-goto-node~. Furthermore, I wouldn't consider this complete, if you couldn't insert a node you want to the zetteldesk-scratch besides switching to it in the info buffer. This is also possible with ~zetteldesk-insert-info-contents~, which is demonstrated here 
  
-  info scratch
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info_scratch.gif]]
   
   Besides the contents, it also drops a link so you can read the node in its context (in the info buffer).
   
   And of course, as I already had all the backbone, it was very easy to add similar functionalities expanding to all emacs buffers. The functions ~zetteldesk-add-to-desktop~ and ~zetteldesk-remove-from-desktop~ are what you expect them to be. Choose a buffer and add it to the zetteldesk. The filter function for these is ~zetteldesk-switch-to-buffer~. Below is a demonstrative gif of how the filtered switch-to-buffer looks.
 
-  buffers
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/buffers.gif]]
 
   Last thing I consider super useful to showcase, is how the system handles references you want to insert to the zetteldesk besides the aforementioned org-roam files and info buffers.
 
@@ -99,7 +100,7 @@
 
   Through ~zetteldesk-insert-org-file-contents~ you can insert all your org mode files to the zetteldesk-scratch. It follows a similar logic to ~zetteldesk-insert-node-contents~ with a major difference that it can handle headings, as most org files use them (the org-roam one doesn't as its more rare to see org-roam files with headings, as they are typically small files). For pdfs, you have the equivalent ~zetteldesk-insert-link-to-pdf~. This doesn't insert a pdf, as obviously that wouldn't be practical, but a link to it. The cool thing is that the link can point to a specific page in the pdf. But that's enough talking, I will let the gif do the rest
 
-  org_pdf
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/org_pdf.gif]]
   
   Note that the above functions filter to only show the appropriate files (org files that are not in org-roam or pdfs respectively) and that if they are in the zetteldesk.
 

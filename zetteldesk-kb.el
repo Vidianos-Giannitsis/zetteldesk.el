@@ -76,7 +76,7 @@
 
 (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk")
   ("Org-Roam"
-   (("n" zeteldesk-insert-node-contents "Link to Node and Contents in *zetteldesk-scratch*")
+   (("n" zetteldesk-insert-node-contents "Link to Node and Contents in *zetteldesk-scratch*")
     ("N" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
     ("i" zetteldesk-node-insert "Link to Node")
     ("b" zetteldesk-node-insert-sort-backlinks "Link to Node - Menu sorted by Backlinks")

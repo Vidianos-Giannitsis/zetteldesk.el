@@ -84,7 +84,7 @@
 
    "Supplementary Material to *zetteldesk-scratch*"
     (("p" zetteldesk-insert-link-to-pdf "Link to PDF")
-     ("o" zetteldesk-org-file-contents "Org File Contents")
+     ("o" zetteldesk-insert-org-file-contents "Org File Contents")
      ("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
 
 ;; The Primary Hydra

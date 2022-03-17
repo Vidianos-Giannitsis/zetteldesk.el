@@ -76,7 +76,7 @@
 
 (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk")
   ("Org-Roam"
-   (("n" zeteldesk-insert-node-contents "Link to Node and Contents in *zetteldesk-scratch*")
+   (("n" zetteldesk-insert-node-contents "Link to Node and Contents in *zetteldesk-scratch*")
     ("N" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
     ("i" zetteldesk-node-insert "Link to Node")
     ("b" zetteldesk-node-insert-sort-backlinks "Link to Node - Menu sorted by Backlinks")
@@ -84,7 +84,7 @@
 
    "Supplementary Material to *zetteldesk-scratch*"
     (("p" zetteldesk-insert-link-to-pdf "Link to PDF")
-     ("o" zetteldesk-org-file-contents "Org File Contents")
+     ("o" zetteldesk-insert-org-file-contents "Org File Contents")
      ("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
 
 ;; The Primary Hydra

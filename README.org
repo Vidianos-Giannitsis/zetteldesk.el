@@ -215,8 +215,3 @@
   Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
 
   Saving the current state of the Zetteldesk. Although I have no clue how. Maybe if I am able to save the value of a buffer local variable between sessions its possible. 
-
-  Create a variable that controls whether insertions happen in the current buffer or the zetteldesk-scratch buffer as its been recommended to me.
-
-  Consider making a video showing all the features to avoid having to use large sized gifs in the README
-

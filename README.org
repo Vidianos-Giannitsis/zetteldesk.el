@@ -3,7 +3,9 @@
 * Table of Contents                                                     :TOC:
 - [[#introduction][Introduction]]
 - [[#installation][Installation]]
+  - [[#using-doom-emacs][Using Doom Emacs]]
 - [[#sample-config][Sample Config]]
+  - [[#doom-emacs-configurations][Doom Emacs Configurations]]
 - [[#getting-started][Getting Started]]
 - [[#keybindings][Keybindings]]
 - [[#debugging][Debugging]]
@@ -29,15 +31,20 @@
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
 
   You can also install the package using straight.el with the following snippet
+#+BEGIN_SRC elisp
+(use-package zetteldesk
+  :straight (zetteldesk
+             :type git :host github
+             :repo "Vidianos-Giannitsis/zetteldesk.el")
+#+END_SRC
 
-  #+BEGIN_SRC elisp
-
-    (use-package zetteldesk
-      :straight (zetteldesk
-		 :type git :host github
-		 :repo "Vidianos-Giannitsis/zetteldesk.el")
-
-  #+END_SRC
+** Using Doom Emacs
+To install in a Doom configuration, put the following declaration in your =packages.el=
+#+begin_src elisp
+;; ~/.doom.d/packages.el
+(package! zetteldesk
+  :recipe (:host github :repo "Vidianos-Giannitsis/zetteldesk.el"))
+#+end_src
 
 * Sample Config
   For those of you who are not so much the reading types and just want a working config, which you can explore later I will leave a config that sets everything up here. I have tried to make the keybinding hydra as self explanatory as possible, and if you check function docstrings you should be able to understand what this does, but for a better idea, you should (in my opinion) check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] and the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]]. But then again, I like reading docs, so if you don't, you may not agree.
@@ -54,7 +61,23 @@
   #+END_SRC
 
   After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
-  
+
+** Doom Emacs Configurations
+From here, we have a few configuration options.
+Put the one you want in your =config.el=.
+These are suggested keybindings, but feel free to change yours.
+
+The easiest configuration is to use the hydra keybindings:
+#+begin_src elisp
+(use-package! zetteldesk
+  :after org-roam
+  :config
+  (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+  (zetteldesk-mode)
+  (require 'zetteldesk-kb))
+#+end_src
+For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/Doom-Configuration][Doom Configuration]] page in the Wiki.
+
 * Getting Started
   
   First things first, once you have the package in your load-path, you need to require and activate the global minor-mode zetteldesk-mode. This mode does some background work to create a buffer named zetteldesk-scratch. This essentially acts as your desktop. This is where you put everything really.

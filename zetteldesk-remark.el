@@ -72,3 +72,14 @@ node its related to."
 				 title))))
 
 (advice-add 'org-remark-highlight-mark :after #'zetteldesk-remark-highlight-advice)
+
+(defun zetteldesk-switch-to-margin-notes ()
+  "Helper function which goes to the zetteldesk-margin-notes file.
+
+If `org-remark-mark' is called through its wrapper function
+`zetteldesk-remark-mark', it sets `org-remark-notes-file-name' to
+a specific file, which is meant to be used with all margin notes
+coming from zetteldesk-scratch. This function switches to that
+file."
+  (interactive)
+  (find-file (concat org-roam-directory "zetteldesk-margin-notes.org")))

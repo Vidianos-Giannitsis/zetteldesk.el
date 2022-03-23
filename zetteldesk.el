@@ -46,6 +46,20 @@ NODE is an org-roam-node"
   (let ((buffer (get-file-buffer (org-roam-node-file node))))
     buffer))
 
+(cl-defmethod org-roam-node-backlinkscount-number ((node org-roam-node))
+    "Access slot \"backlinks\" of org-roam-node struct CL-X. This
+    is identical to `org-roam-node-backlinkscount' with the
+    difference that it returns a number instead of a fromatted
+    string. This is to be used in
+    `org-roam-node-sort-by-backlinks'"
+    (let* ((count (caar (org-roam-db-query
+			 [:select (funcall count source)
+				  :from links
+				  :where (= dest $s1)
+				  :and (= type "id")]
+			 (org-roam-node-id node)))))
+      count))
+
 (defun org-roam-node-poi-or-moc-p (NODE)
   "Check if NODE has the tag POI or the tag MOC.  Return t if it does."
   (or (string-equal (car (org-roam-node-tags NODE)) "POI")

@@ -2,7 +2,7 @@
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
+;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
 ;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2"))
 ;; Created: 3rd March 2022
 ;; License: GPL-3.0

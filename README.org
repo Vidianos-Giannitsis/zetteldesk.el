@@ -164,10 +164,9 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
     (unless package-archive-contents
       (package-refresh-contents))
 
-    ;; Install and Setup Org-Roam
+    ;; Setup Org-Roam
     ;; Set the org-roam directory to ~/org_roam as that is what I use, if
     ;; you need something different, change it before testing this
-    (package-install 'org-roam)
 
     (add-hook 'after-init-hook 'org-roam-setup)
     (setq org-roam-v2-ack t)

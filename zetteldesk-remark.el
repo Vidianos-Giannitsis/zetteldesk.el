@@ -2,7 +2,7 @@
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
+;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
 ;; Package-Requires: ((zetteldesk "0.2") (org-remark "1.0"))
 ;; Created: 22nd March 2022
 ;; License: GPL-3.0
@@ -65,6 +65,8 @@ node its related to."
     (let* ((title (org-entry-get nil "ITEM"))
 	   (node (org-roam-node-from-title-or-alias title))
 	   (file (org-roam-node-file node))
+	   (org-remark-notes-file-name
+	    (concat org-roam-directory "zetteldesk-margin-notes.org"))
 	   (ov (make-overlay beg end nil :front-advance)))
       (org-remark-highlight-save file
 				 beg end

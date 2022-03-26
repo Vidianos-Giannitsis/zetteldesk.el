@@ -168,12 +168,6 @@ those files"
 ;; that allow the user to add them to something. And then, you also
 ;; need ways to remove things, because people make mistakes.
 
-(defcustom zetteldesk-info-nodes '()
-  "List of info nodes that are part of the zetteldesk.
-Initialised as an empty list"
-  :type 'list
-  :group 'zetteldesk)
-
 (defun zetteldesk-add-to-desktop (BUFFER)
   "Add BUFFER to the current `zetteldesk'."
   (interactive "b")
@@ -232,13 +226,6 @@ with them, and if so adds it to the `zetteldesk'"
 	  (with-current-buffer (find-file-noselect file)
 	    (setq-local zetteldesk "foo")))))))
 
-(defun zetteldesk-add-info-node-to-desktop ()
-  "Find the current info-node.
-Then add its name to the list of the variable
-`zetteldesk-info-nodes'"
-  (interactive)
-  (add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
-
 (defun zetteldesk-remove-from-desktop (BUFFER)
   "Remove BUFFER from the current `zetteldesk'."
   (interactive "b")
@@ -270,15 +257,6 @@ buffer to the desktop it removes it."
 	(unless (eq buffer nil)
 	  (with-current-buffer buffer
 	    (kill-local-variable 'zetteldesk)))))))
-
-(defun zetteldesk-remove-info-node-from-desktop ()
-  "Remove an info-node from the `zetteldesk'.
-The node is selected through a `completing-read' menu of
-`zetteldesk-info-nodes'"
-  (interactive)
-  (setq zetteldesk-info-nodes (remove
-			       (completing-read "Info Nodes: " zetteldesk-info-nodes)
-			       zetteldesk-info-nodes)))
 
 ;; -- FILTER FUNCTIONS --
 ;; This section is about defining all the functions that show you the
@@ -327,14 +305,6 @@ missed something you want to include."
 	     (concat "id:" id)
 	     description))))
 
-(defun zetteldesk-info-goto-node ()
-  "Zetteldesk filter function for `Info-goto-node'.
-
-Prompts the user to select a node from the list
-`zetteldesk-info-nodes' and jumps to that node"
-  (interactive)
-  (Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
-
 ;; -- *ZETTELDESK-SCRATCH* --
 ;; This is the section where it all comes together. The
 ;; zetteldesk-scratch buffer is a special buffer defined here on which
@@ -374,6 +344,28 @@ buffer, a useful part of the whole zetteldesk workflow."
       (org-mode))))
 
 (add-hook 'zetteldesk-mode-on-hook 'zetteldesk--create-scratch-buffer)
+
+(defmacro zetteldesk-insert-location ()
+  "Find the location the zetteldesk-insert functions should insert to.
+
+The decision is made depending on the variable
+`zetteldesk-insert-scratch-or-current-buffer'.  Check its
+docstring for more info.  This is used in all zetteldesk-insert
+functions to decide if the insertion should happen in
+*zetteldesk-scratch or the current buffer."
+  `(if zetteldesk-insert-scratch-or-current-buffer
+		  "*zetteldesk-scratch*"
+		(current-buffer)))
+
+(defmacro zetteldesk-insert-switch-to-scratch (arg)
+  "Switch to the *zetteldesk-scratch* if ARG is the `\\[universal-argument]'.
+
+All the zetteldesk-insert functions have a similar logic of
+switching to the *zetteldesk-scratch* buffer in a split if given
+a `\\[universal-argument]'.  To avoid repetition, this macro
+expands to the needed code."
+  `(when (equal ,arg '(4))
+     (switch-to-buffer-other-window "*zetteldesk-scratch*")))
 
 (defun zetteldesk-switch-to-scratch-buffer (&optional arg)
   "Open the zetteldesk-scratch buffer in a split with the current buffer.
@@ -421,9 +413,7 @@ buffer in a split."
   (let* ((node (org-roam-node-read nil #'zetteldesk-node-p))
 	 (file (org-roam-node-file node))
 	 (description (org-roam-node-formatted node))
-	 (location (if zetteldesk-insert-scratch-or-current-buffer
-		       "*zetteldesk-scratch*"
-		     (current-buffer))))
+	 (location (zetteldesk-insert-location)))
     (insert (org-link-make-string
 	     (concat "id:" (org-roam-node-id node))
 	     description))
@@ -432,9 +422,7 @@ buffer in a split."
       (newline)
       (insert-file-contents file nil 67)
       (replace-string "#+title: " "* ")))
-  (when (equal arg '(4))
-    (save-current-buffer
-      (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
+  (zetteldesk-insert-switch-to-scratch arg))
 
 (defun zetteldesk-insert-node-contents-without-link ()
   "\"Sister function\" of `zetteldesk-insert-node-contents'.
@@ -451,9 +439,7 @@ buffer. But sometimes its not handy, and so, I just made this
 second iteration to fix that issue."
   (interactive)
   (let* ((node (org-roam-node-read nil #'zetteldesk-node-p))
-	 (location (if zetteldesk-insert-scratch-or-current-buffer
-		       "*zetteldesk-scratch*"
-		     (current-buffer)))
+	 (location (zetteldesk-insert-location))
 	 (file (org-roam-node-file node)))
     (with-current-buffer location
       (goto-char (point-max))
@@ -474,9 +460,7 @@ Optional argument ARG, if given needs to be a
 buffer in a split"
   (interactive "P")
   (let* ((buffer (set-buffer (read-buffer "Zetteldesk Buffers: " nil nil #'zetteldesk-org-buffer-p)))
-	 (location (if zetteldesk-insert-scratch-or-current-buffer
-		       "*zetteldesk-scratch*"
-		     (current-buffer)))
+	 (location (zetteldesk-insert-location))
 	 (file (buffer-file-name buffer)))
     (set-buffer location)
     (goto-char (point-max))
@@ -487,8 +471,7 @@ buffer in a split"
       (while (not (org-next-visible-heading 1))
 	(org-metaright)))
     (replace-string "#+title: " "* "))
-  (when (equal arg '(4))
-    (switch-to-buffer-other-window "*zetteldesk-scratch*")))
+  (zetteldesk-insert-switch-to-scratch arg))
 
 (defun zetteldesk-insert-link-to-pdf (&optional arg)
   "Select a pdf file that is part of the `zetteldesk'.
@@ -517,9 +500,7 @@ useful."
   (interactive "P")
   (let* ((pdf-buffer (set-buffer (read-buffer "Zetteldesk Pdfs: " nil nil #'zetteldesk-pdf-p)))
 	 (file (buffer-file-name pdf-buffer))
-	 (location (if zetteldesk-insert-scratch-or-current-buffer
-		       "*zetteldesk-scratch*"
-		     (current-buffer)))
+	 (location (zetteldesk-insert-location))
 	 (page (read-from-minibuffer "Page: " "1"))
 	 (description (file-name-nondirectory (file-name-sans-extension file))))
     (with-current-buffer location
@@ -537,56 +518,5 @@ useful."
 	       (concat "pdf:" file "::" page)
 	       description)))))
 
-(defun zetteldesk-insert-info-contents (&optional arg)
-  "Select an info node that is part of the current `zetteldesk'.
-Uses a `completing-read' prompt for the selection.
-
-Then, in the *zetteldesk-scratch* buffer, go to the end of the
-buffer, insert a newline and a heading of the form \"Supportive
-Material - \" the node's name \"(Info)\" akin to what is done in
-`zetteldesk-insert-link-to-pdf'.  Then, insert the contents of the
-chosen info node, removing the first 2 lines which have the
-contextual links of the buffer, as they are not functional
-outside of the info buffer.  Also insert a link with the title
-\"See this node in its context\" which opens the node inside the
-info program. Finally, restore the buffer from which this
-function was called. Ideally, this wouldn't require a
-switch-to-buffer statement, but the function `Info-goto-node'
-used for this function switches the visible buffer to the info
-node and I couldn't find an alternative that only makes it
-current for editing operations, but doesn't change the visible
-buffer to it.
-
-I find the link to the actual info buffer is useful as a lot of
-the time, you might want to insert the buffer so you can store it
-with other useful information inside the zetteldesk-scratch
-buffer, but then, you are interested in looking into the other
-nodes of the manual you were reading.
-
-Optional argument ARG which is a `\\[universal-argument]' switch to the
-zetteldesk-scratch buffer in a split."
-  (interactive "P")
-  (let ((info_node (completing-read "Nodes: " zetteldesk-info-nodes))
-	(location (if zetteldesk-insert-scratch-or-current-buffer
-		      "*zetteldesk-scratch*"
-		    (current-buffer)))
-	(buffer (current-buffer)))
-    (Info-goto-node info_node)
-    (with-current-buffer location
-      (goto-char (point-max))
-      (newline)
-      (org-insert-heading)
-      (insert "Supportive Material - " info_node " (Info)")
-      (newline)
-      (save-excursion (insert-buffer-substring "*info*")
-		      (insert
-		       (org-link-make-string
-			(concat "elisp:(Info-goto-node \"" info_node "\")")
-			"See this node in its context")))
-      (kill-whole-line 2))
-    (switch-to-buffer buffer)
-    (when (equal arg '(4))
-      (switch-to-buffer-other-window "*zetteldesk-scratch*"))))
-
 (provide 'zetteldesk)
-;;; zetteldesk ends here
+;;; zetteldesk.el ends here

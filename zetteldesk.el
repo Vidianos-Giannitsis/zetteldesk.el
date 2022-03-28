@@ -47,11 +47,11 @@ NODE is an org-roam-node"
     buffer))
 
 (cl-defmethod org-roam-node-backlinkscount-number ((node org-roam-node))
-    "Access slot \"backlinks\" of org-roam-node struct CL-X. This
-    is identical to `org-roam-node-backlinkscount' with the
-    difference that it returns a number instead of a fromatted
-    string. This is to be used in
-    `org-roam-node-sort-by-backlinks'"
+    "Access slot \"backlinks\" of org-roam-node struct CL-X.
+This is identical to `org-roam-node-backlinkscount' with the
+difference that it returns a number instead of a fromatted
+string. This is to be used in `org-roam-node-sort-by-backlinks'.
+NODE is an org-roam-node."
     (let* ((count (caar (org-roam-db-query
 			 [:select (funcall count source)
 				  :from links

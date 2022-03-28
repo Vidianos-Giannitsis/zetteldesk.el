@@ -49,7 +49,9 @@ To install in a Doom configuration, put the following declaration in your =packa
 * Sample Config
   For those of you who are not so much the reading types and just want a working config, which you can explore later I will leave a config that sets everything up here. I have tried to make the keybinding hydra as self explanatory as possible, and if you check function docstrings you should be able to understand what this does, but for a better idea, you should (in my opinion) check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] and the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]]. But then again, I like reading docs, so if you don't, you may not agree.
 
-  This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, this is mostly an org-roam extension with some other things on the side) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro (which I find the most visually appealing way to write macros). They are all on Melpa so you shouldn't have trouble finding them.
+  This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, this is mostly an org-roam extension with some other things on the side) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro (which I find the most visually appealing way to write macros). I also have a require statement on the optional extension zetteldesk-ref. I think its very useful, so I included it, but if you don't want it, you can skip it. Note, that for that to work, [[https://github.com/tmalsburg/helm-bibtex][Bibtex-Completion]] also needs to be set up, as it uses a function from that package to fetch bibtex entries with notes.
+
+  They are all on Melpa so you shouldn't have trouble finding them.
 
   #+BEGIN_SRC elisp
 
@@ -57,6 +59,7 @@ To install in a Doom configuration, put the following declaration in your =packa
     (zetteldesk-mode 1)
     (setq zetteldesk-hydra-prefix (kbd "C-c z"))
     (require 'zetteldesk-kb)
+    (require 'zetteldesk-ref)
 
   #+END_SRC
 
@@ -93,10 +96,13 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   But first, here is a list of the main features of the package: 
   - Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of an org-roam node
   - Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
-  - Save specific parts of a manual inside the Info program to seamlessly jump between specific info nodes, even if unrelated
   - Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
-  - Insert the contents of an org-file or an Info-node to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) and Info-nodes in the zetteldesk respectively. 
+  - Insert the contents of an org-file to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) in the zetteldesk. 
   - Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
+  - A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
+  - Save specific parts of a manual inside the Info program to seamlessly jump between specific info nodes, even if unrelated. Furthermore, have the ability to insert the Info node to the zetteldesk-scratch.
+
+    The last two are implemented in a seperate extension zetteldesk-ref.el, which I highly recommend.
   
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 

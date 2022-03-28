@@ -62,8 +62,7 @@
     ("p" zetteldesk-add-poi-or-moc-backlink-to-desktop "Select MOC or POI - Add one of its backlinks"))
 
    "Other"
-   (("a" zetteldesk-add-to-desktop "Add Buffer")
-    ("i" zetteldesk-add-info-node-to-desktop "Add Info Node"))))
+   (("a" zetteldesk-add-to-desktop "Add Buffer"))))
 
 (pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk")
   ("Org-Roam"
@@ -71,8 +70,7 @@
     ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
 
    "Other"
-   (("r" zetteldesk-remove-from-desktop "Remove Buffer")
-    ("i" zetteldesk-remove-info-node-from-desktop "Remove Info Node"))))
+   (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))
 
 (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk")
   ("Org-Roam"
@@ -84,16 +82,14 @@
 
    "Supplementary Material to *zetteldesk-scratch*"
     (("p" zetteldesk-insert-link-to-pdf "Link to PDF")
-     ("o" zetteldesk-insert-org-file-contents "Org File Contents")
-     ("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
+     ("o" zetteldesk-insert-org-file-contents "Org File Contents"))))
 
 ;; The Primary Hydra
 
 (pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra")
   ("Filter Functions"
    (("b" zetteldesk-switch-to-buffer "Switch to Zetteldesk Buffer")
-    ("n" zetteldesk-node-find "Find Zetteldesk Node")
-    ("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node"))
+    ("n" zetteldesk-node-find "Find Zetteldesk Node"))
 
    "Add/Remove Hydras"
    (("r" zetteldesk-remove-hydra/body "Run the Removing Hydra")

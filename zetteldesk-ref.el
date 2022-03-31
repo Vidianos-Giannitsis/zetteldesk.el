@@ -36,14 +36,14 @@
 (require 'bibtex-completion)
 
 ;; -- Reference Nodes from Bibtex Entries --
-;; (defun zetteldesk-note-refs-p ()
-;;   "Predicate function to find all bibtex completion candidates with a note.
+(defun zetteldesk-note-refs-p ()
+  "Predicate function to find all bibtex completion candidates with a note.
 
-;; Checks if every candidate has the \"=has-note=\" tag using
-;; `assoc' and if it does, collects that candidate"
-;;   (cl-loop for ref in (bibtex-completion-candidates)
-;; 	   if (assoc "=has-note=" ref)
-;; 	   collect ref))
+ Checks if every candidate has the \"=has-note=\" tag using
+ `assoc' and if it does, collects that candidate"
+  (cl-loop for ref in (bibtex-completion-candidates)
+	   if (assoc "=has-note=" ref)
+ 	   collect ref))
 
 (defun zetteldesk-citekey-from-refs ()
   "Function to find the \"=key=\" tag from a list of candidates.

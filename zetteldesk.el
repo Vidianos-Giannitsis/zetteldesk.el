@@ -48,6 +48,7 @@ NODE is an org-roam-node"
 
 (cl-defmethod org-roam-node-backlinkscount-number ((node org-roam-node))
     "Access slot \"backlinks\" of org-roam-node struct CL-X.
+
 This is identical to `org-roam-node-backlinkscount' with the
 difference that it returns a number instead of a fromatted
 string. This is to be used in `org-roam-node-sort-by-backlinks'.
@@ -146,6 +147,18 @@ This function is used as a filter function to create
       (not (eq (default-value 'zetteldesk) (buffer-local-value 'zetteldesk (org-roam-node-buffer NODE))))
     nil))
 
+(defmacro zetteldesk-mode-buffer-p (BUFFER MODE)
+  "Check if BUFFER is part of the `zetteldesk' and in major-mode MODE.
+
+This macro is meant to be used to write filter functions to be
+passed to `read-buffer' variants such as
+`zetteldesk-org-buffer-p' which is used in
+`zetteldesk-insert-org-file-contents'. BUFFER is in the form
+required for `read-buffer' while MODE should be a symbol such as
+'org-mode."
+  `(and (zetteldesk-buffer-p ,BUFFER)
+	(eq (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
+
 (defun zetteldesk-org-buffer-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk'.
 Then check if the file is an org file but not one that belongs to
@@ -156,11 +169,11 @@ This is used as the filter function for
 file, but as `zetteldesk-insert-node-contents' is a superior
 version for org-roam nodes, that function should not prompts for
 those files"
-  (and (zetteldesk-buffer-p BUFFER) (eq (buffer-local-value 'major-mode (cdr BUFFER)) 'org-mode)))
+  (zetteldesk-mode-buffer-p BUFFER 'org-mode))
 
 (defun zetteldesk-pdf-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk' and also a pdf file."
-  (and (zetteldesk-p BUFFER) (eq (buffer-local-value 'major-mode (cdr BUFFER)) 'pdf-view-mode)))
+  (zetteldesk-mode-buffer-p BUFFER 'pdf-view-mode))
 
 ;; -- ADD/REMOVE THINGS IN THE ZETTELDESK --
 ;; To get a system where the user can get multiple filtered views of
@@ -168,11 +181,22 @@ those files"
 ;; that allow the user to add them to something. And then, you also
 ;; need ways to remove things, because people make mistakes.
 
+(defmacro zetteldesk--add-buffer (BUFFER)
+  "Add BUFFER to the current `zettelesk'.
+
+This is a low-level macro used in all zetteldesk-add
+functions. Given BUFFER it creates the code required to add the
+buffer to the zetteldesk. For example all
+`zetteldesk-add-to-desktop' is, is an interactive call to this
+macro. Other functions need more stuff, but deep-down they all
+use this macro."
+  `(with-current-buffer ,BUFFER	
+     (setq-local zetteldesk "foo")))
+
 (defun zetteldesk-add-to-desktop (BUFFER)
   "Add BUFFER to the current `zetteldesk'."
   (interactive "b")
-  (with-current-buffer BUFFER
-    (setq-local zetteldesk "foo")))
+  (zetteldesk--add-buffer BUFFER))
 
 (defun zetteldesk-add-node-to-desktop (NODE)
   "Add NODE to the `zetteldesk'.
@@ -183,10 +207,8 @@ org-roam node read through `org-roam-node-read'"
 	 (file (org-roam-node-file NODE))
 	 (org-startup-with-latex-preview nil))
     (if (not (eq buffer nil))
-	(with-current-buffer buffer
-	  (setq-local zetteldesk "foo"))
-      (with-current-buffer (find-file-noselect file)
-	(setq-local zetteldesk "foo")))))
+	(zetteldesk--add-buffer buffer)
+      (zetteldesk--add-buffer (find-file-noselect file)))))
 
 (defun zetteldesk-add-poi-or-moc-backlink-to-desktop ()
   "Prompts the user to select an org-roam node that has a specific tag.
@@ -221,16 +243,23 @@ with them, and if so adds it to the `zetteldesk'"
 	      (buffer (org-roam-node-buffer node))
 	      (file (org-roam-node-file node)))
 	(if (not (eq buffer nil))
-	    (with-current-buffer buffer
-	      (setq-local zetteldesk "foo"))
-	  (with-current-buffer (find-file-noselect file)
-	    (setq-local zetteldesk "foo")))))))
+	    (zetteldesk--add-buffer buffer)
+	  (zetteldesk--add-buffer (find-file-noselect file)))))))
+
+(defmacro zetteldesk--remove-buffer (BUFFER)
+  "Remove BUFFER from the current `zetteldesk'.
+
+This is a low-level macro used in all zetteldesk-remove
+functions. This function is identical in logic to
+`zetteldesk--add-buffer', however it is for removing thingss
+instead of adding."
+  `(with-current-buffer ,BUFFER
+     (kill-local-variable 'zetteldesk)))
 
 (defun zetteldesk-remove-from-desktop (BUFFER)
   "Remove BUFFER from the current `zetteldesk'."
   (interactive "b")
-  (with-current-buffer BUFFER
-    (kill-local-variable 'zetteldesk)))
+  (zetteldesk--remove-buffer BUFFER))
 
 (defun zetteldesk-remove-node-from-desktop (NODE)
   "Remove NODE from the `zetteldesk'.
@@ -238,8 +267,7 @@ NODE is an org-roam node
 and is read through `org-roam-node-read'"
   (interactive (list (org-roam-node-read nil #'zetteldesk-node-p)))
   (let ((buffer (org-roam-node-buffer NODE)))
-    (with-current-buffer buffer
-      (kill-local-variable 'zetteldesk))))
+    (zetteldesk--remove-buffer buffer)))
 
 (defun zetteldesk-remove-backlinks-from-desktop ()
   "Remove from the `zetteldesk', the current buffer and its backlinks.
@@ -255,8 +283,7 @@ buffer to the desktop it removes it."
 	      (node (org-roam-node-from-id id))
 	      (buffer (org-roam-node-buffer node)))
 	(unless (eq buffer nil)
-	  (with-current-buffer buffer
-	    (kill-local-variable 'zetteldesk)))))))
+	  (zetteldesk--remove-buffer buffer))))))
 
 ;; -- FILTER FUNCTIONS --
 ;; This section is about defining all the functions that show you the

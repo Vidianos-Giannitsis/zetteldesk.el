@@ -50,9 +50,9 @@ NODE is an org-roam-node"
     "Access slot \"backlinks\" of org-roam-node struct CL-X.
 
 This is identical to `org-roam-node-backlinkscount' with the
-difference that it returns a number instead of a fromatted
-string. This is to be used in `org-roam-node-sort-by-backlinks'.
-NODE is an org-roam-node."
+    difference that it returns a number instead of a fromatted
+    string. This is to be used in
+    `org-roam-node-sort-by-backlinks'. NODE is an org-roam-node."
     (let* ((count (caar (org-roam-db-query
 			 [:select (funcall count source)
 				  :from links
@@ -80,7 +80,8 @@ work as this is a complimentary function to that"
    (org-roam-node-id (org-roam-node-at-point))))
 
 (defun org-roam-backlink-query* (NODE)
-  "Run `org-roam-backlink-query'.
+  "Run `org-roam-backlink-query' with NODE instead of `org-roam-node-at-point'.
+
 Instead of returning a list of the backlinks of
 `org-roam-node-at-point', find the backlinks of NODE.  This is
 handy in cases where NODE is read through `org-roam-node-read'
@@ -148,12 +149,12 @@ This function is used as a filter function to create
     nil))
 
 (defmacro zetteldesk-mode-buffer-p (BUFFER MODE)
-  "Check if BUFFER is part of the `zetteldesk' and in major-mode MODE.
+  "Check if BUFFER is part of the `zetteldesk' and in `major-mode' MODE.
 
 This macro is meant to be used to write filter functions to be
 passed to `read-buffer' variants such as
 `zetteldesk-org-buffer-p' which is used in
-`zetteldesk-insert-org-file-contents'. BUFFER is in the form
+`zetteldesk-insert-org-file-contents'.  BUFFER is in the form
 required for `read-buffer' while MODE should be a symbol such as
 'org-mode."
   `(and (zetteldesk-buffer-p ,BUFFER)
@@ -185,12 +186,12 @@ those files"
   "Add BUFFER to the current `zettelesk'.
 
 This is a low-level macro used in all zetteldesk-add
-functions. Given BUFFER it creates the code required to add the
-buffer to the zetteldesk. For example all
+functions.  Given BUFFER it creates the code required to add the
+buffer to the zetteldesk.  For example all
 `zetteldesk-add-to-desktop' is, is an interactive call to this
-macro. Other functions need more stuff, but deep-down they all
+macro.  Other functions need more stuff, but deep-down they all
 use this macro."
-  `(with-current-buffer ,BUFFER	
+  `(with-current-buffer ,BUFFER
      (setq-local zetteldesk "foo")))
 
 (defun zetteldesk-add-to-desktop (BUFFER)
@@ -250,7 +251,7 @@ with them, and if so adds it to the `zetteldesk'"
   "Remove BUFFER from the current `zetteldesk'.
 
 This is a low-level macro used in all zetteldesk-remove
-functions. This function is identical in logic to
+functions.  This function is identical in logic to
 `zetteldesk--add-buffer', however it is for removing thingss
 instead of adding."
   `(with-current-buffer ,BUFFER

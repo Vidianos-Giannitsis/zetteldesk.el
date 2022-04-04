@@ -65,8 +65,6 @@ node its related to."
     (let* ((title (org-entry-get nil "ITEM"))
 	   (node (org-roam-node-from-title-or-alias title))
 	   (file (org-roam-node-file node))
-	   (org-remark-notes-file-name
-	    (concat org-roam-directory "zetteldesk-margin-notes.org"))
 	   (ov (make-overlay beg end nil :front-advance)))
       (org-remark-highlight-save file
 				 beg end
@@ -84,4 +82,4 @@ a specific file, which is meant to be used with all margin notes
 coming from zetteldesk-scratch. This function switches to that
 file."
   (interactive)
-  (find-file (concat org-roam-directory "zetteldesk-margin-notes.org")))
+  (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))

@@ -39,11 +39,11 @@
 (defun zetteldesk-note-refs-p ()
   "Predicate function to find all bibtex completion candidates with a note.
 
- Checks if every candidate has the \"=has-note=\" tag using
- `assoc' and if it does, collects that candidate"
+Checks if every candidate has the \"=has-note=\" tag using
+`assoc' and if it does, collects that candidate"
   (cl-loop for ref in (bibtex-completion-candidates)
 	   if (assoc "=has-note=" ref)
- 	   collect ref))
+	   collect ref))
 
 (defun zetteldesk-citekey-from-refs ()
   "Function to find the \"=key=\" tag from a list of candidates.
@@ -100,8 +100,8 @@ function.  This is for those cases where it is helpful to use your
 own list of nodes, because a predicate function can not filter
 them in the way you want easily.
 
-INITIAL-INPUT, FILTER-FN, SORT-FN, REQUIRE-MATCH and PROMPT are
-the same as `org-roam-node-read'."
+INITIAL-INPUT, SORT-FN, FILTER-FN, REQUIRE-MATCH, PROMPT are the
+same as in `org-roam-node-read'."
   (let* ((nodes (org-roam-node-read--completions* node-list filter-fn sort-fn))
 	 (prompt (or prompt "Node: "))
 	 (node (completing-read
@@ -259,28 +259,6 @@ zetteldesk-scratch buffer in a split."
       (kill-whole-line 2))
     (switch-to-buffer buffer)
     (zetteldesk-insert-switch-to-scratch arg)))
-
-;; Add keybindings for this package in the default hydra
-
-(pretty-hydra-define+ zetteldesk-add-hydra ()
-  ("Other"
-   (("i" zetteldesk-add-info-node-to-desktop "Add Info Node"))))
-
-(pretty-hydra-define+ zetteldesk-remove-hydra ()
-  ("Other"
-   (("i" zetteldesk-remove-info-node-from-desktop "Remove Info Node"))))
-
-(pretty-hydra-define+ zetteldesk-insert-hydra ()
-  ("Org-Roam"
-   (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))
-
-   "Supplementary Material to *zetteldesk-scratch*"
-   (("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
-
-(pretty-hydra-define+ zetteldesk-main-hydra ()
-  ("Filter Functions"
-   (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node")
-    ("l" zetteldesk-find-ref-node "Go to Zetteldesk Literature Node"))))
 
 (provide 'zetteldesk-ref)
 ;;; zetteldesk-ref.el ends here

@@ -94,16 +94,16 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   Then, I have prepared a few demos of the main features of the package, for you to look at to get an idea. For more detailed documentation, check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] of the package and the function docstrings. This is a short showcase of the main features.
 
   But first, here is a list of the main features of the package: 
-  - Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of an org-roam node
-  - Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
-  - Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
-  - Insert the contents of an org-file to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) in the zetteldesk. 
-  - Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
-  - A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
-  - Save specific parts of a manual inside the Info program to seamlessly jump between specific info nodes, even if unrelated. Furthermore, have the ability to insert the Info node to the zetteldesk-scratch.
+  1. Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of an org-roam node
+  2. Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
+  3. Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
+  4. Save specific parts of a manual inside the Info program to seamlessly jump between specific info nodes, even if unrelated. Furthermore, have the ability to insert the Info node to the zetteldesk-scratch.
+  5. Insert the contents of an org-file to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) in the zetteldesk. 
+  6. Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
+  7. A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
 
-    The last two are implemented in a seperate extension zetteldesk-ref.el, which I highly recommend.
-  
+     Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-ref.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally. Feature number 7, referring to reference nodes is the other thing contained in zetteldesk-ref.el. Its an optional extension to handle reference nodes written with org-noter. It is one of the more personalized parts of this package and introduces a dependency on the ~bibtex-completion~ package. However, its in my opinion not necessary to show in a "Getting Started" for the package so information about it will be in the Wiki.
+
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/add_zetteldesk.gif]]

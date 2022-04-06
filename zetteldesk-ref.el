@@ -1,10 +1,10 @@
-;;; zetteldesk-ref.el --- A zetteldesk extension for use with the Info
-;;; program and literature nodes
+;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with
+;;; literature nodes.
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "0.2") (bibtex-completion))
+;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
 
@@ -29,6 +29,11 @@
 ;; associated to a bibtex entry which are mostly powered by
 ;; org-noter.  This code makes these reference materials interface
 ;; better with the zetteldesk.
+
+;; Despite not in the hard dependencies of the package, it is highly
+;; recommended you use org-roam-bibtex with this package. Its the main
+;; package for creating literature notes with org-roam and what this
+;; does is make zetteldesk interface better with such nodes.
 
 ;;; Code:
 
@@ -145,8 +150,7 @@ article.  These are gathered with `zetteldesk-node-from-refs' and
 shown to the user through `org-roam-node-read*' filtered
 according to `zetteldesk-node-p'.
 
-After selection, insert its citekey at point for future
-reference, then in the location determined by
+After selection, in the location determined by
 `zetteldesk-insert-location' (typically *zetteldesk-scratch*), go
 to `point-max', insert a newline and then insert the contents of
 the selected node but remove the first 4 lines which is the
@@ -157,14 +161,20 @@ node: \" is entered suffixed by the citekey of the entry.
 
 If given the optional argument ARG, which needs to be the
 `\\[universal-argument]' also switch to the *zetteldesk-scratch*
-buffer in a split."
+buffer in a split. If given `\\[universal-argument]'
+`\\[universal-argument]' also insert the citekey in the current
+buffer. In `zetteldesk-insert-node-contents', inserting a link to
+the node is the default behaviour and a seperate function is
+implemented for when you don't want that. In this version, it
+made more sense to order it this way in my opinion."
   (interactive "P")
   (let* ((node
 	  (org-roam-node-read* (zetteldesk-node-from-refs) nil #'zetteldesk-node-p))
 	 (file (org-roam-node-file node))
 	 (location (zetteldesk-insert-location))
 	 (citekey (concat "cite:" (car (org-roam-node-refs node)))))
-    (insert citekey)
+    (when (equal arg '(16))
+      (insert citekey))
     (set-buffer location)
     (goto-char (point-max))
     (save-excursion
@@ -181,84 +191,15 @@ buffer in a split."
 	    citekey))
   (zetteldesk-insert-switch-to-scratch arg))
 
-;; -- Info Nodes --
-(defcustom zetteldesk-info-nodes '()
-  "List of info nodes that are part of the zetteldesk.
-Initialised as an empty list"
-  :type 'list
-  :group 'zetteldesk)
+;; Add keybindings for this package in the default hydra
 
-(defun zetteldesk-add-info-node-to-desktop ()
-  "Find the current info-node.
-Then add its name to the list of the variable
-`zetteldesk-info-nodes'"
-  (interactive)
-  (add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
+(pretty-hydra-define+ zetteldesk-insert-hydra ()
+  ("Org-Roam"
+   (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
 
-(defun zetteldesk-remove-info-node-from-desktop ()
-  "Remove an info-node from the `zetteldesk'.
-The node is selected through a `completing-read' menu of
-`zetteldesk-info-nodes'"
-  (interactive)
-  (setq zetteldesk-info-nodes (remove
-			       (completing-read "Info Nodes: " zetteldesk-info-nodes)
-			       zetteldesk-info-nodes)))
-
-(defun zetteldesk-info-goto-node ()
-  "Zetteldesk filter function for `Info-goto-node'.
-
-Prompts the user to select a node from the list
-`zetteldesk-info-nodes' and jumps to that node"
-  (interactive)
-  (Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
-
-(defun zetteldesk-insert-info-contents (&optional arg)
-  "Select an info node that is part of the current `zetteldesk'.
-Uses a `completing-read' prompt for the selection.
-
-Then, in the *zetteldesk-scratch* buffer, go to the end of the
-buffer, insert a newline and a heading of the form \"Supportive
-Material - \" the node's name \"(Info)\" akin to what is done in
-`zetteldesk-insert-link-to-pdf'.  Then, insert the contents of the
-chosen info node, removing the first 2 lines which have the
-contextual links of the buffer, as they are not functional
-outside of the info buffer.  Also insert a link with the title
-\"See this node in its context\" which opens the node inside the
-info program. Finally, restore the buffer from which this
-function was called. Ideally, this wouldn't require a
-switch-to-buffer statement, but the function `Info-goto-node'
-used for this function switches the visible buffer to the info
-node and I couldn't find an alternative that only makes it
-current for editing operations, but doesn't change the visible
-buffer to it.
-
-I find the link to the actual info buffer is useful as a lot of
-the time, you might want to insert the buffer so you can store it
-with other useful information inside the zetteldesk-scratch
-buffer, but then, you are interested in looking into the other
-nodes of the manual you were reading.
-
-Optional argument ARG which is a `\\[universal-argument]' switch to the
-zetteldesk-scratch buffer in a split."
-  (interactive "P")
-  (let ((info_node (completing-read "Nodes: " zetteldesk-info-nodes))
-	(location (zetteldesk-insert-location))
-	(buffer (current-buffer)))
-    (Info-goto-node info_node)
-    (with-current-buffer location
-      (goto-char (point-max))
-      (newline)
-      (org-insert-heading)
-      (insert "Supportive Material - " info_node " (Info)")
-      (newline)
-      (save-excursion (insert-buffer-substring "*info*")
-		      (insert
-		       (org-link-make-string
-			(concat "elisp:(Info-goto-node \"" info_node "\")")
-			"See this node in its context")))
-      (kill-whole-line 2))
-    (switch-to-buffer buffer)
-    (zetteldesk-insert-switch-to-scratch arg)))
+(pretty-hydra-define+ zetteldesk-main-hydra ()
+  ("Filter Functions"
+   (("l" zetteldesk-find-ref-node "Go to Zetteldesk Literature Node"))))
 
 (provide 'zetteldesk-ref)
 ;;; zetteldesk-ref.el ends here

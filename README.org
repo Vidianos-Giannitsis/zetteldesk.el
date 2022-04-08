@@ -46,12 +46,25 @@ To install in a Doom configuration, put the following declaration in your =packa
   :recipe (:host github :repo "Vidianos-Giannitsis/zetteldesk.el"))
 #+end_src
 
-* Sample Full Config
+* Sample Config
   For those of you who are not so much the reading types and just want a working config, which you can explore later I will leave a config that sets everything up here. I have tried to make the keybinding hydra as self explanatory as possible, and if you check function docstrings you should be able to understand what this does, but for a better idea, you should (in my opinion) check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] and the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]]. But then again, I like reading docs, so if you don't, you may not agree.
 
-  This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, this is mostly an org-roam extension with some other things on the side) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro (which I find the most visually appealing way to write macros). I also have a require statement on optional extensions such as zetteldesk-ref and zetteldesk-info. I think they are very useful, so I include them, but if you don't want them, you can skip them. Zetteldesk-info doesn't have any dependencies (it was originally part of zetteldesk.el). Note, that for that to work, [[https://github.com/tmalsburg/helm-bibtex][Bibtex-Completion]] also needs to be set up, as it uses a function from that package to fetch bibtex entries with notes.
-
+  This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, this is mostly an org-roam extension with some other things on the side) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro (which I find the most visually appealing way to write macros).
+  
   They are all on Melpa so you shouldn't have trouble finding them.
+
+  #+BEGIN_SRC elisp
+
+    (require 'zetteldesk)
+    (zetteldesk-mode 1)
+    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+
+  #+END_SRC
+
+  After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
+
+** Sample full config
+  This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. For deciding which ones you like read on or check out their relevant sections in the Wiki of the package. But, since the point of the sample is to not have to read on and try to explore these yourself, I will warn you of their dependencies. All of the optional stuff depends on zetteldesk.el and zetteldesk-kb.el (for adding their own keybindings to the big hydra). However, zetteldesk-ref also has a dependency on bibtex-completion (helm or ivy bibtex that is) and zetteldesk-remark has a dependency on org-remark. These packages are essential for these extensions to work as their point is to better integrate with those packages I typically use in my workflow. For zetteldesk-ref, if you prefer a framework such as Citar, there is work being done on that (check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/issues/5][here]]). However, due to the fact that Citar's completion candidate functions are a bit more intricate than the ones on bibtex-completion this isn't ready.
 
   #+BEGIN_SRC elisp
 
@@ -61,13 +74,13 @@ To install in a Doom configuration, put the following declaration in your =packa
     (require 'zetteldesk-kb)
     (require 'zetteldesk-ref)
     (require 'zetteldesk-info)
-
+    (require 'zetteldesk-remark)
+    
   #+END_SRC
 
-  After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
-
 ** Doom Emacs Configurations
-From here, we have a few configuration options.
+If you use Doom Emacs, fear not, we have some configuration options for it, courtesy of @jlcolbert.
+
 Put the one you want in your =config.el=.
 These are suggested keybindings, but feel free to change yours.
 
@@ -82,6 +95,15 @@ The easiest configuration is to use the hydra keybindings:
 #+end_src
 For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/Doom-Configuration][Doom Configuration]] page in the Wiki.
 
+* Keybindings
+  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier. 
+
+  For this reason, I have defined a set of hydras for the package's defaults, but I have not defined a prefix-key for the hydra, as that is something you will have to decide yourself imo. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package. This addon was originally envisioned to be fully optional, but as I have made some side packages for zetteldesk.el, these assume you have zetteldesk-kb.el loaded and add on to its keybindings. The logic is that zetteldesk-kb.el should only have the keybindings of zetteldesk.el and the rest of the extensions should define their keybindings inside their own file. In a way, this makes this keybinding library more or less mandatory to use the extensions, but no one forces you to use these bindings. I for one load them in my config but don't use the hydra too much as I prefer my own set of bindings.
+ 
+  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. If you customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~), the main hydra will automatically be bound to that key in every buffer with zetteldesk-mode active (meaning every buffer as its a global minor mode). Note though that due to the structure of the package, and my decision to not define a prefix key by default, you will need to set its value before loading the library as it will signal an error otherwise (due to the ~define-key~ expecting a keybinding and getting ~nil~).
+
+  The sample code for loading this is basically the minimal example for above so I don't need to add any more.
+
 * Getting Started
   
   First things first, once you have the package in your load-path, you need to require and activate the global minor-mode zetteldesk-mode. This mode does some background work to create a buffer named zetteldesk-scratch. This essentially acts as your desktop. This is where you put everything really.
@@ -94,7 +116,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   Then, I have prepared a few demos of the main features of the package, for you to look at to get an idea. For more detailed documentation, check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] of the package and the function docstrings. This is a short showcase of the main features.
 
-  But first, here is a list of the main features of the package: 
+  But first, here is a list of the main features of the package as seen below: 
   1. Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of an org-roam node
   2. Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
   3. Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
@@ -102,8 +124,11 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   5. Insert the contents of an org-file to the zetteldesk-scratch as supplementary material to org-roam nodes. Again, the selection is filtered to org files (*but not* org-roam nodes) in the zetteldesk. 
   6. Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
   7. A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
+  8. Integrating the zetteldesk-scratch buffer with org-remark so you can freely take margin notes from it albeit it not being associated with a buffer.
 
-     Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally. Feature number 7, referring to reference nodes is the other thing contained in zetteldesk-ref.el. Its an optional extension to handle reference nodes written with org-noter. It is one of the more personalized parts of this package and introduces a dependency on the ~bibtex-completion~ package. However, its in my opinion not necessary to show in a "Getting Started" for the package so information about it will be in the Wiki.
+     Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally.
+
+     From feature 7 and onwards (currently its just 7 and 8), these features come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be undocumented here. However, if you check the wiki, there will be ample info for these there.
 
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
@@ -144,55 +169,6 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   And that's the core of the package, which I wanted to showcase. For more detailed docs and part of the workflow I use with this explained, do check the package's wiki. 
   
-* Keybindings
-  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier. 
-
-  For this reason, I have defined a set of hydras for the package's defaults, but I have not defined a prefix-key for the hydra, as that is something you will have to decide yourself imo. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
-
-  But, as I consider it fully optional it's not in the main part of the package. Its in a seperate elisp file zetteldesk-kb.el, to load it use
-  #+BEGIN_SRC elisp
-    (require 'zetteldesk-kb)
-  #+END_SRC
-
-  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. If you customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~), the main hydra will automatically be bound to that key in every buffer with zetteldesk-mode active (meaning every buffer as its a global minor mode). Note though that due to the structure of the package, and my decision to not define a prefix key by default, you will need to set its value before loading the library as it will signal an error otherwise (due to the ~define-key~ expecting a keybinding and getting ~nil~). 
-
-* Debugging
-  This code is tested only on my machine, so there may be unexpected errors. If you find one, I would appreciate if you filed an issue about it. But before doing that, make sure you try reproducing it with emacs -Q. As a convenience, I use the following code to setup package.el, org-roam and finally zetteldesk.el in an emacs -Q buffer so I can test with a clean slate.
-
-  #+BEGIN_SRC elisp
-
-    ;; Setup package.el
-    (require 'package)
-    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-			     ("elpa" . "https://elpa.gnu.org/packages/")))
-
-    (package-initialize)
-    (unless package-archive-contents
-      (package-refresh-contents))
-
-    ;; Setup Org-Roam
-    ;; Set the org-roam directory to ~/org_roam as that is what I use, if
-    ;; you need something different, change it before testing this
-
-    (add-hook 'after-init-hook 'org-roam-setup)
-    (setq org-roam-v2-ack t)
-
-    (use-package org-roam
-      :config
-      (setq org-roam-directory "~/org_roam"))
-
-    ;; Load zetteldesk.el and turn on zetteldesk-mode to have a
-    ;; functioning zetteldesk-scratch
-    (load-file "~/Zetteldesk/zetteldesk.el")
-    (zetteldesk-mode 1)
-
-    ;; Then for testing the hydras from the zetteldesk-kb library
-    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
-    (load-file "~/Zetteldesk/zetteldesk-kb.el")
-
-  #+END_SRC
-  
 * Background of the Package
   So if you reached up to here, you are probably interested in this. So you can check out the background story of this package. This is how I concieved the package and everything leading up to the release. I find it interesting to read something like this as it gives a good description and use case for this, in an organic manner. Note that its rather lengthy and unfiltered though.
   
@@ -226,11 +202,15 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   This is where we currently are. Another big thing I want to do, is to play around a bit with [[https://github.com/nobiot/org-remark][org-remark]]. I believe that in such tool, the ability to highlight things and add margin notes to it might be really useful. In general I do not really use this right now, so it will take some time to do that, but I look forward to it. I also add small things to it in a rather regular basis, whenever I feel something is missing. The development of this, is very closely connected with my studying, so if I find something I can improve I will try to do so.
 
 * Related Work & Thank yous
-  In any kind of work you do, its a good practice to cite your sources of inspiration, and how your work differentiates itself from others. Furthermore, its also a good practice to say thanks to the people that helped, either directly or inderictly to make this what it is. So here's mine
+  In any kind of work you do, its a good practice to cite your sources of inspiration, and how your work differentiates itself from others. Furthermore, its also a good practice to say thanks to the people that helped, either directly or indirectly to make this what it is. So here's mine
 
-  Of course this list couldn't start with anything other than the exceptional book [[https://takesmartnotes.com/][How to Take Smart Notes]] by Sonke Ahrens. This book is one of the best books I have read. It is an excellent introduction to the idea of the Zettelkasten and quotes from that book was what sparked the original thoughts. Its definitely my #1 source of inspiration. In that book, a [[http://zettelkasten.danielluedecke.de/en/][slip-box program]] is recommended. Trusting the author, I decided to check it out, even though I was certain I was gonna use emacs for my zettelkasten. This program is honestly pretty decent and the idea of the desktop was borrowed from its implementation in that program, as it was mentioned in the book. Furthermore its Outliner is a pretty good looking thing. Once I set up better integration with ~org-remark~ to make this better for outlining, that is going to be another major source of inspiration for me. Another thing that gave me inspiration is the book [[https://www.goodreads.com/book/show/16174518-how-to-make-a-complete-map-of-every-thought-you-think][How to Make a Complete Map of Every Thought you Think]], which had some pivotal ideas for my workflow.
+  Of course this list couldn't start with anything other than the exceptional book [[https://takesmartnotes.com/][How to Take Smart Notes]] by Sonke Ahrens. This book is one of the best books I have read. It is an excellent introduction to the idea of the Zettelkasten and quotes from that book was what sparked the original thoughts. Its definitely my #1 source of inspiration. In that book, a [[http://zettelkasten.danielluedecke.de/en/][slip-box program]] is recommended. Trusting the author, I decided to check it out, even though I was certain I was gonna use emacs for my zettelkasten. This program is honestly pretty decent and the idea of the desktop was borrowed from its implementation in that program, as it was mentioned in the book. Furthermore its Outliner is a pretty good looking thing. Another thing that gave me inspiration is the book [[https://www.goodreads.com/book/show/16174518-how-to-make-a-complete-map-of-every-thought-you-think][How to Make a Complete Map of Every Thought you Think]], which had some pivotal ideas for my workflow.
 
-  For the people that helped me, this was originally no one, because I made this myself on my free time. This has changed now however. @jlcolbert on github, has helped me with adding doom emacs related sections to the README/wiki, which is a nice contribution for me. @jdoggz helped me fix the graininess that the demonstrative gifs had in the beginning. The gifs were too large, but also grainy when viewed on firefox. He helped me get better quality gifs so its easier for everyone to follow.
+  And this list wouldn't be complete without a mention to the packages that all of this was built on. I honestly can't thank jethro and every one else associated with org-roam enough for creating such an amazing product. Org-roam is in my opinion of the best packages out there for Emacs and I use it every day. That's also why this package is built on top of it. I find it hard to imagine going back to not using this package. But besides org-roam, this package uses a lot of other Emacs packages to feel more complete. For example, as mentioned above, the keybindings are using the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra]] package. I definitely own abo-abo a thanks for making hydra, one of (at least in my opinion) easiest to use and most convenient packages for managing your keybindings. Then the pretty-hydra macro is just a cherry on-top which makes hydras look even better.
+
+  Then for the other extensions of the package, they are all based on a seperate package and create better integration of it with zetteldesk.el. I absolutely love the Info program built-in to emacs for reading documentation and that's why zetteldesk-info.el is a thing. Furthermore, due to my studies, its essential that I read scientific articles. Packages such as [[https://github.com/tmalsburg/helm-bibtex][Ivy-Bibtex]] and [[https://github.com/org-roam/org-roam-bibtex][Org-Roam-Bibtex]] make my life so much easier and a better integration of these and zetteldesk is what zetteldesk-ref.el is trying to achieve. Lastly, from the inception of this package, I was looking more into [[https://github.com/nobiot/org-remark][org-remark]] for integrating it with this package. I will be honest, I don't use that package so often myself, but its definitely great and I think the creation of zetteldesk-remark.el which integrates it with the zetteldesk will make me use it a lot more.
+
+  With that long list of indirect thank yous, we can move to people who have helped me. This was originally no one, because I made this myself on my free time. But due to the magic of open source community projects, I now have more friends (yayyy). @jlcolbert on github, has helped me with adding doom emacs related sections, small fixes and in general has been very helpful to me. @jdoggz helped me fix the graininess that the demonstrative gifs had in the beginning. The gifs were too large, but also grainy when viewed on firefox. He helped me get better quality gifs so its easier for everyone to follow. To be honest, if you used a chromium browser it wasn't even that bad, but holy was it a problem on firefox. So I am definitely grateful for him doing some of the research on the subject for me.
 
   Furthermore I wouldn't be able to get the knowledge to get here without a few people. The two main thank yous I would have to give are David Wilson from [[https://www.youtube.com/c/SystemCrafters][System Crafters on Youtube]] and the FSF for publishing the excellent book "An Introduction to Emacs Lisp" which helped me learn the language. Lastly, I would also like to thank [[https://www.reddit.com/r/emacs/][r/emacs]] on reddit. Reddit is infamous for not having a very good community. A lot of people disregard it as a rather bad social media with little use. But r/emacs, is truly a great community. Whenever I can't find an answer to a problem myself, I am certain that if I go to r/emacs and ask, someone will be able to help me, as people have in the past. Not to mention that I have gotten a lot of suggestions for this package from r/emacs, and to an extent its community helped me make this into what it is. So to everyone there, thanks for making this community what it is, its great!
 
@@ -241,7 +221,6 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   - [[https://github.com/alphapapa/bufler.el][Bufler]] is a package made for playing around more with your buffers more. Zetteldesk also has similar functionality, but its not its core focus, so obviously I would consider it inferior in this regard. I just added the buffer stuff as it made sense conceptually to me to do more than org-roam nodes.
   
 * COMMENT Things to do
-  An important plan of mine is to set up better org-remark integration with this package as its something really interesting I haven't gone around to doing. 
 
   Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
 

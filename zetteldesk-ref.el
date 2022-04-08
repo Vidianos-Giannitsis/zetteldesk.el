@@ -4,7 +4,7 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion))
+;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion) (zetteldesk-kb))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
 
@@ -38,6 +38,7 @@
 ;;; Code:
 
 (require 'zetteldesk)
+(require 'zetteldesk-kb)
 (require 'bibtex-completion)
 
 ;; -- Reference Nodes from Bibtex Entries --

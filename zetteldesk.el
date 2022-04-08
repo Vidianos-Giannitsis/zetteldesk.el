@@ -8,7 +8,7 @@
 ;; Created: 6th February 2022
 ;; License: GPL-3.0
 ;; Keywords: org-roam, revision, zettelkasten
-;; Version: 0.2
+;; Version: 0.4
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -358,7 +358,7 @@ for whichever usecase you might want"
 
 When turned on, this mode initialises the *zetteldesk-scratch*
 buffer, a useful part of the whole zetteldesk workflow."
-  nil
+  :init-value nil
   :global t
   :group 'zetteldesk
   :keymap zetteldesk-map

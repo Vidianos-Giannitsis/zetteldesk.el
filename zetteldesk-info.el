@@ -4,7 +4,7 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-info.el
-;; Package-Requires: ((zetteldesk "0.2"))
+;; Package-Requires: ((zetteldesk "0.2") (zetteldesk-kb))
 ;; Created: 6th April 2022 (as an independent file, existed since the
 ;; start)
 ;; License: GPL-3.0
@@ -33,6 +33,7 @@
 ;;; Code:
 
 (require 'zetteldesk)
+(require 'zetteldesk-kb)
 
 ;; -- Info Nodes --
 (defcustom zetteldesk-info-nodes '()

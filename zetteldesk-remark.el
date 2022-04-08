@@ -23,11 +23,11 @@
 ;;; Commentary:
 
 ;; This file defines some functions for zetteldesk.el which help with
-;; integrating it with org-remark. Org-remark requires the buffer from
-;; which its called to be associated with a file. However the
-;; zetteldesk-scratch buffer is not associated with a file. Therefore,
+;; integrating it with org-remark.  Org-remark requires the buffer from
+;; which its called to be associated with a file.  However the
+;; zetteldesk-scratch buffer is not associated with a file.  Therefore,
 ;; some special things need to be done to allow for this integration
-;; to work. However, I consider that this is a good implementation of
+;; to work.  However, I consider that this is a good implementation of
 ;; such behaviour.
 
 ;;; Code:
@@ -62,7 +62,7 @@ to a file."
   (setq zetteldesk-remark-title (read-string "Zetteldesk Remark Title: ")))
 
 (defun zetteldesk-remark-set-notes-file ()
-  "Helper function that sets `org-remark-notes-file-name''s value.
+  "Helper function to set `org-remark-notes-file-name''s value.
 
 This is the value the zetteldesk-remark functions expect and this function is run in the `zetteldesk-remark-mode-on-hook'."
   (setq org-remark-notes-file-name
@@ -76,7 +76,7 @@ This is the value the zetteldesk-remark functions expect and this function is ru
 
 If the buffer is not associated to a file name, this function
 should not return nil, but the value of
-`zetteldesk-remark-title'. This is to be able to use
+`zetteldesk-remark-title'.  This is to be able to use
 `zetteldesk-remark-mark' in the *zetteldesk-scratch*."
   (if (buffer-file-name)
       (or (cadr (assoc "TITLE" (org-collect-keywords '("TITLE"))))
@@ -92,11 +92,11 @@ It has a bonus optional parameter NODE-TITLE which acts as the
 name of the second level heading which will store the item and to
 not completely lose the items that were marked during the call to
 `zetteldesk-remark-mark' they are placed in a quote block right
-after the second level heading. Besides that it acts the same as
-`org-remark-highlight-save'. However,
+after the second level heading.  Besides that it acts the same as
+`org-remark-highlight-save'.  However,
 `zetteldesk-remark-highlight-mark' the function that calls this,
 gives it quite different arguments than
-`org-remark-highlight-mark' would. For more details refer to its
+`org-remark-highlight-mark' would.  For more details refer to its
 docstring.
 
 FILENAME, BEG, END, PROPS and TITLE are the same as in
@@ -175,20 +175,20 @@ FILENAME, BEG, END, PROPS and TITLE are the same as in
   "Variation of `org-remark-highlight-mark' for zetteldesk-remark.el.
 
 The main difference is that the zetteldesk alternative to some of
-the org-remark functions are run. This
+the org-remark functions are run.  This
 `zetteldesk-remark-highlight-save' instead of
 `org-remark-highlight-save' and
 `zetteldesk-remark-highlight-get-title' instead of
-`org-remark-highlight-get-title'. Also, when ran, this function
+`org-remark-highlight-get-title'.  Also, when ran, this function
 activates `zetteldesk-remark-mode' which runs some useful
 initialization functions that other functions of the package
 expect.
 
-In running the function, filename is no longer taken from
-`buffer-file-name' but from the node whose title is the current
-heading's title, the title is a `concat' of the string
+In running the function, filename is no longer taken from the
+function `buffer-file-name' but from the node whose title is the
+current heading's title, the title is a `concat' of the string
 *zetteldesk-scratch* and the value of
-`zetteldesk-remark-highlight-get-title'. Lastly, this gives
+`zetteldesk-remark-highlight-get-title'.  Lastly, this gives
 `zetteldesk-remark-highlight-save''s final argument which is the
 title of the node that is associated with this section.
 
@@ -238,7 +238,7 @@ identical to those in `org-remark-highlight-mark'."
   "Variation of `org-remark-mark' for zetteldesk-remark.el.
 
 The only difference is that `zetteldesk-remark-highlight-mark' is
-run instead of `org-remark-highlight-mark'. For details on what
+run instead of `org-remark-highlight-mark'.  For details on what
 the differences are, refer to its doctstring, while for details
 on the arguments BEG, END, ID and MODE refer to
 `org-remark-mark'."
@@ -251,12 +251,12 @@ on the arguments BEG, END, ID and MODE refer to
 				    (list "org-remark-label" "nil")))
 
 (defun zetteldesk-remark-switch-to-margin-notes ()
-  "Helper function which goes to the zetteldesk-margin-notes file.
+  "Helper function to go to the zetteldesk-margin-notes file.
 
 If `org-remark-mark' is called through its wrapper function
 `zetteldesk-remark-mark', it sets `org-remark-notes-file-name' to
 a specific file, which is meant to be used with all margin notes
-coming from zetteldesk-scratch. This function switches to that
+coming from zetteldesk-scratch.  This function switches to that
 file."
   (interactive)
   (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))

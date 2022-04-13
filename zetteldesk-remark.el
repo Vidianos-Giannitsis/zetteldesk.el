@@ -46,6 +46,19 @@ Initialised to nil and given a value when turning on
   :type 'string
   :group 'zetteldesk)
 
+(defcustom zetteldesk-remark-notes-file
+  (concat org-roam-directory "zetteldesk-margin-notes.org")
+  "Notes file for zetteldesk-remark notes.
+
+The point of zetteldesk-remark is to annotate the
+*zetteldesk-scratch* buffer, a buffer not associated with a
+file. Therefore, you need to define your own file for its margin
+notes or else it will be ~/marginalia.org. The default is
+zetteldesk-margin-notes.org inside the org-roam-directory, which
+I consider rather sensible."
+  :type 'string
+  :group 'zetteldesk)
+
 (define-minor-mode zetteldesk-remark-mode
   "Toggle the zetteldesk-remark-mode.
 
@@ -64,9 +77,9 @@ to a file."
 (defun zetteldesk-remark-set-notes-file ()
   "Helper function to set `org-remark-notes-file-name''s value.
 
-This is the value the zetteldesk-remark functions expect and this function is run in the `zetteldesk-remark-mode-on-hook'."
-  (setq org-remark-notes-file-name
-	(concat org-roam-directory "zetteldesk-margin-notes.org")))
+This is the value the zetteldesk-remark functions expect and this
+function is run in the `zetteldesk-remark-mode-on-hook'."
+  (setq org-remark-notes-file-name zetteldesk-remark-notes-file))
 
 (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-notes-file)
 (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-title)
@@ -226,7 +239,7 @@ identical to those in `org-remark-highlight-mark'."
 	     (zetteldesk-remark-highlight-save filename
 					       beg end
 					       (overlay-properties ov)
-					       (concat "*zetteldesk-scratch* "
+					       (concat "zetteldesk-scratch "
 						       (zetteldesk-remark-highlight-get-title))
 					       node-title)
 	   (message "org-remark: Highlights not saved; buffer is not visiting a file"))))))
@@ -259,7 +272,7 @@ a specific file, which is meant to be used with all margin notes
 coming from zetteldesk-scratch.  This function switches to that
 file."
   (interactive)
-  (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
+  (pop-to-buffer (find-file zetteldesk-remark-notes-file)))
 
 ;; -- Keybindings --
 

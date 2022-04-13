@@ -128,7 +128,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
      Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally.
 
-     From feature 7 and onwards (currently its just 7 and 8), these features come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be undocumented here. However, if you check the wiki, there will be ample info for these there.
+     From feature 7 and onwards (currently its just 7 and 8), these features come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be explained very briefly here. If you check the wiki, there will be ample info for these there. 
 
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
@@ -167,7 +167,11 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   
   Note that the above functions filter to only show the appropriate files (org files that are not in org-roam or pdfs respectively) and that if they are in the zetteldesk.
 
-  And that's the core of the package, which I wanted to showcase. For more detailed docs and part of the workflow I use with this explained, do check the package's wiki. 
+  Now, as promised, I will give you a very brief description of the optional extensions. For ~zetteldesk-ref.el~ the most important functions I would say are ~zetteldesk-find-ref-node~ and ~zetteldesk-insert-ref-node-contents~. This extension follows the model of ~zetteldesk.el~ very closely. It defines some predicates, makes filters and defines a special insertion behaviour. You can think of ~zetteldesk-find-ref-node~ as a combination of filters between ~ivy-bibtex-with-notes~ and ~zetteldesk-node-find~, while you can think of ~zetteldesk-insert-ref-node-contents~ as an inbetween of implementations between ~zetteldesk-insert-org-contents~ and ~zetteldesk-insert-node-contents~.
+
+  For ~zetteldesk-remark.el~, go in ~*zetteldesk-scratch*~, mark a section and run ~zetteldesk-remark-mark~. There's a lot of technical details behind this (which I explain in the wiki) but if you want to test it, ~zetteldesk-remark-mark~ essentially does all the magic.
+
+  For visual demonstrations of these, check their wiki sections.
   
 * Background of the Package
   So if you reached up to here, you are probably interested in this. So you can check out the background story of this package. This is how I concieved the package and everything leading up to the release. I find it interesting to read something like this as it gives a good description and use case for this, in an organic manner. Note that its rather lengthy and unfiltered though.

@@ -46,19 +46,6 @@ Initialised to nil and given a value when turning on
   :type 'string
   :group 'zetteldesk)
 
-(defcustom zetteldesk-remark-notes-file
-  (concat org-roam-directory "zetteldesk-margin-notes.org")
-  "Notes file for zetteldesk-remark notes.
-
-The point of zetteldesk-remark is to annotate the
-*zetteldesk-scratch* buffer, a buffer not associated with a
-file. Therefore, you need to define your own file for its margin
-notes or else it will be ~/marginalia.org. The default is
-zetteldesk-margin-notes.org inside the org-roam-directory, which
-I consider rather sensible."
-  :type 'string
-  :group 'zetteldesk)
-
 (define-minor-mode zetteldesk-remark-mode
   "Toggle the zetteldesk-remark-mode.
 
@@ -79,10 +66,33 @@ to a file."
 
 This is the value the zetteldesk-remark functions expect and this
 function is run in the `zetteldesk-remark-mode-on-hook'."
-  (setq org-remark-notes-file-name zetteldesk-remark-notes-file))
+  (setq org-remark-notes-file-name
+	(concat org-roam-directory "zetteldesk-margin-notes.org")))
+
+(defun zetteldesk-remark-reset-notes-file ()
+  "Reset `org-remark-notes-file-name' to its default value.
+
+This is a helper function for zetteldesk-remark to reset the
+value of that variable after turning off
+`zetteldesk-remark-mode-off-hook'"
+  (custom-reevaluate-setting 'org-remark-notes-file-name))
 
 (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-notes-file)
+(add-hook 'zetteldesk-remark-mode-off-hook 'zetteldesk-remark-reset-notes-file)
 (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-title)
+
+(defun org-top-level-heading-title ()
+  "Get the title of the top-level org heading.
+
+This is a helper function for `zetteldesk-remark-highlight-mark'.
+That function assumes that the heading's title is the title of a
+node, which is true only for top level headings in
+*zetteldesk-scratch*.  This ensures that the title it takes is
+always that of a top level heading."
+  (save-excursion
+    (while (not (= (car (org-heading-components)) 1))
+      (org-previous-visible-heading 1))
+    (nth 4 (org-heading-components))))
 
 (defun zetteldesk-remark-highlight-get-title ()
   "Variation of `org-remark-highlight-get-title' for zetteldesk-remark.el.
@@ -232,14 +242,14 @@ identical to those in `org-remark-highlight-mark'."
      ;; for mode, nil and :change result in saving the highlight.  :load
      ;; bypasses save.
      (unless (eq mode :load)
-       (let* ((node-title (org-entry-get nil "ITEM"))
+       (let* ((node-title (org-top-level-heading-title))
 	      (node (org-roam-node-from-title-or-alias node-title))
 	      (filename (org-roam-node-file node)))
 	 (if filename
 	     (zetteldesk-remark-highlight-save filename
 					       beg end
 					       (overlay-properties ov)
-					       (concat "zetteldesk-scratch "
+					       (concat "*zetteldesk-scratch* "
 						       (zetteldesk-remark-highlight-get-title))
 					       node-title)
 	   (message "org-remark: Highlights not saved; buffer is not visiting a file"))))))
@@ -272,7 +282,7 @@ a specific file, which is meant to be used with all margin notes
 coming from zetteldesk-scratch.  This function switches to that
 file."
   (interactive)
-  (pop-to-buffer (find-file zetteldesk-remark-notes-file)))
+  (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
 
 ;; -- Keybindings --
 

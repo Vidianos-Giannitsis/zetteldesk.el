@@ -229,3 +229,5 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
 
   Saving the current state of the Zetteldesk. Although I have no clue how. Maybe if I am able to save the value of a buffer local variable between sessions its possible. 
+
+  Polish some features like minor problems in zetteldesk-remark.el, implement the backwards idea to the existing one in zetteldesk-ref.el and start the process of publishing to MELPA.

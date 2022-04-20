@@ -46,21 +46,31 @@
   "Predicate function to find all bibtex completion candidates with a note.
 
 Checks if every candidate has the \"=has-note=\" tag using
-`assoc' and if it does, collects that candidate"
+`assoc' and if it does, collects that candidate."
   (cl-loop for ref in (bibtex-completion-candidates)
 	   if (assoc "=has-note=" ref)
 	   collect ref))
 
 (defun zetteldesk-citekey-from-refs ()
-  "Function to find the \"=key=\" tag from a list of candidates.
+  "Finds the \"=key=\" tag from a list of candidates.
 
 The list is collected with `zetteldesk-note-refs-p' which is a
 list of candidates that have notes. Collects it using `assoc'."
   (cl-loop for ref in (zetteldesk-note-refs-p)
 	   collect (assoc "=key=" ref)))
 
+(defun zetteldesk-citekey-from-node ()
+  "Collects the citekeys of org-roam-nodes in the `zetteldesk'.
+
+Ignores nodes for which `org-roam-node-refs' returns nil."
+  (let* ((init-list (org-roam-node-list))
+	 (zetteldesk-nodes (cl-remove-if-not #'zetteldesk-node-p init-list)))
+    (cl-loop for node in zetteldesk-nodes
+	     if (org-roam-node-refs node)
+	     collect (car (org-roam-node-refs node)))))
+
 (defun zetteldesk-node-from-refs ()
-  "Function that collects a list of ref nodes.
+  "Collects a list of ref nodes.
 
 The nodes are collected from their citekey using
 `org-roam-node-from-ref', while the citekeys themselves are
@@ -144,6 +154,44 @@ finding the file is done indirectly and not through
   (interactive)
   (find-file (org-roam-node-file (org-roam-node-read* (zetteldesk-node-from-refs) nil #'zetteldesk-node-p))))
 
+(defun zetteldesk-ivy-bibtex-with-notes (&optional arg)
+  "Search `zetteldesk' BibTeX entries with notes using `ivy-bibtex'.
+
+This function builds on `ivy-bibtex-with-notes', meaning it shows
+a list of bibtex entries with notes, however its filtering
+includes only nodes in the `zetteldesk'.
+
+With a prefix ARG the cache is invalidated and the bibliography
+reread."
+  (interactive "P")
+  (cl-letf* ((candidates (zetteldesk-note-refs-p))
+	     ((symbol-function 'bibtex-completion-candidates)
+	      (lambda ()
+		(cl-loop for ref in candidates
+			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
+				    (zetteldesk-citekey-from-node))
+			 collect ref))))
+    (ivy-bibtex arg)))
+
+(defun zetteldesk-helm-bibtex-with-notes (&optional arg)
+  "Search `zetteldesk' BibTeX entries with notes using `helm-bibtex'.
+
+This function builds on `helm-bibtex-with-notes', meaning it shows
+a list of bibtex entries with notes, however its filtering
+includes only nodes in the `zetteldesk'.
+
+With a prefix ARG the cache is invalidated and the bibliography
+reread."
+  (interactive "P")
+  (cl-letf* ((candidates (zetteldesk-note-refs-p))
+	     ((symbol-function 'bibtex-completion-candidates)
+	      (lambda ()
+		(cl-loop for ref in candidates
+			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
+				    (zetteldesk-citekey-from-node))
+			 collect ref))))
+    (helm-bibtex)))
+
 (defun zetteldesk-insert-ref-node-contents (&optional arg)
   "Select a node that is part of the current `zetteldesk' and a ref node.
 Ref nodes are nodes that refer to reference material such as an
@@ -198,9 +246,19 @@ made more sense to order it this way in my opinion."
   ("Org-Roam"
    (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
 
+(pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+  ("Org-Roam UI"
+   (("r" zetteldesk-find-ref-node))
+
+   "Helm-Bibtex UI"
+    (("h" zetteldesk-helm-bibtex-with-notes))
+
+    "Ivy-Bibtex UI"
+    (("i" zetteldesk-ivy-bibtex-with-notes))))
+
 (pretty-hydra-define+ zetteldesk-main-hydra ()
   ("Filter Functions"
-   (("l" zetteldesk-find-ref-node "Go to Zetteldesk Literature Node"))))
+   (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
 
 (provide 'zetteldesk-ref)
 ;;; zetteldesk-ref.el ends here

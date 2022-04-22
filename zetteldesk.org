@@ -1267,7 +1267,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
      `zetteldesk-node-from-refs'."
        (interactive
 	(list (org-roam-node-read* (zetteldesk-node-from-refs) nil #'zetteldesk-node-p)))
-       (let ((buffer (org-roam-node-buffer NODEE)))
+       (let ((buffer (org-roam-node-buffer NODE)))
 	 (zetteldesk--remove-buffer buffer)))
 
      (defun zetteldesk-find-ref-node ()
@@ -1533,11 +1533,11 @@ For my package zetteldesk.el, I define some keybindings in the file zetteldesk-k
 
   (pretty-hydra-define+ zetteldesk-add-hydra ()
     ("Org-Roam"
-     (("l" zetteldesk-add-ref-node-to-desktop))))
+     (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node"))))
 
   (pretty-hydra-define+ zetteldesk-remove-hydra ()
     ("Org-Roam"
-     (("l" zetteldesk-remove-ref-node-from-desktop))))
+     (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node"))))
 
   (pretty-hydra-define+ zetteldesk-main-hydra ()
     ("Filter Functions"

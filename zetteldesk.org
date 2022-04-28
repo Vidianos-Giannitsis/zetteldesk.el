@@ -33,7 +33,7 @@ This file was originally part of my emacs config in the org-roam section. Howeve
 
    #+BEGIN_SRC elisp :tangle zetteldesk.el
 
-     ;;; zetteldesk.el --- A revision and outlining tool for org-roam
+     ;;; zetteldesk.el --- A revision and outlining tool for org-roam  -*- lexical-binding: t; -*-
 
      ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
      ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
@@ -649,7 +649,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
 #+BEGIN_SRC elisp :tangle zetteldesk-kb.el
 
-  ;;; zetteldesk-kb.el --- Keybindings for zetteldesk.el
+  ;;; zetteldesk-kb.el --- Keybindings for zetteldesk.el  -*- lexical-binding: t; -*-
 
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
@@ -771,7 +771,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 * Org-remark integration
 ** Preamble
 #+BEGIN_SRC elisp :tangle zetteldesk-remark.el
-  ;;; zetteldesk-remark.el --- Org-Remark integration for zetteldesk.el
+  ;;; zetteldesk-remark.el --- Org-Remark integration for zetteldesk.el   -*- lexical-binding: t; -*-
 
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
@@ -1097,8 +1097,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
     This is just the intro text that needs to be in the start of the file
 
     #+BEGIN_SRC elisp :tangle zetteldesk-ref.el
-      ;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with
-      ;;; literature nodes.
+      ;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes.   -*- lexical-binding: t; -*-
 
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
@@ -1122,12 +1121,11 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
       ;;; Commentary:
 
-      ;; This package provides some optional improvements to
-      ;; zetteldesk.el.  Specifically it introduces mechanisms for handling
-      ;; nodes from the Info program built in to Emacs and literature notes
-      ;; associated to a bibtex entry which are mostly powered by
-      ;; org-noter.  This code makes these reference materials interface
-      ;; better with the zetteldesk.
+      ;; This package provides some optional improvements to zetteldesk.el.
+      ;; Specifically it introduces mechanisms for handling literature notes
+      ;; associated to a bibtex entry which are mostly powered by org-noter.
+      ;; This code makes these reference materials interface better with the
+      ;; zetteldesk.
 
       ;; Despite not in the hard dependencies of the package, it is highly
       ;; recommended you use org-roam-bibtex with this package.  Its the main
@@ -1383,8 +1381,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
     This is just the intro text that needs to be in the start of the file
 
     #+BEGIN_SRC elisp :tangle zetteldesk-info.el
-      ;;; zetteldesk-info.el --- A zetteldesk extension for interacting with
-      ;;; the info program
+      ;;; zetteldesk-info.el --- A zetteldesk extension for interacting with the info program   -*- lexical-binding: t; -*-
 
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>

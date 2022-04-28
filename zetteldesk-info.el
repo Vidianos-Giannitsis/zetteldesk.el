@@ -1,5 +1,4 @@
-;;; zetteldesk-info.el --- A zetteldesk extension for interacting with
-;;; the info program
+;;; zetteldesk-info.el --- A zetteldesk extension for interacting with the info program   -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>

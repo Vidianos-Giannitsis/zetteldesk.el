@@ -1,4 +1,4 @@
-;;; zetteldesk.el --- A revision and outlining tool for org-roam
+;;; zetteldesk.el --- A revision and outlining tool for org-roam  -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>

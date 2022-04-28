@@ -1,5 +1,4 @@
-;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with
-;;; literature nodes.
+;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes.   -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
@@ -23,12 +22,11 @@
 
 ;;; Commentary:
 
-;; This package provides some optional improvements to
-;; zetteldesk.el.  Specifically it introduces mechanisms for handling
-;; nodes from the Info program built in to Emacs and literature notes
-;; associated to a bibtex entry which are mostly powered by
-;; org-noter.  This code makes these reference materials interface
-;; better with the zetteldesk.
+;; This package provides some optional improvements to zetteldesk.el.
+;; Specifically it introduces mechanisms for handling literature notes
+;; associated to a bibtex entry which are mostly powered by org-noter.
+;; This code makes these reference materials interface better with the
+;; zetteldesk.
 
 ;; Despite not in the hard dependencies of the package, it is highly
 ;; recommended you use org-roam-bibtex with this package.  Its the main

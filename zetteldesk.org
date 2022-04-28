@@ -271,7 +271,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	  (zetteldesk--add-buffer (find-file-noselect file)))))
 
     (defun zetteldesk-add-poi-or-moc-backlink-to-desktop ()
-      "Prompts the user to select an org-roam node that has a specific tag.
+      "Prompt the user to select an org-roam node that has a specific tag.
     Looks for the POI or MOC tag (filtering done with
     `org-roam-node-poi-or-moc-p') and collects its ID and backlinks.
     Then, prompt the user to select one of its backlinks and add that
@@ -1130,7 +1130,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;; better with the zetteldesk.
 
       ;; Despite not in the hard dependencies of the package, it is highly
-      ;; recommended you use org-roam-bibtex with this package. Its the main
+      ;; recommended you use org-roam-bibtex with this package.  Its the main
       ;; package for creating literature notes with org-roam and what this
       ;; does is make zetteldesk interface better with such nodes.
 
@@ -1158,7 +1158,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 		collect ref))
 
      (defun zetteldesk-citekey-from-refs ()
-       "Finds the \"=key=\" tag from a list of candidates.
+       "Find the \"=key=\" tag from a list of candidates.
 
      The list is collected with `zetteldesk-note-refs-p' which is a
      list of candidates that have notes. Collects it using `assoc'."
@@ -1249,7 +1249,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
        "Add NODE to the `zetteldesk'.
 
      NODE is a literature note that is part of the org-roam
-     repository. The list of such nodes is gathered with
+     repository.  The list of such nodes is gathered with
      `zetteldesk-node-from-refs'."
        (interactive (list (org-roam-node-read* (zetteldesk-node-from-refs))))
        (let ((buffer (org-roam-node-buffer NODE))

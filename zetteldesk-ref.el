@@ -31,7 +31,7 @@
 ;; better with the zetteldesk.
 
 ;; Despite not in the hard dependencies of the package, it is highly
-;; recommended you use org-roam-bibtex with this package. Its the main
+;; recommended you use org-roam-bibtex with this package.  Its the main
 ;; package for creating literature notes with org-roam and what this
 ;; does is make zetteldesk interface better with such nodes.
 
@@ -52,7 +52,7 @@ Checks if every candidate has the \"=has-note=\" tag using
 	   collect ref))
 
 (defun zetteldesk-citekey-from-refs ()
-  "Finds the \"=key=\" tag from a list of candidates.
+  "Find the \"=key=\" tag from a list of candidates.
 
 The list is collected with `zetteldesk-note-refs-p' which is a
 list of candidates that have notes. Collects it using `assoc'."
@@ -143,7 +143,7 @@ same as in `org-roam-node-read'."
   "Add NODE to the `zetteldesk'.
 
 NODE is a literature note that is part of the org-roam
-repository. The list of such nodes is gathered with
+repository.  The list of such nodes is gathered with
 `zetteldesk-node-from-refs'."
   (interactive (list (org-roam-node-read* (zetteldesk-node-from-refs))))
   (let ((buffer (org-roam-node-buffer NODE))

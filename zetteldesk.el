@@ -212,7 +212,7 @@ org-roam node read through `org-roam-node-read'"
       (zetteldesk--add-buffer (find-file-noselect file)))))
 
 (defun zetteldesk-add-poi-or-moc-backlink-to-desktop ()
-  "Prompts the user to select an org-roam node that has a specific tag.
+  "Prompt the user to select an org-roam node that has a specific tag.
 Looks for the POI or MOC tag (filtering done with
 `org-roam-node-poi-or-moc-p') and collects its ID and backlinks.
 Then, prompt the user to select one of its backlinks and add that

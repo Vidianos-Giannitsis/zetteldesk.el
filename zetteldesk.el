@@ -395,6 +395,14 @@ expands to the needed code."
   `(when (equal ,arg '(4))
      (switch-to-buffer-other-window "*zetteldesk-scratch*")))
 
+(defmacro zetteldesk--replace-title ()
+  "Replace \"#+title: \" with \"* \".
+
+A lot of the zetteldesk-insert functions need this functionality
+so I implemented it as a simple macro."
+  `(while (search-forward "#+title: " nil t)
+     (replace-match "* " nil t)))
+
 (defun zetteldesk-switch-to-scratch-buffer (&optional arg)
   "Open the zetteldesk-scratch buffer in a split with the current buffer.
 
@@ -449,7 +457,7 @@ buffer in a split."
       (goto-char (point-max))
       (newline)
       (insert-file-contents file nil 67)
-      (replace-string "#+title: " "* ")))
+      (zetteldesk--replace-title)))
   (zetteldesk-insert-switch-to-scratch arg))
 
 (defun zetteldesk-insert-node-contents-without-link ()
@@ -473,7 +481,7 @@ second iteration to fix that issue."
       (goto-char (point-max))
       (newline)
       (insert-file-contents file nil 67)
-      (replace-string "#+title: " "* ")))
+      (zetteldesk--replace-title)))
   (switch-to-buffer-other-window "*zetteldesk-scratch*"))
 
 (defun zetteldesk-insert-org-file-contents (&optional arg)
@@ -498,7 +506,7 @@ buffer in a split"
     (save-excursion
       (while (not (org-next-visible-heading 1))
 	(org-metaright)))
-    (replace-string "#+title: " "* "))
+    (zetteldesk--replace-title))
   (zetteldesk-insert-switch-to-scratch arg))
 
 (defun zetteldesk-insert-link-to-pdf (&optional arg)

@@ -256,7 +256,7 @@ made more sense to order it this way in my opinion."
     (save-excursion
       (while (not (org-next-visible-heading 1))
 	(org-metaright)))
-    (replace-string "#+title: " "* ")
+    (zetteldesk--replace-title)
     (end-of-line 1)
     (newline)
     (insert "Bibtex entry for node: "

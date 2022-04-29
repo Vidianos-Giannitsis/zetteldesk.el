@@ -487,6 +487,14 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
        `(when (equal ,arg '(4))
 	  (switch-to-buffer-other-window "*zetteldesk-scratch*")))
 
+     (defmacro zetteldesk--replace-title ()
+       "Replace \"#+title: \" with \"* \".
+
+     A lot of the zetteldesk-insert functions need this functionality
+     so I implemented it as a simple macro."
+       `(while (search-forward "#+title: " nil t)
+	  (replace-match "* " nil t)))
+
      (defun zetteldesk-switch-to-scratch-buffer (&optional arg)
        "Open the zetteldesk-scratch buffer in a split with the current buffer.
 
@@ -541,7 +549,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	   (goto-char (point-max))
 	   (newline)
 	   (insert-file-contents file nil 67)
-	   (replace-string "#+title: " "* ")))
+	   (zetteldesk--replace-title)))
        (zetteldesk-insert-switch-to-scratch arg))
 
      (defun zetteldesk-insert-node-contents-without-link ()
@@ -565,7 +573,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	   (goto-char (point-max))
 	   (newline)
 	   (insert-file-contents file nil 67)
-	   (replace-string "#+title: " "* ")))
+	   (zetteldesk--replace-title)))
        (switch-to-buffer-other-window "*zetteldesk-scratch*"))
 
      (defun zetteldesk-insert-org-file-contents (&optional arg)
@@ -590,7 +598,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	 (save-excursion
 	   (while (not (org-next-visible-heading 1))
 	     (org-metaright)))
-	 (replace-string "#+title: " "* "))
+	 (zetteldesk--replace-title))
        (zetteldesk-insert-switch-to-scratch arg))
 
      (defun zetteldesk-insert-link-to-pdf (&optional arg)
@@ -1362,7 +1370,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 	 (save-excursion
 	   (while (not (org-next-visible-heading 1))
 	     (org-metaright)))
-	 (replace-string "#+title: " "* ")
+	 (zetteldesk--replace-title)
 	 (end-of-line 1)
 	 (newline)
 	 (insert "Bibtex entry for node: "

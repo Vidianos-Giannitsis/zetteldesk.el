@@ -3,9 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-;; Package-Requires: ((zetteldesk "0.2") (org-remark "1.0") (zetteldesk-kb))
+;; Package-Requires: ((zetteldesk "0.4") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
 ;; Created: 22nd March 2022
 ;; License: GPL-3.0
+;; Version: 0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -46,8 +47,9 @@ Initialised to nil and given a value when turning on
   :type 'string
   :group 'zetteldesk)
 
+;;;###autoload
 (define-minor-mode zetteldesk-remark-mode
-  "Toggle the zetteldesk-remark-mode.
+  "Toggle the `zetteldesk-remark-mode'.
 
 This mode initialises the value of `zetteldesk-remark-title', an
 important variable for using org-remark in buffers not associated
@@ -132,7 +134,6 @@ FILENAME, BEG, END, PROPS and TITLE are the same as in
 	 (line-num (org-current-line beg))
 	 (orgid (org-remark-highlight-get-org-id beg)))
     (with-current-buffer notes-buf
-      (when (featurep 'org-remark-convert-legacy) (org-remark-convert-legacy-data))
       ;;`org-with-wide-buffer is a macro that should work for non-Org file'
       (org-with-wide-buffer
        (let ((file-headline (or (org-find-property

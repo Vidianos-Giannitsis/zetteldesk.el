@@ -38,11 +38,10 @@ This file was originally part of my emacs config in the org-roam section. Howeve
      ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
      ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
      ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
-     ;; Package-Requires: ((org-roam "2.0"))
+     ;; Package-Requires: ((emacs "27.1") (org-roam "2.0"))
      ;; Tested on Emacs 27.2 and org-roam v2.2
      ;; Created: 6th February 2022
      ;; License: GPL-3.0
-     ;; Keywords: org-roam, revision, zettelkasten
      ;; Version: 0.4
 
      ;; This file is free software; you can redistribute it and/or modify
@@ -445,8 +444,9 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
        :type 'string
        :group 'zetteldesk)
 
+     ;;;###autoload
      (define-minor-mode zetteldesk-mode
-       "Toggles the global zetteldesk-mode.
+       "Toggles the global `zetteldesk-mode'.
 
      When turned on, this mode initialises the *zetteldesk-scratch*
      buffer, a useful part of the whole zetteldesk workflow."
@@ -518,9 +518,9 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	      (nodes_poi (cl-remove-if-not #'org-roam-node-poi-or-moc-p zetteldesk_nodes)))
 	 (while nodes_poi
 	   (let* ((node (car nodes_poi))
-		  (description (org-roam-node-formatted (car nodes_poi))))
+		  (description (org-roam-node-formatted node)))
 	     (insert (org-link-make-string
-		      (concat "id:" (org-roam-node-id (car nodes_poi)))
+		      (concat "id:" (org-roam-node-id node))
 		      description))
 	     (insert ", "))
 	   (setq nodes_poi (cdr nodes_poi)))))
@@ -784,9 +784,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-  ;; Package-Requires: ((zetteldesk "0.2") (org-remark "1.0") (zetteldesk-kb))
+  ;; Package-Requires: ((zetteldesk "0.4") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
   ;; Created: 22nd March 2022
   ;; License: GPL-3.0
+  ;; Version: 0.1
 
   ;; This file is free software; you can redistribute it and/or modify
   ;; it under the terms of the GNU General Public License as published by
@@ -838,8 +839,9 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
        :type 'string
        :group 'zetteldesk)
 
+     ;;;###autoload
      (define-minor-mode zetteldesk-remark-mode
-       "Toggle the zetteldesk-remark-mode.
+       "Toggle the `zetteldesk-remark-mode'.
 
      This mode initialises the value of `zetteldesk-remark-title', an
      important variable for using org-remark in buffers not associated
@@ -924,7 +926,6 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 	      (line-num (org-current-line beg))
 	      (orgid (org-remark-highlight-get-org-id beg)))
 	 (with-current-buffer notes-buf
-	   (when (featurep 'org-remark-convert-legacy) (org-remark-convert-legacy-data))
 	   ;;`org-with-wide-buffer is a macro that should work for non-Org file'
 	   (org-with-wide-buffer
 	    (let ((file-headline (or (org-find-property
@@ -1105,14 +1106,15 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
     This is just the intro text that needs to be in the start of the file
 
     #+BEGIN_SRC elisp :tangle zetteldesk-ref.el
-      ;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes.   -*- lexical-binding: t; -*-
+      ;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes   -*- lexical-binding: t; -*-
 
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-      ;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion) (zetteldesk-kb))
+      ;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion "2.0") (zetteldesk-kb "0.1") (emacs "26.1"))
       ;; Created: 27th March 2022
       ;; License: GPL-3.0
+      ;; Version: 0.1
 
       ;; This file is free software; you can redistribute it and/or modify
       ;; it under the terms of the GNU General Public License as published by
@@ -1133,12 +1135,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;; Specifically it introduces mechanisms for handling literature notes
       ;; associated to a bibtex entry which are mostly powered by org-noter.
       ;; This code makes these reference materials interface better with the
-      ;; zetteldesk.
-
-      ;; Despite not in the hard dependencies of the package, it is highly
-      ;; recommended you use org-roam-bibtex with this package.  Its the main
-      ;; package for creating literature notes with org-roam and what this
-      ;; does is make zetteldesk interface better with such nodes.
+      ;; zetteldesk
 
       ;;; Code:
 
@@ -1327,7 +1324,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 			      if (member (concat "cite:" (cdr (assoc "=key=" ref)))
 					 (zetteldesk-citekey-from-node))
 			      collect ref))))
-	 (helm-bibtex)))
+	 (helm-bibtex arg)))
 
      (defun zetteldesk-insert-ref-node-contents (&optional arg)
        "Select a node that is part of the current `zetteldesk' and a ref node.
@@ -1394,10 +1391,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-info.el
-      ;; Package-Requires: ((zetteldesk "0.2") (zetteldesk-kb))
-      ;; Created: 6th April 2022 (as an independent file, existed since the
-      ;; start)
+      ;; Package-Requires: ((zetteldesk "0.2") (zetteldesk-kb "0.1") (emacs "27.1"))
+      ;; Created: 6th April 2022 (as an independent file, existed since the start)
       ;; License: GPL-3.0
+      ;; Version: 0.1
 
       ;; This file is free software; you can redistribute it and/or modify
       ;; it under the terms of the GNU General Public License as published by

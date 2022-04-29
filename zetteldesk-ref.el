@@ -1,11 +1,12 @@
-;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes.   -*- lexical-binding: t; -*-
+;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes   -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion) (zetteldesk-kb))
+;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion "2.0") (zetteldesk-kb "0.1") (emacs "26.1"))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
+;; Version: 0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,12 +27,7 @@
 ;; Specifically it introduces mechanisms for handling literature notes
 ;; associated to a bibtex entry which are mostly powered by org-noter.
 ;; This code makes these reference materials interface better with the
-;; zetteldesk.
-
-;; Despite not in the hard dependencies of the package, it is highly
-;; recommended you use org-roam-bibtex with this package.  Its the main
-;; package for creating literature notes with org-roam and what this
-;; does is make zetteldesk interface better with such nodes.
+;; zetteldesk
 
 ;;; Code:
 
@@ -213,7 +209,7 @@ reread."
 			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
 				    (zetteldesk-citekey-from-node))
 			 collect ref))))
-    (helm-bibtex)))
+    (helm-bibtex arg)))
 
 (defun zetteldesk-insert-ref-node-contents (&optional arg)
   "Select a node that is part of the current `zetteldesk' and a ref node.

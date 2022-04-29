@@ -3,11 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
-;; Package-Requires: ((org-roam "2.0"))
+;; Package-Requires: ((emacs "27.1") (org-roam "2.0"))
 ;; Tested on Emacs 27.2 and org-roam v2.2
 ;; Created: 6th February 2022
 ;; License: GPL-3.0
-;; Keywords: org-roam, revision, zettelkasten
 ;; Version: 0.4
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -353,8 +352,9 @@ for whichever usecase you might want"
   :type 'string
   :group 'zetteldesk)
 
+;;;###autoload
 (define-minor-mode zetteldesk-mode
-  "Toggles the global zetteldesk-mode.
+  "Toggles the global `zetteldesk-mode'.
 
 When turned on, this mode initialises the *zetteldesk-scratch*
 buffer, a useful part of the whole zetteldesk workflow."
@@ -426,9 +426,9 @@ commas"
 	 (nodes_poi (cl-remove-if-not #'org-roam-node-poi-or-moc-p zetteldesk_nodes)))
     (while nodes_poi
       (let* ((node (car nodes_poi))
-	     (description (org-roam-node-formatted (car nodes_poi))))
+	     (description (org-roam-node-formatted node)))
 	(insert (org-link-make-string
-		 (concat "id:" (org-roam-node-id (car nodes_poi)))
+		 (concat "id:" (org-roam-node-id node))
 		 description))
 	(insert ", "))
       (setq nodes_poi (cdr nodes_poi)))))

@@ -206,7 +206,7 @@ org-roam node read through `org-roam-node-read'"
   (let ((buffer (org-roam-node-buffer NODE))
 	 (file (org-roam-node-file NODE))
 	 (org-startup-with-latex-preview nil))
-    (if (not (eq buffer nil))
+    (if buffer
 	(zetteldesk--add-buffer buffer)
       (zetteldesk--add-buffer (find-file-noselect file)))))
 
@@ -242,7 +242,7 @@ with them, and if so adds it to the `zetteldesk'"
 	      (node (org-roam-node-from-id id))
 	      (buffer (org-roam-node-buffer node))
 	      (file (org-roam-node-file node)))
-	(if (not (eq buffer nil))
+	(if buffer
 	    (zetteldesk--add-buffer buffer)
 	  (zetteldesk--add-buffer (find-file-noselect file)))))))
 
@@ -282,7 +282,7 @@ buffer to the desktop it removes it."
       (let* ((id (car (nth number (org-roam-backlink-query))))
 	      (node (org-roam-node-from-id id))
 	      (buffer (org-roam-node-buffer node)))
-	(unless (eq buffer nil)
+	(when buffer
 	  (zetteldesk--remove-buffer buffer))))))
 
 ;; -- FILTER FUNCTIONS --

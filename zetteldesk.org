@@ -265,7 +265,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
       (let ((buffer (org-roam-node-buffer NODE))
 	     (file (org-roam-node-file NODE))
 	     (org-startup-with-latex-preview nil))
-	(if (not (eq buffer nil))
+	(if buffer
 	    (zetteldesk--add-buffer buffer)
 	  (zetteldesk--add-buffer (find-file-noselect file)))))
 
@@ -301,7 +301,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 		  (node (org-roam-node-from-id id))
 		  (buffer (org-roam-node-buffer node))
 		  (file (org-roam-node-file node)))
-	    (if (not (eq buffer nil))
+	    (if buffer
 		(zetteldesk--add-buffer buffer)
 	      (zetteldesk--add-buffer (find-file-noselect file)))))))
 
@@ -341,7 +341,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 	  (let* ((id (car (nth number (org-roam-backlink-query))))
 		  (node (org-roam-node-from-id id))
 		  (buffer (org-roam-node-buffer node)))
-	    (unless (eq buffer nil)
+	    (when buffer
 	      (zetteldesk--remove-buffer buffer))))))
 
 

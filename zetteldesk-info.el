@@ -49,7 +49,7 @@ Then add its name to the list of the variable
   (add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
 
 (defun zetteldesk-remove-info-node-from-desktop ()
-  "Remove an info-node from the `zetteldesk'.
+  "Remove an info-node from the `zetteldesk-desktop'.
 The node is selected through a `completing-read' menu of
 `zetteldesk-info-nodes'"
   (interactive)
@@ -66,7 +66,7 @@ Prompts the user to select a node from the list
   (Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
 
 (defun zetteldesk-insert-info-contents (&optional arg)
-  "Select an info node that is part of the current `zetteldesk'.
+  "Select an info node that is part of the current `zetteldesk-desktop'.
 Uses a `completing-read' prompt for the selection.
 
 Then, in the *zetteldesk-scratch* buffer, go to the end of the

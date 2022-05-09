@@ -51,7 +51,7 @@ NODE is an org-roam-node"
 This is identical to `org-roam-node-backlinkscount' with the
     difference that it returns a number instead of a fromatted
     string. This is to be used in
-    `org-roam-node-sort-by-backlinks'. NODE is an org-roam-node."
+    `zetteldesk-roam-node-sort-by-backlinks'. NODE is an org-roam-node."
     (let* ((count (caar (org-roam-db-query
 			 [:select (funcall count source)
 				  :from links
@@ -60,12 +60,12 @@ This is identical to `org-roam-node-backlinkscount' with the
 			 (org-roam-node-id node)))))
       count))
 
-(defun org-roam-node-poi-or-moc-p (NODE)
+(defun zetteldesk-roam-node-poi-or-moc-p (NODE)
   "Check if NODE has the tag POI or the tag MOC.  Return t if it does."
   (or (string-equal (car (org-roam-node-tags NODE)) "POI")
       (string-equal (car (org-roam-node-tags NODE)) "MOC")))
 
-(defun org-roam-backlink-query ()
+(defun zetteldesk-roam-backlink-query ()
   "Simple org-roam query function.
 Stores the IDs of all the files that link to the node at point.
 This is a modified part of the `org-roam-backlinks-get' function
@@ -78,8 +78,8 @@ work as this is a complimentary function to that"
 	    :and (= type "id")]
    (org-roam-node-id (org-roam-node-at-point))))
 
-(defun org-roam-backlink-query* (NODE)
-  "Run `org-roam-backlink-query' with NODE instead of `org-roam-node-at-point'.
+(defun zetteldesk-roam-backlink-query* (NODE)
+  "Run `zetteldesk-roam-backlink-query' with NODE.
 
 Instead of returning a list of the backlinks of
 `org-roam-node-at-point', find the backlinks of NODE.  This is
@@ -92,7 +92,7 @@ and doesn't have to be the `current-buffer'"
 		 :and (= type "id")]
 	(org-roam-node-id NODE)))
 
-(defun org-roam-node-sort-by-backlinks (completion-a completion-b)
+(defun zetteldesk-roam-node-sort-by-backlinks (completion-a completion-b)
   "Sorting function for org-roam that sort the list of nodes.
 Sorting is done accordint to the number of backlinks.  This is
 the sorting function in `org-roam-node-find-by-backlinks' and
@@ -110,23 +110,31 @@ and COMPLETION-B are same as in
 ;; menus as chosen by the user, so obviously predicate functions are
 ;; core to the package
 
-(defcustom zetteldesk
+(defcustom zetteldesk-desktop
   "default"
   "Buffer local variable.
 Checks if the current buffer is part of the zetteldesk.  A buffer
 is part of the zetteldesk only if the value of this variable is
-not its default value in that buffer.  Its default value is
-default because I am not creative."
+not its default value in that buffer."
   :type 'string
   :group 'zetteldesk
   :local t)
 
+(defconst zetteldesk-desktop-default
+  "default"
+  "Default value of `zetteldesk-desktop'.
+
+This stores the default value through a `defconst' so it can't be
+modified to do a comparison between it and the current value of
+`zetteldesk-desktop'.")
+
 (defun zetteldesk-p (BUFFER)
-  "Check if BUFFER is part of the current `zetteldesk'."
-  (not (eq (default-value 'zetteldesk) (buffer-local-value 'zetteldesk (cdr BUFFER)))))
+  "Check if BUFFER is part of the current `zetteldesk-desktop'."
+  (not (eq zetteldesk-desktop-default
+	   (buffer-local-value 'zetteldesk-desktop (cdr BUFFER)))))
 
 (defun zetteldesk-buffer-p (BUFFER)
-  "Check if BUFFER is part of the current `zetteldesk'.
+  "Check if BUFFER is part of the current `zetteldesk-desktop'.
 Then check if BUFFER is not associated to an org-roam file.
 
 Org-roam file buffers are better viewed with `org-roam-node-file'
@@ -138,17 +146,18 @@ function `zetteldesk-switch-to-buffer'"
 (defun zetteldesk-node-p (NODE)
   "Check if NODE is associated with an open buffer.
 If it is, check if that buffer is part of the current
-`zetteldesk'.  If it isn't, return nil.
+`zetteldesk-desktop'.  If it isn't, return nil.
 
 This function is used as a filter function to create
 `zetteldesk-node-find' which is a filtered view of
 `org-roam-node-find'"
   (if (org-roam-node-buffer NODE)
-      (not (eq (default-value 'zetteldesk) (buffer-local-value 'zetteldesk (org-roam-node-buffer NODE))))
+      (not (eq zetteldesk-desktop-default
+	       (buffer-local-value 'zetteldesk-desktop (org-roam-node-buffer NODE))))
     nil))
 
 (defmacro zetteldesk-mode-buffer-p (BUFFER MODE)
-  "Check if BUFFER is part of the `zetteldesk' and in `major-mode' MODE.
+  "Check if BUFFER is part of the `zetteldesk-desktop' and in `major-mode' MODE.
 
 This macro is meant to be used to write filter functions to be
 passed to `read-buffer' variants such as
@@ -160,7 +169,7 @@ required for `read-buffer' while MODE should be a symbol such as
 	(eq (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
 
 (defun zetteldesk-org-buffer-p (BUFFER)
-  "Check if BUFFER is part of the current `zetteldesk'.
+  "Check if BUFFER is part of the current `zetteldesk-desktop'.
 Then check if the file is an org file but not one that belongs to
 org-roam.
 
@@ -172,7 +181,7 @@ those files"
   (zetteldesk-mode-buffer-p BUFFER 'org-mode))
 
 (defun zetteldesk-pdf-p (BUFFER)
-  "Check if BUFFER is part of the current `zetteldesk' and also a pdf file."
+  "Check if BUFFER is part of the current `zetteldesk-desktop' and also a pdf file."
   (zetteldesk-mode-buffer-p BUFFER 'pdf-view-mode))
 
 ;; -- ADD/REMOVE THINGS IN THE ZETTELDESK --
@@ -191,15 +200,15 @@ buffer to the zetteldesk.  For example all
 macro.  Other functions need more stuff, but deep-down they all
 use this macro."
   `(with-current-buffer ,BUFFER
-     (setq-local zetteldesk "foo")))
+     (setq-local zetteldesk-desktop "foo")))
 
 (defun zetteldesk-add-to-desktop (BUFFER)
-  "Add BUFFER to the current `zetteldesk'."
+  "Add BUFFER to the current `zetteldesk-desktop'."
   (interactive "b")
   (zetteldesk--add-buffer BUFFER))
 
 (defun zetteldesk-add-node-to-desktop (NODE)
-  "Add NODE to the `zetteldesk'.
+  "Add NODE to the `zetteldesk-desktop'.
 If there isn't a buffer associated to it, create it.  NODE is an
 org-roam node read through `org-roam-node-read'"
   (interactive (list (org-roam-node-read)))
@@ -213,13 +222,13 @@ org-roam node read through `org-roam-node-read'"
 (defun zetteldesk-add-poi-or-moc-backlink-to-desktop ()
   "Prompt the user to select an org-roam node that has a specific tag.
 Looks for the POI or MOC tag (filtering done with
-`org-roam-node-poi-or-moc-p') and collects its ID and backlinks.
+`zetteldesk-roam-node-poi-or-moc-p') and collects its ID and backlinks.
 Then, prompt the user to select one of its backlinks and add that
 to the zetteldesk."
   (interactive)
-  (let* ((source (org-roam-node-read nil #'org-roam-node-poi-or-moc-p))
+  (let* ((source (org-roam-node-read nil #'zetteldesk-roam-node-poi-or-moc-p))
 	 (source-id (org-roam-node-id source))
-	 (backlinks (org-roam-backlink-query* source)))
+	 (backlinks (zetteldesk-roam-backlink-query* source)))
     (zetteldesk-add-node-to-desktop
      (org-roam-node-read nil (lambda (NODE)
 			       (let* ((id (org-roam-node-id NODE))
@@ -227,18 +236,18 @@ to the zetteldesk."
 				 (member id-list backlinks)))))))
 
 (defun zetteldesk-add-backlinks-to-desktop ()
-  "Add the current buffer and all its backlinks to the `zetteldesk'.
+  "Add the current buffer and all its backlinks to the `zetteldesk-desktop'.
 
 This function queries the database for all the nodes that link to
-the current node with the `org-roam-backlink-query' function and
+the current node with the `zetteldesk-roam-backlink-query' function and
 then recursively checks if there is an open buffer associated
-with them, and if so adds it to the `zetteldesk'"
+with them, and if so adds it to the `zetteldesk-desktop'"
   (interactive)
-  (setq-local zetteldesk "foo")
-  (let ((backlinks (length (org-roam-backlink-query)))
+  (setq-local zetteldesk-desktop "foo")
+  (let ((backlinks (length (zetteldesk-roam-backlink-query)))
 	(org-startup-with-latex-preview nil))
     (dotimes (number backlinks)
-      (let* ((id (car (nth number (org-roam-backlink-query))))
+      (let* ((id (car (nth number (zetteldesk-roam-backlink-query))))
 	      (node (org-roam-node-from-id id))
 	      (buffer (org-roam-node-buffer node))
 	      (file (org-roam-node-file node)))
@@ -247,22 +256,22 @@ with them, and if so adds it to the `zetteldesk'"
 	  (zetteldesk--add-buffer (find-file-noselect file)))))))
 
 (defmacro zetteldesk--remove-buffer (BUFFER)
-  "Remove BUFFER from the current `zetteldesk'.
+  "Remove BUFFER from the current `zetteldesk-desktop'.
 
 This is a low-level macro used in all zetteldesk-remove
 functions.  This function is identical in logic to
 `zetteldesk--add-buffer', however it is for removing thingss
 instead of adding."
   `(with-current-buffer ,BUFFER
-     (kill-local-variable 'zetteldesk)))
+     (kill-local-variable 'zetteldesk-desktop)))
 
 (defun zetteldesk-remove-from-desktop (BUFFER)
-  "Remove BUFFER from the current `zetteldesk'."
+  "Remove BUFFER from the current `zetteldesk-desktop'."
   (interactive "b")
   (zetteldesk--remove-buffer BUFFER))
 
 (defun zetteldesk-remove-node-from-desktop (NODE)
-  "Remove NODE from the `zetteldesk'.
+  "Remove NODE from the `zetteldesk-desktop'.
 NODE is an org-roam node
 and is read through `org-roam-node-read'"
   (interactive (list (org-roam-node-read nil #'zetteldesk-node-p)))
@@ -270,16 +279,16 @@ and is read through `org-roam-node-read'"
     (zetteldesk--remove-buffer buffer)))
 
 (defun zetteldesk-remove-backlinks-from-desktop ()
-  "Remove from the `zetteldesk', the current buffer and its backlinks.
+  "Remove from the `zetteldesk-desktop', the current buffer and its backlinks.
 
 This function is essentially a carbon copy of
 `zetteldesk-add-backlinks-to-desktop' but instead of adding the
 buffer to the desktop it removes it."
   (interactive)
-  (kill-local-variable 'zetteldesk)
-  (let ((backlinks (length (org-roam-backlink-query))))
+  (kill-local-variable 'zetteldesk-desktop)
+  (let ((backlinks (length (zetteldesk-roam-backlink-query))))
     (dotimes (number backlinks)
-      (let* ((id (car (nth number (org-roam-backlink-query))))
+      (let* ((id (car (nth number (zetteldesk-roam-backlink-query))))
 	      (node (org-roam-node-from-id id))
 	      (buffer (org-roam-node-buffer node)))
 	(when buffer
@@ -292,7 +301,7 @@ buffer to the desktop it removes it."
 (defun zetteldesk-switch-to-buffer ()
   "Execute a filtered `switch-to-buffer'.
 The filter is done using `zetteldesk-buffer-p' to show only
-buffers that are part of the current `zetteldesk' and not
+buffers that are part of the current `zetteldesk-desktop' and not
 `org-roam-node's."
   (interactive)
   (switch-to-buffer (read-buffer "Zetteldesk Buffers: " nil nil #'zetteldesk-buffer-p)))
@@ -300,14 +309,14 @@ buffers that are part of the current `zetteldesk' and not
 (defun zetteldesk-node-find ()
   "Execute a filtered `org-roam-node-find'.
 The filter is done using `zetteldesk-node-p' to show only nodes that are
-part of the current `zetteldesk'"
+part of the current `zetteldesk-desktop'"
   (interactive)
   (org-roam-node-find nil nil #'zetteldesk-node-p))
 
 (defun zetteldesk-node-insert ()
   "Execute a filtered `org-roam-node-insert'.
 The filter is done using `zetteldesk-node-p' to show only nodes that are
-part of the current `zetteldesk'"
+part of the current `zetteldesk-desktop'"
   (interactive)
   (org-roam-node-insert #'zetteldesk-node-p))
 
@@ -325,7 +334,7 @@ acts essentially as a complimentary function to
 `zetteldesk-node-insert-if-poi-or-moc' to check if that one
 missed something you want to include."
   (interactive)
-  (let* ((node (org-roam-node-read nil #'zetteldesk-node-p #'org-roam-node-sort-by-backlinks))
+  (let* ((node (org-roam-node-read nil #'zetteldesk-node-p #'zetteldesk-roam-node-sort-by-backlinks))
 	 (id (org-roam-node-id node))
 	 (description (org-roam-node-formatted node)))
     (insert (org-link-make-string
@@ -352,6 +361,13 @@ for whichever usecase you might want"
   :type 'string
   :group 'zetteldesk)
 
+(defun zetteldesk--create-scratch-buffer ()
+  "Create the zetteldesk-scratch buffer and put it in `org-mode'."
+  (let ((buffer (generate-new-buffer "*zetteldesk-scratch*"))
+	(org-startup-with-latex-preview nil))
+    (with-current-buffer buffer
+      (org-mode))))
+
 ;;;###autoload
 (define-minor-mode zetteldesk-mode
   "Toggles the global `zetteldesk-mode'.
@@ -362,16 +378,9 @@ buffer, a useful part of the whole zetteldesk workflow."
   :global t
   :group 'zetteldesk
   :keymap zetteldesk-map
-  :lighter " zetteldesk")
-
-(defun zetteldesk--create-scratch-buffer ()
-  "Create the zetteldesk-scratch buffer and put it in `org-mode'."
-  (let ((buffer (generate-new-buffer "*zetteldesk-scratch*"))
-	(org-startup-with-latex-preview nil))
-    (with-current-buffer buffer
-      (org-mode))))
-
-(add-hook 'zetteldesk-mode-on-hook 'zetteldesk--create-scratch-buffer)
+  :lighter " zetteldesk"
+  (when zetteldesk-mode
+    (zetteldesk--create-scratch-buffer)))
 
 (defmacro zetteldesk-insert-location ()
   "Find the location the zetteldesk-insert functions should insert to.
@@ -417,13 +426,13 @@ buffer without issuing a split."
 (defun zetteldesk-node-insert-if-poi-or-moc ()
   "Filter `org-roam-node-list' to show zetteldesk-nodes only.
 Then filter that to only those that have the POI or MOC tag with
-`zetteldesk-node-p' and `org-roam-node-poi-or-moc-p'.  Then
+`zetteldesk-node-p' and `zetteldesk-roam-node-poi-or-moc-p'.  Then
 insert a link to every one of those nodes and seperate them with
 commas"
   (interactive)
   (let* ((init_list (org-roam-node-list))
 	 (zetteldesk_nodes (cl-remove-if-not #'zetteldesk-node-p init_list))
-	 (nodes_poi (cl-remove-if-not #'org-roam-node-poi-or-moc-p zetteldesk_nodes)))
+	 (nodes_poi (cl-remove-if-not #'zetteldesk-roam-node-poi-or-moc-p zetteldesk_nodes)))
     (while nodes_poi
       (let* ((node (car nodes_poi))
 	     (description (org-roam-node-formatted node)))
@@ -434,7 +443,7 @@ commas"
       (setq nodes_poi (cdr nodes_poi)))))
 
 (defun zetteldesk-insert-node-contents (&optional arg)
-  "Select a node that is part of the current `zetteldesk'.
+  "Select a node that is part of the current `zetteldesk-desktop'.
 Add a link to it at point and then insert its contents to the
 bottom of the *zetteldesk-scratch* buffer after inserting a
 newline there.  Remove the first 67 characters which is the
@@ -462,7 +471,7 @@ buffer in a split."
 
 (defun zetteldesk-insert-node-contents-without-link ()
   "\"Sister function\" of `zetteldesk-insert-node-contents'.
-Finds a node that is part of the `zetteldesk' and inserts its
+Finds a node that is part of the `zetteldesk-desktop' and inserts its
 contents to the bottom of the zetteldesk-scratch buffer. This
 function differentiates itself, by the fact that it doesn't
 insert an ID link to the node in the current buffer and by the
@@ -485,7 +494,7 @@ second iteration to fix that issue."
   (switch-to-buffer-other-window "*zetteldesk-scratch*"))
 
 (defun zetteldesk-insert-org-file-contents (&optional arg)
-  "Select an org buffer that is in the `zetteldesk'.
+  "Select an org buffer that is in the `zetteldesk-desktop'.
 Insert its contents to the *zetteldesk-scratch* buffer, make its
  title a top level heading and demote all of its headings by one
  level (since the title now acts as a top level heading).  Note
@@ -510,7 +519,7 @@ buffer in a split"
   (zetteldesk-insert-switch-to-scratch arg))
 
 (defun zetteldesk-insert-link-to-pdf (&optional arg)
-  "Select a pdf file that is part of the `zetteldesk'.
+  "Select a pdf file that is part of the `zetteldesk-desktop'.
 Prompt for a page in that pdf (defaults to page 1 if you don't
 care about the page).
 

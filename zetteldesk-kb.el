@@ -3,9 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
-;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2"))
+;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
 ;; Created: 3rd March 2022
 ;; License: GPL-3.0
+;; Version: 0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -99,17 +100,94 @@
    (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
     ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
 
+
 ;; Set up the keybinding to call the hydra
 
-(defcustom zetteldesk-hydra-prefix nil
+(defcustom zetteldesk-kb-hydra-prefix nil
   "Stores the value of the keybinding that calls the main zetteldesk hydra.
 By default it is set to nil, to
   allow the user to set the prefix they want"
   :type 'string
   :group 'zetteldesk)
 
-(define-key zetteldesk-map zetteldesk-hydra-prefix 'zetteldesk-main-hydra/body)
+(define-key zetteldesk-map zetteldesk-kb-hydra-prefix 'zetteldesk-main-hydra/body)
+
+;; -- Zetteldesk-remark --
+
+(with-eval-after-load 'zetteldesk-remark
+  (pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
+    ("Zetteldesk Remark Functions"
+     (("m" zetteldesk-remark-mark "Mark region and create margin note")
+      ("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
+
+     "Org Remark Functions"
+     (("o" org-remark-open "Open margin note")
+      ("n" org-remark-view-next "Open next margin note" :exit nil)
+      ("p" org-remark-view-prev "Open previous margin note" :exit nil)
+      ("v" org-remark-view "Open margin note without switching to it" :exit nil))
+
+     "Quit"
+     (("q" nil "quit")))))
+
+(with-eval-after-load 'zetteldesk-remark
+  (pretty-hydra-define+ zetteldesk-main-hydra ()
+    ("Inserting Things and *zetteldesk-scratch*"
+     (("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra")))))
+
+;; -- Zetteldesk-ref.el --
+
+(with-eval-after-load 'zetteldesk-ref
+  (pretty-hydra-define+ zetteldesk-insert-hydra ()
+    ("Org-Roam"
+     (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting")))))
+
+(with-eval-after-load 'zetteldesk-ref
+  (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+    ("Org-Roam UI"
+     (("r" zetteldesk-find-ref-node))
+
+     "Helm-Bibtex UI"
+     (("h" zetteldesk-helm-bibtex-with-notes))
+
+     "Ivy-Bibtex UI"
+     (("i" zetteldesk-ivy-bibtex-with-notes)))))
+
+(with-eval-after-load 'zetteldesk-ref
+  (pretty-hydra-define+ zetteldesk-add-hydra ()
+    ("Org-Roam"
+     (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node")))))
+
+(with-eval-after-load 'zetteldesk-ref
+  (pretty-hydra-define+ zetteldesk-remove-hydra ()
+    ("Org-Roam"
+     (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node")))))
+
+(with-eval-after-load 'zetteldesk-ref
+  (pretty-hydra-define+ zetteldesk-main-hydra ()
+    ("Filter Functions"
+     (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node")))))
+
+;; -- Zetteldesk-info.el --
+
+(with-eval-after-load 'zetteldesk-info
+  (pretty-hydra-define+ zetteldesk-add-hydra ()
+    ("Other"
+     (("i" zetteldesk-info-add-info-node-to-desktop "Add Info Node")))))
+
+(with-eval-after-load 'zetteldesk-info
+  (pretty-hydra-define+ zetteldesk-remove-hydra ()
+    ("Other"
+     (("i" zetteldesk-info-remove-info-node-from-desktop "Remove Info Node")))))
+
+(with-eval-after-load 'zetteldesk-info
+  (pretty-hydra-define+ zetteldesk-main-hydra ()
+    ("Filter Functions"
+     (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node")))))
+
+(with-eval-after-load 'zetteldesk-info
+  (pretty-hydra-define+ zetteldesk-insert-hydra ()
+    ("Supplementary Material to *zetteldesk-scratch*"
+     (("I" zetteldesk-info-insert-contents "Info Node Contents + Link to context")))))
 
 (provide 'zetteldesk-kb)
-
 ;;; zetteldesk-kb.el ends here

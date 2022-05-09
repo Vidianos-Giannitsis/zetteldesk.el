@@ -671,9 +671,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
-  ;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2"))
+  ;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
   ;; Created: 3rd March 2022
   ;; License: GPL-3.0
+  ;; Version: 0.1
 
   ;; This file is free software; you can redistribute it and/or modify
   ;; it under the terms of the GNU General Public License as published by
@@ -767,20 +768,40 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
      (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
       ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
 
+
   ;; Set up the keybinding to call the hydra
 
-  (defcustom zetteldesk-hydra-prefix nil
+  (defcustom zetteldesk-kb-hydra-prefix nil
     "Stores the value of the keybinding that calls the main zetteldesk hydra.
   By default it is set to nil, to
     allow the user to set the prefix they want"
     :type 'string
     :group 'zetteldesk)
 
-  (define-key zetteldesk-map zetteldesk-hydra-prefix 'zetteldesk-main-hydra/body)
+  (define-key zetteldesk-map zetteldesk-kb-hydra-prefix 'zetteldesk-main-hydra/body)
 
-  (provide 'zetteldesk-kb)
+  ;; -- Zetteldesk-remark --
 
-  ;;; zetteldesk-kb.el ends here
+  (with-eval-after-load 'zetteldesk-remark
+    (pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
+      ("Zetteldesk Remark Functions"
+       (("m" zetteldesk-remark-mark "Mark region and create margin note")
+	("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
+
+       "Org Remark Functions"
+       (("o" org-remark-open "Open margin note")
+	("n" org-remark-view-next "Open next margin note" :exit nil)
+	("p" org-remark-view-prev "Open previous margin note" :exit nil)
+	("v" org-remark-view "Open margin note without switching to it" :exit nil))
+
+       "Quit"
+       (("q" nil "quit")))))
+
+  (with-eval-after-load 'zetteldesk-remark
+    (pretty-hydra-define+ zetteldesk-main-hydra ()
+      ("Inserting Things and *zetteldesk-scratch*"
+       (("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra")))))
+
 
 #+END_SRC
 
@@ -793,7 +814,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-  ;; Package-Requires: ((zetteldesk "0.4") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
+  ;; Package-Requires: ((zetteldesk "0.5") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
   ;; Created: 22nd March 2022
   ;; License: GPL-3.0
   ;; Version: 0.1
@@ -884,7 +905,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
      (add-hook 'zetteldesk-remark-mode-off-hook 'zetteldesk-remark-reset-notes-file)
      (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-title)
 
-     (defun org-top-level-heading-title ()
+     (defun zetteldesk-remark-top-level-heading-title ()
        "Get the title of the top-level org heading.
 
      This is a helper function for `zetteldesk-remark-highlight-mark'.
@@ -1044,7 +1065,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 	  ;; for mode, nil and :change result in saving the highlight.  :load
 	  ;; bypasses save.
 	  (unless (eq mode :load)
-	    (let* ((node-title (org-top-level-heading-title))
+	    (let* ((node-title (zetteldesk-remark-top-level-heading-title))
 		   (node (org-roam-node-from-title-or-alias node-title))
 		   (filename (org-roam-node-file node)))
 	      (if filename
@@ -1085,26 +1106,6 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
      file."
        (interactive)
        (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
-
-     ;; -- Keybindings --
-
-     (pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
-       ("Zetteldesk Remark Functions"
-	(("m" zetteldesk-remark-mark "Mark region and create margin note")
-	 ("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
-
-	"Org Remark Functions"
-	(("o" org-remark-open "Open margin note")
-	 ("n" org-remark-view-next "Open next margin note" :exit nil)
-	 ("p" org-remark-view-prev "Open previous margin note" :exit nil)
-	 ("v" org-remark-view "Open margin note without switching to it" :exit nil))
-
-	"Quit"
-	(("q" nil "quit"))))
-
-     (pretty-hydra-define+ zetteldesk-main-hydra ()
-       ("Inserting Things and *zetteldesk-scratch*"
-	(("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra"))))
 
    #+END_SRC
      
@@ -1444,14 +1445,14 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 	:type 'list
 	:group 'zetteldesk)
 
-      (defun zetteldesk-add-info-node-to-desktop ()
+      (defun zetteldesk-info-add-info-node-to-desktop ()
 	"Find the current info-node.
       Then add its name to the list of the variable
       `zetteldesk-info-nodes'"
 	(interactive)
 	(add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
 
-      (defun zetteldesk-remove-info-node-from-desktop ()
+      (defun zetteldesk-info-remove-info-node-from-desktop ()
 	"Remove an info-node from the `zetteldesk-desktop'.
       The node is selected through a `completing-read' menu of
       `zetteldesk-info-nodes'"
@@ -1468,7 +1469,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 	(interactive)
 	(Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
 
-      (defun zetteldesk-insert-info-contents (&optional arg)
+      (defun zetteldesk-info-insert-contents (&optional arg)
 	"Select an info node that is part of the current `zetteldesk-desktop'.
       Uses a `completing-read' prompt for the selection.
 
@@ -1524,60 +1525,69 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 * Adding keybindings to the hydra
 For my package zetteldesk.el, I define some keybindings in the file zetteldesk-kb.el. As I do not use these keybindings myself (I prefer the evil-styled ones that suit my config better tbh) that file is never loaded in my config, therefore this should also not be loaded. However, as I often play around with the code here and not in the zetteldesk directory I want to have this here for copy-paste-ability.
 
-#+BEGIN_SRC elisp :tangle zetteldesk-ref.el
+#+BEGIN_SRC elisp :tangle zetteldesk-kb.el
 
-  ;; Add keybindings for this package in the default hydra
+  ;; -- Zetteldesk-ref.el --
 
-  (pretty-hydra-define+ zetteldesk-insert-hydra ()
-    ("Org-Roam"
-     (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
+  (with-eval-after-load 'zetteldesk-ref
+    (pretty-hydra-define+ zetteldesk-insert-hydra ()
+      ("Org-Roam"
+       (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting")))))
 
-  (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
-    ("Org-Roam UI"
-     (("r" zetteldesk-find-ref-node))
+  (with-eval-after-load 'zetteldesk-ref
+    (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+      ("Org-Roam UI"
+       (("r" zetteldesk-find-ref-node))
 
-     "Helm-Bibtex UI"
-      (("h" zetteldesk-helm-bibtex-with-notes))
+       "Helm-Bibtex UI"
+       (("h" zetteldesk-helm-bibtex-with-notes))
 
-      "Ivy-Bibtex UI"
-      (("i" zetteldesk-ivy-bibtex-with-notes))))
+       "Ivy-Bibtex UI"
+       (("i" zetteldesk-ivy-bibtex-with-notes)))))
 
-  (pretty-hydra-define+ zetteldesk-add-hydra ()
-    ("Org-Roam"
-     (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node"))))
+  (with-eval-after-load 'zetteldesk-ref
+    (pretty-hydra-define+ zetteldesk-add-hydra ()
+      ("Org-Roam"
+       (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node")))))
 
-  (pretty-hydra-define+ zetteldesk-remove-hydra ()
-    ("Org-Roam"
-     (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node"))))
+  (with-eval-after-load 'zetteldesk-ref
+    (pretty-hydra-define+ zetteldesk-remove-hydra ()
+      ("Org-Roam"
+       (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node")))))
 
-  (pretty-hydra-define+ zetteldesk-main-hydra ()
-    ("Filter Functions"
-     (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
+  (with-eval-after-load 'zetteldesk-ref
+    (pretty-hydra-define+ zetteldesk-main-hydra ()
+      ("Filter Functions"
+       (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node")))))
 
 #+END_SRC
 
 #+RESULTS:
 : zetteldesk-main-hydra/body
 
-#+BEGIN_SRC elisp :tangle zetteldesk-info.el
+#+BEGIN_SRC elisp :tangle zetteldesk-kb.el
 
-  ;; Add keybindings for this package in the default hydra
+  ;; -- Zetteldesk-info.el --
 
-  (pretty-hydra-define+ zetteldesk-add-hydra ()
-    ("Other"
-     (("i" zetteldesk-add-info-node-to-desktop "Add Info Node"))))
+  (with-eval-after-load 'zetteldesk-info
+    (pretty-hydra-define+ zetteldesk-add-hydra ()
+      ("Other"
+       (("i" zetteldesk-info-add-info-node-to-desktop "Add Info Node")))))
 
-  (pretty-hydra-define+ zetteldesk-remove-hydra ()
-    ("Other"
-     (("i" zetteldesk-remove-info-node-from-desktop "Remove Info Node"))))
+  (with-eval-after-load 'zetteldesk-info
+    (pretty-hydra-define+ zetteldesk-remove-hydra ()
+      ("Other"
+       (("i" zetteldesk-info-remove-info-node-from-desktop "Remove Info Node")))))
 
-  (pretty-hydra-define+ zetteldesk-main-hydra ()
-    ("Filter Functions"
-     (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node"))))
+  (with-eval-after-load 'zetteldesk-info
+    (pretty-hydra-define+ zetteldesk-main-hydra ()
+      ("Filter Functions"
+       (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node")))))
 
-  (pretty-hydra-define+ zetteldesk-insert-hydra ()
-    ("Supplementary Material to *zetteldesk-scratch*"
-     (("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
+  (with-eval-after-load 'zetteldesk-info
+    (pretty-hydra-define+ zetteldesk-insert-hydra ()
+      ("Supplementary Material to *zetteldesk-scratch*"
+       (("I" zetteldesk-info-insert-contents "Info Node Contents + Link to context")))))
 #+END_SRC
 
 * Providing the packages to be loaded in init.el
@@ -1605,4 +1615,11 @@ For my package zetteldesk.el, I define some keybindings in the file zetteldesk-k
 
   (provide 'zetteldesk-remark)
   ;;; zetteldesk-remark.el ends here
+#+END_SRC
+
+#+BEGIN_SRC elisp :tangle zetteldesk-kb.el
+
+  (provide 'zetteldesk-kb)
+  ;;; zetteldesk-kb.el ends here
+
 #+END_SRC

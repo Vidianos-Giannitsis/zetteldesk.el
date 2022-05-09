@@ -3,7 +3,7 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-;; Package-Requires: ((zetteldesk "0.4") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
+;; Package-Requires: ((zetteldesk "0.5") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
 ;; Created: 22nd March 2022
 ;; License: GPL-3.0
 ;; Version: 0.1
@@ -83,7 +83,7 @@ value of that variable after turning off
 (add-hook 'zetteldesk-remark-mode-off-hook 'zetteldesk-remark-reset-notes-file)
 (add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-title)
 
-(defun org-top-level-heading-title ()
+(defun zetteldesk-remark-top-level-heading-title ()
   "Get the title of the top-level org heading.
 
 This is a helper function for `zetteldesk-remark-highlight-mark'.
@@ -243,7 +243,7 @@ identical to those in `org-remark-highlight-mark'."
      ;; for mode, nil and :change result in saving the highlight.  :load
      ;; bypasses save.
      (unless (eq mode :load)
-       (let* ((node-title (org-top-level-heading-title))
+       (let* ((node-title (zetteldesk-remark-top-level-heading-title))
 	      (node (org-roam-node-from-title-or-alias node-title))
 	      (filename (org-roam-node-file node)))
 	 (if filename
@@ -284,26 +284,6 @@ coming from zetteldesk-scratch.  This function switches to that
 file."
   (interactive)
   (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
-
-;; -- Keybindings --
-
-(pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
-  ("Zetteldesk Remark Functions"
-   (("m" zetteldesk-remark-mark "Mark region and create margin note")
-    ("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
-
-   "Org Remark Functions"
-   (("o" org-remark-open "Open margin note")
-    ("n" org-remark-view-next "Open next margin note" :exit nil)
-    ("p" org-remark-view-prev "Open previous margin note" :exit nil)
-    ("v" org-remark-view "Open margin note without switching to it" :exit nil))
-
-   "Quit"
-   (("q" nil "quit"))))
-
-(pretty-hydra-define+ zetteldesk-main-hydra ()
-  ("Inserting Things and *zetteldesk-scratch*"
-   (("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra"))))
 
 (provide 'zetteldesk-remark)
 ;;; zetteldesk-remark.el ends here

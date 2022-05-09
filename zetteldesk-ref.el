@@ -259,33 +259,5 @@ made more sense to order it this way in my opinion."
 	    citekey))
   (zetteldesk-insert-switch-to-scratch arg))
 
-;; Add keybindings for this package in the default hydra
-
-(pretty-hydra-define+ zetteldesk-insert-hydra ()
-  ("Org-Roam"
-   (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
-
-(pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
-  ("Org-Roam UI"
-   (("r" zetteldesk-find-ref-node))
-
-   "Helm-Bibtex UI"
-    (("h" zetteldesk-helm-bibtex-with-notes))
-
-    "Ivy-Bibtex UI"
-    (("i" zetteldesk-ivy-bibtex-with-notes))))
-
-(pretty-hydra-define+ zetteldesk-add-hydra ()
-  ("Org-Roam"
-   (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node"))))
-
-(pretty-hydra-define+ zetteldesk-remove-hydra ()
-  ("Org-Roam"
-   (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node"))))
-
-(pretty-hydra-define+ zetteldesk-main-hydra ()
-  ("Filter Functions"
-   (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
-
 (provide 'zetteldesk-ref)
 ;;; zetteldesk-ref.el ends here

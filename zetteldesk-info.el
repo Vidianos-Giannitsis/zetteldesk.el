@@ -41,14 +41,14 @@ Initialised as an empty list"
   :type 'list
   :group 'zetteldesk)
 
-(defun zetteldesk-add-info-node-to-desktop ()
+(defun zetteldesk-info-add-info-node-to-desktop ()
   "Find the current info-node.
 Then add its name to the list of the variable
 `zetteldesk-info-nodes'"
   (interactive)
   (add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
 
-(defun zetteldesk-remove-info-node-from-desktop ()
+(defun zetteldesk-info-remove-info-node-from-desktop ()
   "Remove an info-node from the `zetteldesk-desktop'.
 The node is selected through a `completing-read' menu of
 `zetteldesk-info-nodes'"
@@ -65,7 +65,7 @@ Prompts the user to select a node from the list
   (interactive)
   (Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
 
-(defun zetteldesk-insert-info-contents (&optional arg)
+(defun zetteldesk-info-insert-contents (&optional arg)
   "Select an info node that is part of the current `zetteldesk-desktop'.
 Uses a `completing-read' prompt for the selection.
 
@@ -112,24 +112,6 @@ zetteldesk-scratch buffer in a split."
       (kill-whole-line 2))
     (switch-to-buffer buffer)
     (zetteldesk-insert-switch-to-scratch arg)))
-
-;; Add keybindings for this package in the default hydra
-
-(pretty-hydra-define+ zetteldesk-add-hydra ()
-  ("Other"
-   (("i" zetteldesk-add-info-node-to-desktop "Add Info Node"))))
-
-(pretty-hydra-define+ zetteldesk-remove-hydra ()
-  ("Other"
-   (("i" zetteldesk-remove-info-node-from-desktop "Remove Info Node"))))
-
-(pretty-hydra-define+ zetteldesk-main-hydra ()
-  ("Filter Functions"
-   (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node"))))
-
-(pretty-hydra-define+ zetteldesk-insert-hydra ()
-  ("Supplementary Material to *zetteldesk-scratch*"
-   (("I" zetteldesk-insert-info-contents "Info Node Contents + Link to context"))))
 
 (provide 'zetteldesk-info)
 ;;; zetteldesk-info.el ends here

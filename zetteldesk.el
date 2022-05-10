@@ -191,7 +191,7 @@ those files"
 ;; need ways to remove things, because people make mistakes.
 
 (defmacro zetteldesk--add-buffer (BUFFER)
-  "Add BUFFER to the current `zettelesk'.
+  "Add BUFFER to the current `zetteldesk-desktop'.
 
 This is a low-level macro used in all zetteldesk-add
 functions.  Given BUFFER it creates the code required to add the

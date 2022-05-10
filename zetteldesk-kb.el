@@ -139,28 +139,28 @@ By default it is set to nil, to
 (with-eval-after-load 'zetteldesk-ref
   (pretty-hydra-define+ zetteldesk-insert-hydra ()
     ("Org-Roam"
-     (("r" zetteldesk-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting")))))
+     (("r" zetteldesk-ref-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting")))))
 
 (with-eval-after-load 'zetteldesk-ref
   (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
     ("Org-Roam UI"
-     (("r" zetteldesk-find-ref-node))
+     (("r" zetteldesk-ref-find-ref-node))
 
      "Helm-Bibtex UI"
-     (("h" zetteldesk-helm-bibtex-with-notes))
+     (("h" zetteldesk-ref-helm-bibtex-with-notes))
 
      "Ivy-Bibtex UI"
-     (("i" zetteldesk-ivy-bibtex-with-notes)))))
+     (("i" zetteldesk-ref-ivy-bibtex-with-notes)))))
 
 (with-eval-after-load 'zetteldesk-ref
   (pretty-hydra-define+ zetteldesk-add-hydra ()
     ("Org-Roam"
-     (("l" zetteldesk-add-ref-node-to-desktop "Add Literature Node")))))
+     (("l" zetteldesk-ref-add-node-to-desktop "Add Literature Node")))))
 
 (with-eval-after-load 'zetteldesk-ref
   (pretty-hydra-define+ zetteldesk-remove-hydra ()
     ("Org-Roam"
-     (("l" zetteldesk-remove-ref-node-from-desktop "Remove Literature Node")))))
+     (("l" zetteldesk-ref-remove-node-from-desktop "Remove Literature Node")))))
 
 (with-eval-after-load 'zetteldesk-ref
   (pretty-hydra-define+ zetteldesk-main-hydra ()

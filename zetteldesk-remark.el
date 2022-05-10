@@ -47,17 +47,14 @@ Initialised to nil and given a value when turning on
   :type 'string
   :group 'zetteldesk)
 
-;;;###autoload
-(define-minor-mode zetteldesk-remark-mode
-  "Toggle the `zetteldesk-remark-mode'.
+(defconst zetteldesk-remark-default-notes "marginalia.org"
+  "Constant that stores the default value of `org-remark-notes-file-name'.
 
-This mode initialises the value of `zetteldesk-remark-title', an
-important variable for using org-remark in buffers not associated
-to a file."
-  :init-value nil
-  :global t
-  :group 'zetteldesk
-  :lighter " zetteldesk-remark")
+Zetteldesk-remark, for its own purposes changes the value of that
+variable with `zetteldesk-remark-set-notes-file' to make it more
+sensible in its own workflow.  However, the original value needs
+to be restored after the package is done.  For this reason this
+constant stores that value.")
 
 (defun zetteldesk-remark-set-title ()
   "Set the value of `zetteldesk-remark-title' from a minibuffer prompt."
@@ -77,11 +74,23 @@ function is run in the `zetteldesk-remark-mode-on-hook'."
 This is a helper function for zetteldesk-remark to reset the
 value of that variable after turning off
 `zetteldesk-remark-mode-off-hook'"
-  (custom-reevaluate-setting 'org-remark-notes-file-name))
+  (setq org-remark-notes-file-name zetteldesk-remark-default-notes))
 
-(add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-notes-file)
-(add-hook 'zetteldesk-remark-mode-off-hook 'zetteldesk-remark-reset-notes-file)
-(add-hook 'zetteldesk-remark-mode-on-hook 'zetteldesk-remark-set-title)
+;;;###autoload
+(define-minor-mode zetteldesk-remark-mode
+  "Toggle the `zetteldesk-remark-mode'.
+
+This mode initialises the value of `zetteldesk-remark-title', an
+important variable for using org-remark in buffers not associated
+to a file."
+  :init-value nil
+  :global t
+  :group 'zetteldesk
+  :lighter " zetteldesk-remark"
+  (if zetteldesk-remark-mode
+      (progn (zetteldesk-remark-set-notes-file)
+	     (zetteldesk-remark-set-title))
+    (zetteldesk-remark-reset-notes-file)))
 
 (defun zetteldesk-remark-top-level-heading-title ()
   "Get the title of the top-level org heading.
@@ -215,6 +224,12 @@ current heading's title, the title is a `concat' of the string
 `zetteldesk-remark-highlight-get-title'.  Lastly, this gives
 `zetteldesk-remark-highlight-save''s final argument which is the
 title of the node that is associated with this section.
+
+This function is meant to be run in the *zetteldesk-scratch*
+buffer so evalutating it elsewhere might lead to errors.  For
+regular buffers associated to a file you should just use the
+default `org-remark-highlight-mark' as this version relies
+heavlily on the structure of *zetteldesk-scratch*.
 
 Arguments BEG, END, ID, MODE, LABEL, FACE and PROPERTIES are all
 identical to those in `org-remark-highlight-mark'."

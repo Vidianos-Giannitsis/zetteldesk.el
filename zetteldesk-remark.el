@@ -3,10 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-;; Package-Requires: ((zetteldesk "0.5") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
+;; Package-Requires: ((zetteldesk "1.0") (org-remark "1.0") (emacs "27.2"))
 ;; Created: 22nd March 2022
 ;; License: GPL-3.0
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@
 ;;; Code:
 
 (require 'zetteldesk)
-(require 'zetteldesk-kb)
 (require 'org-remark)
 
 ;; -- Helper Functions/Variables --
@@ -43,7 +42,18 @@
   "Title to use in `zetteldesk-remark-highlight-get-title'.
 
 Initialised to nil and given a value when turning on
-`zetteldesk-remark-mode'."
+`zetteldesk-remark-mode' through `zetteldesk-remark-set-title'."
+  :type 'string
+  :group 'zetteldesk)
+
+(defcustom zetteldesk-remark-notes-file
+  (concat org-roam-directory "zetteldesk-margin-notes.org")
+  "Default value of `org-remark-notes-file-name' for zetteldesk functions.
+
+When turning on `zetteldesk-remark-mode' this variable's value is
+set to the value of `org-remark-notes-file-name' through
+`zetteldesk-remark-set-notes-file'.  This is stored as a variable
+so you can customise it if you don't like its default value."
   :type 'string
   :group 'zetteldesk)
 
@@ -64,16 +74,15 @@ constant stores that value.")
   "Helper function to set `org-remark-notes-file-name''s value.
 
 This is the value the zetteldesk-remark functions expect and this
-function is run in the `zetteldesk-remark-mode-on-hook'."
-  (setq org-remark-notes-file-name
-	(concat org-roam-directory "zetteldesk-margin-notes.org")))
+function is run when `zetteldesk-remark-mode' is turned on."
+  (setq org-remark-notes-file-name zetteldesk-remark-notes-file))
 
 (defun zetteldesk-remark-reset-notes-file ()
   "Reset `org-remark-notes-file-name' to its default value.
 
 This is a helper function for zetteldesk-remark to reset the
 value of that variable after turning off
-`zetteldesk-remark-mode-off-hook'"
+`zetteldesk-remark-mode'."
   (setq org-remark-notes-file-name zetteldesk-remark-default-notes))
 
 ;;;###autoload
@@ -298,7 +307,7 @@ a specific file, which is meant to be used with all margin notes
 coming from zetteldesk-scratch.  This function switches to that
 file."
   (interactive)
-  (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
+  (pop-to-buffer (find-file zetteldesk-remark-notes-file)))
 
 (provide 'zetteldesk-remark)
 ;;; zetteldesk-remark.el ends here

@@ -3,10 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion "2.0") (zetteldesk-kb "0.1") (emacs "26.1"))
+;; Package-Requires: ((zetteldesk "1.0") (bibtex-completion "2.0") (emacs "26.1"))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@
 ;;; Code:
 
 (require 'zetteldesk)
-(require 'zetteldesk-kb)
 (require 'bibtex-completion)
 
 ;; -- Reference Nodes from Bibtex Entries --

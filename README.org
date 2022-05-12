@@ -1,16 +1,23 @@
 #+TITLE: Zetteldesk.el a Revision and Outlining tool built on top of Org-Roam
 
 * Table of Contents                                                     :TOC:
+- [[#warning][WARNING]]
 - [[#introduction][Introduction]]
 - [[#installation][Installation]]
   - [[#using-doom-emacs][Using Doom Emacs]]
 - [[#sample-config][Sample Config]]
+  - [[#sample-full-config][Sample full config]]
   - [[#doom-emacs-configurations][Doom Emacs Configurations]]
-- [[#getting-started][Getting Started]]
+- [[#optional-extensions-for-zetteldeskel][Optional Extensions for zetteldesk.el]]
 - [[#keybindings][Keybindings]]
-- [[#debugging][Debugging]]
+- [[#getting-started][Getting Started]]
 - [[#background-of-the-package][Background of the Package]]
 - [[#related-work--thank-yous][Related Work & Thank yous]]
+
+* WARNING
+(This message was written in 12 of May 2022)
+
+For uploading this package to MELPA I had to make some major naming changes to abide by its conventions. If you happened to have installed this package before, you should really update it and any of its optional extensions as a lot of things have changed in this update. However, in a few days this will most likely be on MELPA so I recommend you get it from there either way (extensions might take a bit more however, so definitely do update those if you want to use them).
 
 * Introduction
   Zetteldesk.el exposes a workflow where you select buffers and org-roam nodes from a completion menu and filter generic functions such as ~switch-to-buffer~ and ~org-roam-node-find~ to show only the things you selected. Then it allows you to insert their contents in a seperate buffer and make an outline of the topic in question. Quoting the one and only Sonke Ahrens, the "desktop" is an essential part of academic endeavours such as writing a paper (I would personally generalize this further as an essential part of any type of revision work).
@@ -26,7 +33,7 @@
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section. Unfortunately, while this idea is mentioned in the book, it is never deeply discussed so I improvised a bit to make something I like, and I think you might find it helpful.
   
 * Installation
-  This package is currently not on MELPA. I would like to add it when I find the time however. To install this, simply clone this repository locally and add zetteldesk.el to your load-path.
+  This package is currently not on MELPA, however, I anticipate it will be very soon (at least the core package). To install this, simply clone this repository locally and add zetteldesk.el to your load-path.
 
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
 

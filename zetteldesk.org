@@ -14,13 +14,12 @@ This file was originally part of my emacs config in the org-roam section. Howeve
 - [[#org-remark-integration][Org-remark integration]]
   - [[#preamble][Preamble]]
   - [[#code][Code]]
-- [[#handling-notes-on-articles-better][Handling notes on articles better]]
+- [[#handling-notes-on-articles-better---literature-notes][Handling notes on articles better - Literature Notes]]
   - [[#preamble-1][Preamble]]
   - [[#reference-notes-from-bibtex-entries][Reference notes from Bibtex Entries]]
 - [[#info-nodes][Info Nodes]]
   - [[#preamble-2][Preamble]]
   - [[#the-rest-of-the-code][The rest of the code]]
-- [[#adding-keybindings-to-the-hydra][Adding keybindings to the hydra]]
 - [[#providing-the-packages-to-be-loaded-in-initel][Providing the packages to be loaded in init.el]]
 
 * Implementing the Zettelkasten "desktop" to org-roam 
@@ -42,7 +41,7 @@ This file was originally part of my emacs config in the org-roam section. Howeve
      ;; Tested on Emacs 27.2 and org-roam v2.2
      ;; Created: 6th February 2022
      ;; License: GPL-3.0
-     ;; Version: 0.4
+     ;; Version: 1.0
 
      ;; This file is free software; you can redistribute it and/or modify
      ;; it under the terms of the GNU General Public License as published by
@@ -674,7 +673,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
   ;; Created: 3rd March 2022
   ;; License: GPL-3.0
-  ;; Version: 0.1
+  ;; Version: 0.2
 
   ;; This file is free software; you can redistribute it and/or modify
   ;; it under the terms of the GNU General Public License as published by
@@ -780,29 +779,6 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
   (define-key zetteldesk-map zetteldesk-kb-hydra-prefix 'zetteldesk-main-hydra/body)
 
-  ;; -- Zetteldesk-remark --
-
-  (with-eval-after-load 'zetteldesk-remark
-    (pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
-      ("Zetteldesk Remark Functions"
-       (("m" zetteldesk-remark-mark "Mark region and create margin note")
-	("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
-
-       "Org Remark Functions"
-       (("o" org-remark-open "Open margin note")
-	("n" org-remark-view-next "Open next margin note" :exit nil)
-	("p" org-remark-view-prev "Open previous margin note" :exit nil)
-	("v" org-remark-view "Open margin note without switching to it" :exit nil))
-
-       "Quit"
-       (("q" nil "quit")))))
-
-  (with-eval-after-load 'zetteldesk-remark
-    (pretty-hydra-define+ zetteldesk-main-hydra ()
-      ("Inserting Things and *zetteldesk-scratch*"
-       (("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra")))))
-
-
 #+END_SRC
 
    
@@ -814,10 +790,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
-  ;; Package-Requires: ((zetteldesk "0.5") (org-remark "1.0") (zetteldesk-kb "0.1") (emacs "27.2"))
+  ;; Package-Requires: ((zetteldesk "1.0") (org-remark "1.0") (emacs "27.2"))
   ;; Created: 22nd March 2022
   ;; License: GPL-3.0
-  ;; Version: 0.1
+  ;; Version: 0.2
 
   ;; This file is free software; you can redistribute it and/or modify
   ;; it under the terms of the GNU General Public License as published by
@@ -845,7 +821,6 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;;; Code:
 
   (require 'zetteldesk)
-  (require 'zetteldesk-kb)
   (require 'org-remark)
 
 #+END_SRC
@@ -865,7 +840,18 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
        "Title to use in `zetteldesk-remark-highlight-get-title'.
 
      Initialised to nil and given a value when turning on
-     `zetteldesk-remark-mode'."
+     `zetteldesk-remark-mode' through `zetteldesk-remark-set-title'."
+       :type 'string
+       :group 'zetteldesk)
+
+     (defcustom zetteldesk-remark-notes-file
+       (concat org-roam-directory "zetteldesk-margin-notes.org")
+       "Default value of `org-remark-notes-file-name' for zetteldesk functions.
+
+     When turning on `zetteldesk-remark-mode' this variable's value is
+     set to the value of `org-remark-notes-file-name' through
+     `zetteldesk-remark-set-notes-file'.  This is stored as a variable
+     so you can customise it if you don't like its default value."
        :type 'string
        :group 'zetteldesk)
 
@@ -886,16 +872,15 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
        "Helper function to set `org-remark-notes-file-name''s value.
 
      This is the value the zetteldesk-remark functions expect and this
-     function is run in the `zetteldesk-remark-mode-on-hook'."
-       (setq org-remark-notes-file-name
-	     (concat org-roam-directory "zetteldesk-margin-notes.org")))
+     function is run when `zetteldesk-remark-mode' is turned on."
+       (setq org-remark-notes-file-name zetteldesk-remark-notes-file))
 
      (defun zetteldesk-remark-reset-notes-file ()
        "Reset `org-remark-notes-file-name' to its default value.
 
      This is a helper function for zetteldesk-remark to reset the
      value of that variable after turning off
-     `zetteldesk-remark-mode-off-hook'"
+     `zetteldesk-remark-mode'."
        (setq org-remark-notes-file-name zetteldesk-remark-default-notes))
 
      ;;;###autoload
@@ -1120,7 +1105,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
      coming from zetteldesk-scratch.  This function switches to that
      file."
        (interactive)
-       (pop-to-buffer (find-file (concat org-roam-directory "zetteldesk-margin-notes.org"))))
+       (pop-to-buffer (find-file zetteldesk-remark-notes-file)))
    #+END_SRC
 
    #+RESULTS:
@@ -1138,10 +1123,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-      ;; Package-Requires: ((zetteldesk "0.3") (bibtex-completion "2.0") (zetteldesk-kb "0.1") (emacs "26.1"))
+      ;; Package-Requires: ((zetteldesk "1.0") (bibtex-completion "2.0") (emacs "26.1"))
       ;; Created: 27th March 2022
       ;; License: GPL-3.0
-      ;; Version: 0.1
+      ;; Version: 0.2
 
       ;; This file is free software; you can redistribute it and/or modify
       ;; it under the terms of the GNU General Public License as published by
@@ -1167,7 +1152,6 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;;; Code:
 
       (require 'zetteldesk)
-      (require 'zetteldesk-kb)
       (require 'bibtex-completion)
 
     #+END_SRC
@@ -1418,10 +1402,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
       ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-info.el
-      ;; Package-Requires: ((zetteldesk "0.2") (zetteldesk-kb "0.1") (emacs "27.1"))
-      ;; Created: 6th April 2022 (as an independent file, existed since the start)
+      ;; Package-Requires: ((zetteldesk "0.4") (emacs "27.1"))
+      ;; Created: 6th April 2022
       ;; License: GPL-3.0
-      ;; Version: 0.1
+      ;; Version: 0.2
 
       ;; This file is free software; you can redistribute it and/or modify
       ;; it under the terms of the GNU General Public License as published by
@@ -1539,7 +1523,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
     #+RESULTS:
     : zetteldesk-insert-info-contents
 
-* Adding keybindings to the hydra
+* COMMENT Adding keybindings to the hydra
 For my package zetteldesk.el, I define some keybindings in the file zetteldesk-kb.el. As I do not use these keybindings myself (I prefer the evil-styled ones that suit my config better tbh) that file is never loaded in my config, therefore this should also not be loaded. However, as I often play around with the code here and not in the zetteldesk directory I want to have this here for copy-paste-ability.
 
 #+BEGIN_SRC elisp :tangle zetteldesk-kb.el

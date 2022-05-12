@@ -7,7 +7,7 @@
 ;; Tested on Emacs 27.2 and org-roam v2.2
 ;; Created: 6th February 2022
 ;; License: GPL-3.0
-;; Version: 0.4
+;; Version: 1.0
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

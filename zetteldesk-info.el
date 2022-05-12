@@ -3,10 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-info.el
-;; Package-Requires: ((zetteldesk "0.2") (zetteldesk-kb "0.1") (emacs "27.1"))
-;; Created: 6th April 2022 (as an independent file, existed since the start)
+;; Package-Requires: ((zetteldesk "0.4") (emacs "27.1"))
+;; Created: 6th April 2022
 ;; License: GPL-3.0
-;; Version: 0.1
+;; Version: 0.2
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

@@ -57,7 +57,7 @@ To install in a Doom configuration, put the following declaration in your =packa
 
     (require 'zetteldesk)
     (zetteldesk-mode 1)
-    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
 
   #+END_SRC
 
@@ -70,7 +70,7 @@ To install in a Doom configuration, put the following declaration in your =packa
 
     (require 'zetteldesk)
     (zetteldesk-mode 1)
-    (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
     (require 'zetteldesk-kb)
     (require 'zetteldesk-ref)
     (require 'zetteldesk-info)
@@ -89,7 +89,7 @@ The easiest configuration is to use the hydra keybindings:
 (use-package! zetteldesk
   :after org-roam
   :config
-  (setq zetteldesk-hydra-prefix (kbd "C-c z"))
+  (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
   (zetteldesk-mode)
   (require 'zetteldesk-kb))
 #+end_src
@@ -160,7 +160,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info.gif]]
   
-  The function that does the adding is ~zetteldesk-add-info-node-to-desktop~ (and of course there is an equivalent ~zetteldesk-remove-info-node-from-desktop~), while the filter function is ~zetteldesk-info-goto-node~. Furthermore, I wouldn't consider this complete, if you couldn't insert a node you want to the zetteldesk-scratch besides switching to it in the info buffer. This is also possible with ~zetteldesk-insert-info-contents~, which is demonstrated here 
+  The function that does the adding is ~zetteldesk-info-add-info-node-to-desktop~ (and of course there is an equivalent ~zetteldesk-info-remove-info-node-from-desktop~), while the filter function is ~zetteldesk-info-goto-node~. Furthermore, I wouldn't consider this complete, if you couldn't insert a node you want to the zetteldesk-scratch besides switching to it in the info buffer. This is also possible with ~zetteldesk-info-insert-contents~, which is demonstrated here 
  
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info_scratch.gif]]
   
@@ -180,7 +180,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   
   Note that the above functions filter to only show the appropriate files (org files that are not in org-roam or pdfs respectively) and that if they are in the zetteldesk.
 
-  Now, as promised, I will give you a very brief description of the optional extensions. For ~zetteldesk-ref.el~ the most important functions I would say are ~zetteldesk-find-ref-node~ and ~zetteldesk-insert-ref-node-contents~. This extension follows the model of ~zetteldesk.el~ very closely. It defines some predicates, makes filters and defines a special insertion behaviour. You can think of ~zetteldesk-find-ref-node~ as a combination of filters between ~ivy-bibtex-with-notes~ and ~zetteldesk-node-find~, while you can think of ~zetteldesk-insert-ref-node-contents~ as an inbetween of implementations between ~zetteldesk-insert-org-contents~ and ~zetteldesk-insert-node-contents~.
+  Now, as promised, I will give you a very brief description of the optional extensions. For ~zetteldesk-ref.el~ the most important functions I would say are ~zetteldesk-ref-find-ref-node~, ~zetteldesk-ref-ivy-bibtex-with-notes~ (or ~zetteldesk-ref-helm-bibtex-with-notes~) and ~zetteldesk-ref-insert-ref-node-contents~. This extension follows the model of ~zetteldesk.el~ very closely. It defines some predicates, makes filters and defines a special insertion behaviour. You can think of the first 2 as combinations of filters between ~ivy-bibtex-with-notes~ and ~zetteldesk-node-find~, implemented with the org-roam UI in ~zetteldesk-ref-find-ref-node~ and with the ~ivy-bibtex-with-notes~ one in ~zetteldesk-ref-ivy-bibtex-with-notes~, while you can think of ~zetteldesk-insert-ref-node-contents~ as an inbetween of implementations between ~zetteldesk-insert-org-contents~ and ~zetteldesk-insert-node-contents~.
 
   For ~zetteldesk-remark.el~, go in ~*zetteldesk-scratch*~, mark a section and run ~zetteldesk-remark-mark~. There's a lot of technical details behind this (which I explain in the wiki) but if you want to test it, ~zetteldesk-remark-mark~ essentially does all the magic.
 
@@ -242,5 +242,3 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
 
   Saving the current state of the Zetteldesk. Although I have no clue how. Maybe if I am able to save the value of a buffer local variable between sessions its possible. 
-
-  Polish some features like minor problems in zetteldesk-remark.el, implement the backwards idea to the existing one in zetteldesk-ref.el and start the process of publishing to MELPA.

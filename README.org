@@ -15,9 +15,7 @@
 - [[#related-work--thank-yous][Related Work & Thank yous]]
 
 * WARNING
-(This message was written in 12 of May 2022)
-
-For uploading this package to MELPA I had to make some major naming changes to abide by its conventions. If you happened to have installed this package before, you should really update it and any of its optional extensions as a lot of things have changed in this update. However, in a few days this will most likely be on MELPA so I recommend you get it from there either way (extensions might take a bit more however, so definitely do update those if you want to use them).
+As of the 15th of May, this package is now available on MELPA. As there have been breaking changes for MELPA compatibility, if you cloned this library in the past I would suggest you install it from MELPA (or I guess if you like installing from source you can pull down the latest changes). Currently the other extensions of the package are not on MELPA, although they will probably be there quite soon.
 
 * Introduction
   Zetteldesk.el exposes a workflow where you select buffers and org-roam nodes from a completion menu and filter generic functions such as ~switch-to-buffer~ and ~org-roam-node-find~ to show only the things you selected. Then it allows you to insert their contents in a seperate buffer and make an outline of the topic in question. Quoting the one and only Sonke Ahrens, the "desktop" is an essential part of academic endeavours such as writing a paper (I would personally generalize this further as an essential part of any type of revision work).
@@ -33,7 +31,7 @@ For uploading this package to MELPA I had to make some major naming changes to a
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section. Unfortunately, while this idea is mentioned in the book, it is never deeply discussed so I improvised a bit to make something I like, and I think you might find it helpful.
   
 * Installation
-  This package is currently not on MELPA, however, I anticipate it will be very soon (at least the core package). To install this, simply clone this repository locally and add zetteldesk.el to your load-path.
+  This package is finally on MELPA. Make sure you have MELPA in your package-archives (it would really surprise me if you don't) and you can install this with ~M-x package-install~. However, currently only the main package is on MELPA. If you want the other extensions I have for the package, you will need to install them from source by cloning this repo and adding it to your load path.
 
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
 
@@ -46,7 +44,7 @@ For uploading this package to MELPA I had to make some major naming changes to a
 #+END_SRC
 
 ** Using Doom Emacs
-To install in a Doom configuration, put the following declaration in your =packages.el=
+To install in a Doom configuration, you can also put the following declaration in your =packages.el=
 #+begin_src elisp
 ;; ~/.doom.d/packages.el
 (package! zetteldesk
@@ -70,21 +68,6 @@ To install in a Doom configuration, put the following declaration in your =packa
 
   After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
 
-** Sample full config
-  This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. They are explained more in the next section of the config.
-  
-  #+BEGIN_SRC elisp
-
-    (require 'zetteldesk)
-    (zetteldesk-mode 1)
-    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
-    (require 'zetteldesk-kb)
-    (require 'zetteldesk-ref)
-    (require 'zetteldesk-info)
-    (require 'zetteldesk-remark)
-    
-  #+END_SRC
-  
 ** Doom Emacs Configurations
 If you use Doom Emacs, fear not, we have some configuration options for it, courtesy of @jlcolbert.
 
@@ -102,6 +85,21 @@ The easiest configuration is to use the hydra keybindings:
 #+end_src
 For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/Doom-Configuration][Doom Configuration]] page in the Wiki.
 
+** Sample full config
+  This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. They are explained more in the next section of the config.
+  
+  #+BEGIN_SRC elisp
+
+    (require 'zetteldesk)
+    (zetteldesk-mode 1)
+    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
+    (require 'zetteldesk-kb)
+    (require 'zetteldesk-ref)
+    (require 'zetteldesk-info)
+    (require 'zetteldesk-remark)
+    
+  #+END_SRC
+  
 * Optional Extensions for zetteldesk.el
   Zetteldesk.el has 4 optional extensions. They are seperate packages because most of them are outside the scope of the general package and introduce unnecessary dependencies.
 

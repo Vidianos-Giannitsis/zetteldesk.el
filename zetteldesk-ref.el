@@ -3,7 +3,7 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "1.0") (bibtex-completion "2.0") (emacs "26.1"))
+;; Package-Requires: ((zetteldesk "1.0") (bibtex-completion "1.0") (emacs "26.1"))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
 ;; Version: 0.2

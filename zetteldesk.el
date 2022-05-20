@@ -130,8 +130,8 @@ modified to do a comparison between it and the current value of
 
 (defun zetteldesk-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk-desktop'."
-  (not (eq zetteldesk-desktop-default
-	   (buffer-local-value 'zetteldesk-desktop (cdr BUFFER)))))
+  (not (equal zetteldesk-desktop-default
+	      (buffer-local-value 'zetteldesk-desktop (cdr BUFFER)))))
 
 (defun zetteldesk-buffer-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk-desktop'.
@@ -152,8 +152,8 @@ This function is used as a filter function to create
 `zetteldesk-node-find' which is a filtered view of
 `org-roam-node-find'"
   (if (org-roam-node-buffer NODE)
-      (not (eq zetteldesk-desktop-default
-	       (buffer-local-value 'zetteldesk-desktop (org-roam-node-buffer NODE))))
+      (not (equal zetteldesk-desktop-default
+		  (buffer-local-value 'zetteldesk-desktop (org-roam-node-buffer NODE))))
     nil))
 
 (defmacro zetteldesk-mode-buffer-p (BUFFER MODE)
@@ -166,7 +166,7 @@ passed to `read-buffer' variants such as
 required for `read-buffer' while MODE should be a symbol such as
 'org-mode."
   `(and (zetteldesk-buffer-p ,BUFFER)
-	(eq (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
+	(equal (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
 
 (defun zetteldesk-org-buffer-p (BUFFER)
   "Check if BUFFER is part of the current `zetteldesk-desktop'.

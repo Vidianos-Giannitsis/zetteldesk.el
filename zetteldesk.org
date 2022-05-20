@@ -177,8 +177,8 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 
   (defun zetteldesk-p (BUFFER)
     "Check if BUFFER is part of the current `zetteldesk-desktop'."
-    (not (eq zetteldesk-desktop-default
-	     (buffer-local-value 'zetteldesk-desktop (cdr BUFFER)))))
+    (not (equal zetteldesk-desktop-default
+		(buffer-local-value 'zetteldesk-desktop (cdr BUFFER)))))
 
   (defun zetteldesk-buffer-p (BUFFER)
     "Check if BUFFER is part of the current `zetteldesk-desktop'.
@@ -199,8 +199,8 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
   `zetteldesk-node-find' which is a filtered view of
   `org-roam-node-find'"
     (if (org-roam-node-buffer NODE)
-	(not (eq zetteldesk-desktop-default
-		 (buffer-local-value 'zetteldesk-desktop (org-roam-node-buffer NODE))))
+	(not (equal zetteldesk-desktop-default
+		    (buffer-local-value 'zetteldesk-desktop (org-roam-node-buffer NODE))))
       nil))
 
   (defmacro zetteldesk-mode-buffer-p (BUFFER MODE)
@@ -213,7 +213,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
   required for `read-buffer' while MODE should be a symbol such as
   'org-mode."
     `(and (zetteldesk-buffer-p ,BUFFER)
-	  (eq (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
+	  (equal (buffer-local-value 'major-mode (cdr ,BUFFER)) ,MODE)))
 
   (defun zetteldesk-org-buffer-p (BUFFER)
     "Check if BUFFER is part of the current `zetteldesk-desktop'.
@@ -234,7 +234,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
 #+END_SRC
 
 #+RESULTS:
-: zetteldesk-node-insert
+: zetteldesk-pdf-p
 
 ** Adding and Removing things in the Zetteldesk
    I define a few adding mechanisms and the matching removing ones, as can seen below. The first is adding/removing a buffer, the second is for a node and then I have two ways of playing with a nodes backlinks. I can add a node and all its backlinks to the zetteldesk, or I can select a node and add one of its backlinks to the zetteldesk. Both have their use cases imo. For the last one, I believe there is no need for a matching removing one. 

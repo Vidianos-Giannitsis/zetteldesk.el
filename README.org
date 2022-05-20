@@ -31,7 +31,9 @@ As of the 15th of May, this package is now available on MELPA. As there have bee
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section. Unfortunately, while this idea is mentioned in the book, it is never deeply discussed so I improvised a bit to make something I like, and I think you might find it helpful.
   
 * Installation
-  This package is finally on MELPA. Make sure you have MELPA in your package-archives (it would really surprise me if you don't) and you can install this with ~M-x package-install~. However, currently only the main package is on MELPA. If you want the other extensions I have for the package, you will need to install them from source by cloning this repo and adding it to your load path.
+  This package is on MELPA [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]]
+
+  Make sure you have MELPA in your package-archives (it would really surprise me if you don't) and you can install this with ~M-x package-install~. However, currently only the main package is on MELPA. If you want the other extensions I have for the package, you will need to install them from source by cloning this repo and adding it to your load path.
 
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
 

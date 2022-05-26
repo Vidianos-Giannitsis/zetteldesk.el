@@ -64,11 +64,11 @@ To install in a Doom configuration, you can also put the following declaration i
 
     (require 'zetteldesk)
     (zetteldesk-mode 1)
-    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
-
+    (require 'zetteldesk-kb)
+    
   #+END_SRC
 
-  After setting these, just press C-c z (or any other keybinding you want for the prefix) and explore the hydra.
+  After setting these, just press C-c z (or any other keybinding you want if you change the value of ~zetteldesk-kb-hydra-prefix~) and explore the hydra.
 
 ** Doom Emacs Configurations
 If you use Doom Emacs, fear not, we have some configuration options for it, courtesy of @jlcolbert.
@@ -88,14 +88,13 @@ The easiest configuration is to use the hydra keybindings:
 For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/Doom-Configuration][Doom Configuration]] page in the Wiki.
 
 ** Sample full config
-  This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. They are explained more in the next section of the config.
+  This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. They are explained more in the next section of the config. This is the one I use personally.
   
   #+BEGIN_SRC elisp
 
     (require 'zetteldesk)
     (zetteldesk-mode 1)
-    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
-    (require 'zetteldesk-kb)
+    (require 'zetteldesk-kb-complete)
     (require 'zetteldesk-ref)
     (require 'zetteldesk-info)
     (require 'zetteldesk-remark)
@@ -105,7 +104,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 * Optional Extensions for zetteldesk.el
   Zetteldesk.el has 4 optional extensions. They are seperate packages because most of them are outside the scope of the general package and introduce unnecessary dependencies.
 
-  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-kb.el][zetteldesk-kb.el]] creates a hydra with which I created the default keybindings of the package. It has dependencies on [[https://github.com/abo-abo/hydra][hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra]] as I like the look of hydras generated with the ~pretty-hydra-define~ macro and decided to use them as the default of the package. You are free to not use them, (as I do myself) but they are a helpful "starter" kit.
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-kb.el][zetteldesk-kb.el]] creates a hydra with which I created the default keybindings of the package. It has dependencies on [[https://github.com/abo-abo/hydra][hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra]] as I like the look of hydras generated with the ~pretty-hydra-define~ macro and decided to use them as the default of the package. You are free to not use them, but they are a helpful "starter" kit. There is also ~zetteldesk-kb-complete.el~, which is an enhancement of this including keybindings for all the other extensions. I use all the extensions so its helpful to have a keybindings extension that includes all extensions.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-info.el][zetteldesk-info.el]], originally part of zetteldesk.el is an extension to use the features of zetteldesk.el with the Info documentation viewer built-in to Emacs. Its in my opinion a very helpful extension and does not introduce any dependencies, but its a case where its features are really outside the scope of zetteldesk.el
 
@@ -116,11 +115,11 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   These are documented in the wiki, so feel free to check them out with more detail.
  
 * Keybindings
-  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier. 
+  Keybindings in Emacs are a long discussion. I firmly believe that emacs is a tool which you can mold to your liking, and the fact that you can completely change all its keybindings with ease to those you like is a big part of that. I personally prefer evil style keybindings with Space as the global leader key. Someone else might like defaults, be inspired by defaults but change them a bit, or any other random thing. However, it is true that default keybindings in packages significantly lower the entry point and help with learning the package easier.
 
-  For this reason, I have defined a set of hydras for the package's defaults, in the extension ~zetteldesk-kb.el~, but I have not defined a prefix-key for the hydra, as that is something you will have to decide yourself imo. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package. This addon was originally envisioned to be fully optional, but as I have made some side packages for zetteldesk.el, these assume you have zetteldesk-kb.el loaded and add on to its keybindings. The logic is that zetteldesk-kb.el should only have the keybindings of zetteldesk.el and the rest of the extensions should define their keybindings inside their own file. In a way, this makes this keybinding library more or less mandatory to use the extensions, but no one forces you to use these bindings. I for one load them in my config but don't use the hydra too much as I prefer my own set of bindings.
- 
-  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. If you customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~), the main hydra will automatically be bound to that key in every buffer with zetteldesk-mode active (meaning every buffer as its a global minor mode). Note though that due to the structure of the package, and my decision to not define a prefix key by default, you will need to set its value before loading the library as it will signal an error otherwise (due to the ~define-key~ expecting a keybinding and getting ~nil~).
+  For this reason, I have defined a set of hydras for the package's defaults, in the extension ~zetteldesk-kb.el~, but they must be installed separately. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
+
+  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. The main hydra is called with "C-c z" by default, but you are free to (and recommended to) customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~) to override that so that it follows the logic of the rest of your config.
 
   The sample code for loading this is basically the minimal example for above so I don't need to add any more.
 

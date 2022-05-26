@@ -770,14 +770,17 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
   ;; Set up the keybinding to call the hydra
 
-  (defcustom zetteldesk-kb-hydra-prefix nil
+  (defcustom zetteldesk-kb-hydra-prefix (kbd "C-c z")
     "Stores the value of the keybinding that calls the main zetteldesk hydra.
   By default it is set to nil, to
     allow the user to set the prefix they want"
     :type 'string
     :group 'zetteldesk)
 
-  (define-key zetteldesk-map zetteldesk-kb-hydra-prefix 'zetteldesk-main-hydra/body)
+  (defvar zetteldesk-map
+    (let ((km (make-sparse-keymap)))
+      (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km)
+    "Keymap for zetteldesk.el")
 
 #+END_SRC
 

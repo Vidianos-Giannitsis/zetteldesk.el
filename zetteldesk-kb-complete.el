@@ -1,12 +1,12 @@
-;;; zetteldesk-kb.el --- Keybindings for zetteldesk.el  -*- lexical-binding: t; -*-
+;;; zetteldesk-kb-complete.el --- Keybindings for zetteldesk.el and extensions  -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
-;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
-;; Created: 3rd March 2022
+;; Package-Requires: ((zetteldesk "1.0") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1") (zetteldesk-info "0.2") (zetteldesk-ref "0.2") (zetteldesk-remark "0.2"))
+;; Created: 23rd May 2022
 ;; License: GPL-3.0
-;; Version: 0.2
+;; Version: 0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,37 +23,23 @@
 
 ;;; Commentary:
 
-;; This file defines a few hydras for the keybindings in
-;; zetteldesk.el.  The hydra displays small descriptions of each
-;; function to help a beginner with getting familiarised with the
-;; package.  The keybindings used are based on what my personal config
-;; uses, but to fit it all in a single hydra, there are some
-;; differentiations.
-
-;; I made this optional and not part of the main package as I don't
-;; consider it essential, just helpful for those who want a ready set
-;; of keybindings, with descriptions instead of the function names to
-;; try the package out.  Due to the modularity of Emacs, I recommend
-;; you set up your own keybindings either from scratch or by
-;; customising these hydras so they make the most sense to you and fit
-;; your mental model.  I however thought that something like this will
-;; be very useful until you get the hang of the package.
-
-;; The hydras are defined with the `pretty-hydra-define' macro from
-;; the `major-mode-hydra' package as imo its end result is a very good
-;; looking hydra menu, perfect for something like this.  For this
-;; reason, this part of the package, relies on that package.
+;; This file is basically zetteldesk-kb.el, but aplified with all the
+;; keybindings for the optional extensions. This is a package which
+;; obviously has a lot of dependencies and is not planned to be on
+;; MELPA. Its just here for the convenience of myself and anyone else
+;; using all of zetteldesk.el's extensions. For more details on these
+;; keybindings refer to zetteldesk-kb.
 
 ;;; Code:
 
-;; Dependencies
-
 (require 'zetteldesk)
+(require 'zetteldesk-info)
+(require 'zetteldesk-ref)
+(require 'zetteldesk-remark)
 (require 'hydra)
 (require 'pretty-hydra)
-;; There is also org-roam, but since this requires zetteldesk.el to be
-;; loaded, that one should handle loading org-roam
 
+;; Main Package
 ;; Supplementary Hydras
 
 (pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk")
@@ -115,5 +101,70 @@ By default it is set to nil, to
     (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km)
   "Keymap for zetteldesk.el")
 
-(provide 'zetteldesk-kb)
-;;; zetteldesk-kb.el ends here
+;; zetteldesk-ref.el additions
+(pretty-hydra-define+ zetteldesk-insert-hydra ()
+  ("Org-Roam"
+   (("r" zetteldesk-ref-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
+
+(pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
+  ("Org-Roam UI"
+   (("r" zetteldesk-ref-find-ref-node))
+
+   "Helm-Bibtex UI"
+   (("h" zetteldesk-ref-helm-bibtex-with-notes))
+
+   "Ivy-Bibtex UI"
+   (("i" zetteldesk-ref-ivy-bibtex-with-notes))))
+
+(pretty-hydra-define+ zetteldesk-add-hydra ()
+  ("Org-Roam"
+   (("l" zetteldesk-ref-add-node-to-desktop "Add Literature Node"))))
+
+(pretty-hydra-define+ zetteldesk-remove-hydra ()
+  ("Org-Roam"
+   (("l" zetteldesk-ref-remove-node-from-desktop "Remove Literature Node"))))
+
+(pretty-hydra-define+ zetteldesk-main-hydra ()
+  ("Filter Functions"
+   (("l" zetteldesk-literature-hydra/body "Go to Zetteldesk Literature Node"))))
+
+;; zetteldesk-remark.el
+
+(pretty-hydra-define zetteldesk-remark-hydra (:color blue :title "Org-remark Integration")
+  ("Zetteldesk Remark Functions"
+   (("m" zetteldesk-remark-mark "Mark region and create margin note")
+    ("s" zetteldesk-remark-switch-to-margin-notes "Switch to the margin notes file"))
+
+   "Org Remark Functions"
+   (("o" org-remark-open "Open margin note")
+    ("n" org-remark-view-next "Open next margin note" :exit nil)
+    ("p" org-remark-view-prev "Open previous margin note" :exit nil)
+    ("v" org-remark-view "Open margin note without switching to it" :exit nil))
+
+   "Quit"
+   (("q" nil "quit"))))
+
+(pretty-hydra-define+ zetteldesk-main-hydra ()
+    ("Inserting Things and *zetteldesk-scratch*"
+     (("m" zetteldesk-remark-hydra/body "Run the Zetteldesk Remark Hydra"))))
+
+;; zetteldesk-info.el
+
+(pretty-hydra-define+ zetteldesk-add-hydra ()
+  ("Other"
+   (("i" zetteldesk-info-add-info-node-to-desktop "Add Info Node"))))
+
+(pretty-hydra-define+ zetteldesk-remove-hydra ()
+  ("Other"
+   (("i" zetteldesk-info-remove-info-node-from-desktop "Remove Info Node"))))
+
+(pretty-hydra-define+ zetteldesk-main-hydra ()
+  ("Filter Functions"
+   (("I" zetteldesk-info-goto-node "Go to Zetteldesk Info Node"))))
+
+(pretty-hydra-define+ zetteldesk-insert-hydra ()
+  ("Supplementary Material to *zetteldesk-scratch*"
+   (("I" zetteldesk-info-insert-contents "Info Node Contents + Link to context"))))
+
+(provide 'zetteldesk-kb-complete)
+;;; zetteldesk-kb-complete ends here

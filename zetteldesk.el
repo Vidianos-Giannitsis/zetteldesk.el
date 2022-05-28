@@ -7,7 +7,7 @@
 ;; Tested on Emacs 27.2 and org-roam v2.2
 ;; Created: 6th February 2022
 ;; License: GPL-3.0
-;; Version: 1.0
+;; Version: 1.0.1
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -346,7 +346,7 @@ missed something you want to include."
 ;; zetteldesk-scratch buffer is a special buffer defined here on which
 ;; you drop all your stuff. Its what molds the whole workflow together
 
-(defcustom zetteldesk-map (make-sparse-keymap)
+(defcustom zetteldesk-kb-map (make-sparse-keymap)
   "This variable is the keymap for `zetteldesk-mode'."
   :type 'keymap
   :group 'zetteldesk)
@@ -377,7 +377,7 @@ buffer, a useful part of the whole zetteldesk workflow."
   :init-value nil
   :global t
   :group 'zetteldesk
-  :keymap zetteldesk-map
+  :keymap zetteldesk-kb-map
   :lighter " zetteldesk"
   (when zetteldesk-mode
     (zetteldesk--create-scratch-buffer)))

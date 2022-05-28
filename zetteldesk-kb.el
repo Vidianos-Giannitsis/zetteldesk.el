@@ -3,10 +3,10 @@
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
-;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
+;; Package-Requires: ((zetteldesk "1.0.1") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
 ;; Created: 3rd March 2022
 ;; License: GPL-3.0
-;; Version: 0.2
+;; Version: 0.3
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -103,12 +103,12 @@
 
 ;; Set up the keybinding to call the hydra
 
-(defcustom zetteldesk-kb-hydra-prefix (kbd "C-c z")
+(defcustom zetteldesk-kb-hydra-prefix (kbd "C-c .")
   "Stores the value of the keybinding that calls the main zetteldesk hydra."
   :type 'string
   :group 'zetteldesk)
 
-(defvar zetteldesk-map
+(defvar zetteldesk-kb-map
   (let ((km (make-sparse-keymap)))
     (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km))
 

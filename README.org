@@ -64,8 +64,9 @@ To install in a Doom configuration, you can also put the following declaration i
 
     (require 'zetteldesk)
     (zetteldesk-mode 1)
+    (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
     (require 'zetteldesk-kb)
-    
+
   #+END_SRC
 
   After setting these, just press C-c z (or any other keybinding you want if you change the value of ~zetteldesk-kb-hydra-prefix~) and explore the hydra.
@@ -98,7 +99,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
     (require 'zetteldesk-ref)
     (require 'zetteldesk-info)
     (require 'zetteldesk-remark)
-    
+
   #+END_SRC
   
 * Optional Extensions for zetteldesk.el
@@ -119,9 +120,7 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   For this reason, I have defined a set of hydras for the package's defaults, in the extension ~zetteldesk-kb.el~, but they must be installed separately. I like hydras for this kind of job as they allow large descriptions and are very convenient to use. They are defined with the [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra-define macro]] as I like how it looks. These keybindings are to an extent inspired by my personal keybindings, but due to their different nature (of trying to fit all of them in a single hydra) they are not identical. However I consider them very usable for the purposes of the package.
 
-  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. The main hydra is called with "C-c z" by default, but you are free to (and recommended to) customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~) to override that so that it follows the logic of the rest of your config.
-
-  The sample code for loading this is basically the minimal example for above so I don't need to add any more.
+  The main hydra that contains all the keybindings is ~zetteldesk-main-hydra~, while I have defined 3 more supplementary hydras, ~zetteldesk-add-hydra~, ~zetteldesk-remove-hydra~ and ~zetteldesk-insert-hydra~ which are called from the main hydra. The main hydra is called with "C-c ." by default. I dislike that keybinding personally, I recommend "C-c z", but its against keybinding conventions to do that and Emacs says I should use C-c followed by a punctuation symbol. The above sample config did actually set it to "C-c z". However, you are free to (and recommended to) customize the value of the variable ~zetteldesk-hydra-prefix~ to a proper keybinding expression (using ~kbd~) to override that so that it follows the logic of the rest of your config. If you however use ~zetteldesk-kb-complete.el~, the extension that has the keybindings for all the extensions (which I use personally), it does have "C-c z" as the default. That package is not planned to be released on MELPA and is for the convenience of myself and anyone else who might be interested in it, so it doesn't really need to follow that convention. If you use it, you should be aware it does that.
 
 * Getting Started
   

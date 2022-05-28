@@ -41,7 +41,7 @@ This file was originally part of my emacs config in the org-roam section. Howeve
      ;; Tested on Emacs 27.2 and org-roam v2.2
      ;; Created: 6th February 2022
      ;; License: GPL-3.0
-     ;; Version: 1.0
+     ;; Version: 1.0.1
 
      ;; This file is free software; you can redistribute it and/or modify
      ;; it under the terms of the GNU General Public License as published by
@@ -437,7 +437,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
      ;; zetteldesk-scratch buffer is a special buffer defined here on which
      ;; you drop all your stuff. Its what molds the whole workflow together
 
-     (defcustom zetteldesk-map (make-sparse-keymap)
+     (defcustom zetteldesk-kb-map (make-sparse-keymap)
        "This variable is the keymap for `zetteldesk-mode'."
        :type 'keymap
        :group 'zetteldesk)
@@ -468,7 +468,7 @@ I tried to follow a rather simple idea to do this and not overcomplicate things.
        :init-value nil
        :global t
        :group 'zetteldesk
-       :keymap zetteldesk-map
+       :keymap zetteldesk-kb-map
        :lighter " zetteldesk"
        (when zetteldesk-mode
 	 (zetteldesk--create-scratch-buffer)))
@@ -670,10 +670,10 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
   ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
-  ;; Package-Requires: ((zetteldesk "0.2") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
+  ;; Package-Requires: ((zetteldesk "1.0.1") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
   ;; Created: 3rd March 2022
   ;; License: GPL-3.0
-  ;; Version: 0.2
+  ;; Version: 0.3
 
   ;; This file is free software; you can redistribute it and/or modify
   ;; it under the terms of the GNU General Public License as published by
@@ -770,12 +770,12 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
   ;; Set up the keybinding to call the hydra
 
-  (defcustom zetteldesk-kb-hydra-prefix (kbd "C-c z")
+  (defcustom zetteldesk-kb-hydra-prefix (kbd "C-c .")
     "Stores the value of the keybinding that calls the main zetteldesk hydra."
     :type 'string
     :group 'zetteldesk)
 
-  (defvar zetteldesk-map
+  (defvar zetteldesk-kb-map
     (let ((km (make-sparse-keymap)))
       (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km))
 

@@ -112,5 +112,9 @@
   (let ((km (make-sparse-keymap)))
     (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km))
 
+;; Local variables:
+;; byte-compile-docstring-max-column: 100
+;; end:
+
 (provide 'zetteldesk-kb)
 ;;; zetteldesk-kb.el ends here

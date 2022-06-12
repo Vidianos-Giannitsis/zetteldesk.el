@@ -34,6 +34,9 @@
 (require 'zetteldesk)
 (require 'bibtex-completion)
 
+(declare-function 'ivy-bibtex ivy-bibtex)
+(declare-function 'helm-bibtex helm-bibtex)
+
 ;; -- Reference Nodes from Bibtex Entries --
 (defun zetteldesk-ref-note-refs-p ()
   "Predicate function to find all bibtex completion candidates with a note.

@@ -1158,8 +1158,8 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
       (require 'zetteldesk)
       (require 'bibtex-completion)
 
-      (declare-function 'ivy-bibtex ivy-bibtex)
-      (declare-function 'helm-bibtex helm-bibtex)
+      (declare-function ivy-bibtex "ext:ivy-bibtex.el")
+      (declare-function helm-bibtex "ext:helm-bibtex.el")
     #+END_SRC
     
 ** Reference notes from Bibtex Entries

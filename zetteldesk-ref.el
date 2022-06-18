@@ -34,8 +34,8 @@
 (require 'zetteldesk)
 (require 'bibtex-completion)
 
-(declare-function 'ivy-bibtex ivy-bibtex)
-(declare-function 'helm-bibtex helm-bibtex)
+(declare-function ivy-bibtex "ext:ivy-bibtex.el")
+(declare-function helm-bibtex "ext:helm-bibtex.el")
 
 ;; -- Reference Nodes from Bibtex Entries --
 (defun zetteldesk-ref-note-refs-p ()

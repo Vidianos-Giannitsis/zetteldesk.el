@@ -35,6 +35,7 @@
 (require 'zetteldesk)
 (require 'zetteldesk-info)
 (require 'zetteldesk-ref)
+(require 'zetteldesk-ref-citar)
 (require 'zetteldesk-remark)
 (require 'hydra)
 (require 'pretty-hydra)
@@ -112,7 +113,10 @@
    (("h" zetteldesk-ref-helm-bibtex-with-notes))
 
    "Ivy-Bibtex UI"
-   (("i" zetteldesk-ref-ivy-bibtex-with-notes))))
+   (("i" zetteldesk-ref-ivy-bibtex-with-notes))
+
+   "Citar UI"
+   (("c" zetteldesk-ref-citar-open-notes))))
 
 (pretty-hydra-define+ zetteldesk-add-hydra ()
   ("Org-Roam"

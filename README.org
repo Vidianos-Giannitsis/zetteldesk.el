@@ -1,5 +1,7 @@
 #+TITLE: Zetteldesk.el a Revision and Outlining tool built on top of Org-Roam
 
+ [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]]
+ 
 * Table of Contents                                                     :TOC:
 - [[#warning][WARNING]]
 - [[#introduction][Introduction]]
@@ -13,9 +15,6 @@
 - [[#getting-started][Getting Started]]
 - [[#background-of-the-package][Background of the Package]]
 - [[#related-work--thank-yous][Related Work & Thank yous]]
-
-* WARNING
-As of the 15th of May, this package is now available on MELPA. As there have been breaking changes for MELPA compatibility, if you cloned this library in the past I would suggest you install it from MELPA (or I guess if you like installing from source you can pull down the latest changes). Currently the other extensions of the package are not on MELPA, although they will probably be there quite soon.
 
 * Introduction
   Zetteldesk.el exposes a workflow where you select buffers and org-roam nodes from a completion menu and filter generic functions such as ~switch-to-buffer~ and ~org-roam-node-find~ to show only the things you selected. Then it allows you to insert their contents in a seperate buffer and make an outline of the topic in question. Quoting the one and only Sonke Ahrens, the "desktop" is an essential part of academic endeavours such as writing a paper (I would personally generalize this further as an essential part of any type of revision work).
@@ -31,9 +30,9 @@ As of the 15th of May, this package is now available on MELPA. As there have bee
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section. Unfortunately, while this idea is mentioned in the book, it is never deeply discussed so I improvised a bit to make something I like, and I think you might find it helpful.
   
 * Installation
-  This package is on MELPA [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]]
+  This package is on MELPA [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]] so just install it with ~M-x package-install~.
 
-  Make sure you have MELPA in your package-archives (it would really surprise me if you don't) and you can install this with ~M-x package-install~. However, currently only the main package is on MELPA. If you want the other extensions I have for the package, you will need to install them from source by cloning this repo and adding it to your load path.
+  The extensions ~zetteldesk-kb~ and ~zetteldesk-ref~ are currently also on MELPA and I am waiting for feedback on the rest. They should be there in at most a month. For everything not on MELPA, my current suggestion is to clone the repo and add the packages to the load path so you can load them to your config.
 
   For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
 
@@ -109,8 +108,8 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-info.el][zetteldesk-info.el]], originally part of zetteldesk.el is an extension to use the features of zetteldesk.el with the Info documentation viewer built-in to Emacs. Its in my opinion a very helpful extension and does not introduce any dependencies, but its a case where its features are really outside the scope of zetteldesk.el
 
-  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref.el][zetteldesk-ref.el]] is an extension for handling literature notes better. I make these with org-roam-bibtex and org-noter and it felt annoying to not have proper filtering and insertion functions (for what these mean, do read on). It relies on [[https://github.com/tmalsburg/helm-bibtex][bibtex-completion]], meaning either helm-bibtex or ivy-bibtex. I have looked into supporting Citar as well (check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/issues/5][this]] issue) but I haven't managed to fully integrate it.
-
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref.el][zetteldesk-ref.el]] is an extension for handling literature notes better. I make these with org-roam-bibtex and org-noter and it felt annoying to not have proper filtering and insertion functions (for what these mean, do read on). It relies on [[https://github.com/tmalsburg/helm-bibtex][bibtex-completion]], meaning either helm-bibtex or ivy-bibtex. If you manage your bibliography with [[https://github.com/emacs-citar/citar][Citar]] however, fear not, as the extension [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref-citar.el][zetteldesk-ref-citar.el]] has been implemented for using this extension of zetteldesk with Citar as its backend.
+   
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-remark.el][zetteldesk-remark]] is an extension for integration between zetteldesk.el and [[https://github.com/nobiot/org-remark][org-remark]]. Org-remark is a package for creating margin notes in your org documents. Due to limitations of both packages, I had to write some functions to smooth out the integration of the two. This extension includes those functions.
 
   These are documented in the wiki, so feel free to check them out with more detail.
@@ -185,11 +184,15 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   
   Note that the above functions filter to only show the appropriate files (org files that are not in org-roam or pdfs respectively) and that if they are in the zetteldesk.
 
-  Now, as promised, I will give you a very brief description of the optional extensions. For ~zetteldesk-ref.el~ the most important functions I would say are ~zetteldesk-ref-find-ref-node~, ~zetteldesk-ref-ivy-bibtex-with-notes~ (or ~zetteldesk-ref-helm-bibtex-with-notes~) and ~zetteldesk-ref-insert-ref-node-contents~. This extension follows the model of ~zetteldesk.el~ very closely. It defines some predicates, makes filters and defines a special insertion behaviour. You can think of the first 2 as combinations of filters between ~ivy-bibtex-with-notes~ and ~zetteldesk-node-find~, implemented with the org-roam UI in ~zetteldesk-ref-find-ref-node~ and with the ~ivy-bibtex-with-notes~ one in ~zetteldesk-ref-ivy-bibtex-with-notes~, while you can think of ~zetteldesk-insert-ref-node-contents~ as an inbetween of implementations between ~zetteldesk-insert-org-contents~ and ~zetteldesk-insert-node-contents~.
+  Now, as promised, I will give you a very brief description of the optional extensions. Actually ~zetteldesk-info.el~ was already explained above (this is because it was originally part of the main package) and there is not much to say about ~zetteldesk-kb.el~ besides what was mentioned in [[*Keybindings][Keybindings]] .
+ 
+  For ~zetteldesk-ref.el~ the most important functions I would say are ~zetteldesk-ref-find-ref-node~, ~zetteldesk-ref-ivy-bibtex-with-notes~ (or ~zetteldesk-ref-helm-bibtex-with-notes~) and ~zetteldesk-ref-insert-ref-node-contents~. This extension follows the model of ~zetteldesk.el~ very closely. It defines some predicates, makes filters and defines a special insertion behaviour. You can think of the first 2 as combinations of filters between ~ivy-bibtex-with-notes~ and ~zetteldesk-node-find~, implemented with the org-roam UI in ~zetteldesk-ref-find-ref-node~ and with the ~ivy-bibtex-with-notes~ one in ~zetteldesk-ref-ivy-bibtex-with-notes~, while you can think of ~zetteldesk-insert-ref-node-contents~ as an inbetween of implementations between ~zetteldesk-insert-org-contents~ and ~zetteldesk-insert-node-contents~.
+
+  If you prefer citar as your backend a lot of the functions have the same name, but are prefixed with ~zetteldesk-ref-citar~ instead of ~zetteldesk-ref~. The only difference is the equivalent to ~zetteldesk-ref-ivy-bibtex-with-notes~ (using the bibliography manager's UI for the selection) is named ~zetteldesk-ref-citar-open-notes~ following the naming of ~citar-open-notes~ on which it is based.
 
   For ~zetteldesk-remark.el~, go in ~*zetteldesk-scratch*~, mark a section and run ~zetteldesk-remark-mark~. There's a lot of technical details behind this (which I explain in the wiki) but if you want to test it, ~zetteldesk-remark-mark~ essentially does all the magic.
 
-  For visual demonstrations of these, check their wiki sections.
+  For visual demonstrations of these, and many more details on them, check their wiki sections.
   
 * Background of the Package
   So if you reached up to here, you are probably interested in this. So you can check out the background story of this package. This is how I concieved the package and everything leading up to the release. I find it interesting to read something like this as it gives a good description and use case for this, in an organic manner. Note that its rather lengthy and unfiltered though.

@@ -1,9 +1,9 @@
-;;; zetteldesk-ref.el --- A zetteldesk extension for interfacing with literature nodes   -*- lexical-binding: t; -*-
+;;; zetteldesk-ref-citar.el --- A zetteldesk extension for interfacing with literature nodes  -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; Maintainer: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref.el
-;; Package-Requires: ((zetteldesk "1.0") (bibtex-completion "1.0") (emacs "26.1"))
+;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-ref-citar.el
+;; Package-Requires: ((zetteldesk "1.0") (citar "0.9") (emacs "26.1"))
 ;; Created: 27th March 2022
 ;; License: GPL-3.0
 ;; Version: 0.2
@@ -27,35 +27,29 @@
 ;; Specifically it introduces mechanisms for handling literature notes
 ;; associated to a bibtex entry which are mostly powered by org-noter.
 ;; This code makes these reference materials interface better with the
-;; zetteldesk
+;; zetteldesk. The original zetteldesk-ref package uses the
+;; bibtex-completion package as its backend which is what I currently
+;; use. However, Citar is another great package for managing
+;; bibliography so I decided to port that package to work with Citar
+;; as well.
 
 ;;; Code:
 
 (require 'zetteldesk)
-(require 'bibtex-completion)
+(require 'citar)
 
-(declare-function ivy-bibtex "ext:ivy-bibtex.el")
-(declare-function helm-bibtex "ext:helm-bibtex.el")
+(defun zetteldesk-ref-citar-node-from-refs ()
+  "Collects a list of ref nodes.
 
-;; -- Reference Nodes from Bibtex Entries --
-(defun zetteldesk-ref-note-refs-p ()
-  "Predicate function to find all bibtex completion candidates with a note.
+The candidates are collected using `citar--get-candidates' with
+the filter `citar-has-note' and using their citekey, the
+org-roam-nodes associated to those citekeys are collected with
+`org-roam-node-from-ref'."
+  (cl-loop for cand in (citar--get-candidates nil (citar-has-note))
+	   for key = (cadr cand)
+	   collect (org-roam-node-from-ref (concat "@" key))))
 
-Checks if every candidate has the \"=has-note=\" tag using
-`assoc' and if it does, collects that candidate."
-  (cl-loop for ref in (bibtex-completion-candidates)
-	   if (assoc "=has-note=" ref)
-	   collect ref))
-
-(defun zetteldesk-ref-citekey-from-refs ()
-  "Find the \"=key=\" tag from a list of candidates.
-
-The list is collected with `zetteldesk-ref-note-refs-p' which is a
-list of candidates that have notes. Collects it using `assoc'."
-  (cl-loop for ref in (zetteldesk-ref-note-refs-p)
-	   collect (assoc "=key=" ref)))
-
-(defun zetteldesk-ref-citekey-from-node ()
+(defun zetteldesk-ref-citar-citekey-from-node ()
   "Collects the citekeys of org-roam-nodes in the `zetteldesk-desktop'.
 
 Ignores nodes for which `org-roam-node-refs' returns nil."
@@ -65,16 +59,7 @@ Ignores nodes for which `org-roam-node-refs' returns nil."
 	     if (org-roam-node-refs node)
 	     collect (car (org-roam-node-refs node)))))
 
-(defun zetteldesk-ref-node-from-refs ()
-  "Collects a list of ref nodes.
-
-The nodes are collected from their citekey using
-`org-roam-node-from-ref', while the citekeys themselves are
-collected from `zetteldesk-ref-citekey-from-refs'."
-  (cl-loop for ref in (zetteldesk-ref-citekey-from-refs)
-	   collect (org-roam-node-from-ref (concat "cite:" (cdr ref)))))
-
-(defun zetteldesk-ref-roam-node-read--completions* (node-list &optional filter-fn sort-fn)
+(defun zetteldesk-ref-citar-roam-node-read--completions* (node-list &optional filter-fn sort-fn)
   "Run `org-roam-node-read--completions' with NODE-LIST being a list of nodes.
 
 Typically, the function takes `org-roam-node-list' as the initial
@@ -102,11 +87,11 @@ used with `org-roam-node-read*'."
 		  nodes)))
     nodes))
 
-(defun zetteldesk-ref-roam-node-read* (node-list &optional initial-input filter-fn sort-fn require-match prompt)
+(defun zetteldesk-ref-citar-roam-node-read* (node-list &optional initial-input filter-fn sort-fn require-match prompt)
   "Run `org-roam-node-read' with the nodes supplied by NODE-LIST.
 
 NODE-LIST is a list of nodes passed to
-`zetteldesk-ref-roam-node-read--completions*', which creates an alist of
+`zetteldesk-ref-citar-roam-node-read--completions*', which creates an alist of
 nodes with the proper formatting to be used in this
 function.  This is for those cases where it is helpful to use your
 own list of nodes, because a predicate function can not filter
@@ -135,13 +120,13 @@ same as in `org-roam-node-read'."
     (or (cdr (assoc node nodes))
 	(org-roam-node-create :title node))))
 
-(defun zetteldesk-ref-add-node-to-desktop (NODE)
+(defun zetteldesk-ref-citar-add-node-to-desktop (NODE)
   "Add NODE to the `zetteldesk-desktop'.
 
 NODE is a literature note that is part of the org-roam
 repository.  The list of such nodes is gathered with
-`zetteldesk-ref-node-from-refs'."
-  (interactive (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs))))
+`zetteldesk-ref-citar-node-from-refs'."
+  (interactive (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs))))
   (let ((buffer (org-roam-node-buffer NODE))
 	(file (org-roam-node-file NODE))
 	(org-startup-with-latex-preview nil))
@@ -149,75 +134,80 @@ repository.  The list of such nodes is gathered with
 	(zetteldesk--add-buffer buffer)
       (zetteldesk--add-buffer (find-file-noselect file)))))
 
-(defun zetteldesk-ref-remove-node-from-desktop (NODE)
+(defun zetteldesk-ref-citar-remove-node-from-desktop (NODE)
   "Remove NODE from the `zetteldesk-desktop'.
 
 NODE is a literature note that is currently part of the
 zetteldesk, meaning its part of the list generated by
-`zetteldesk-ref-node-from-refs'."
+`zetteldesk-ref-citar-node-from-refs'."
   (interactive
-   (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p)))
+   (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs) nil #'zetteldesk-node-p)))
   (let ((buffer (org-roam-node-buffer NODE)))
     (zetteldesk--remove-buffer buffer)))
 
-(defun zetteldesk-ref-find-ref-node ()
-  "Execute a filtered version of `ivy-bibtex-with-notes' in an org-roam UI.
+(defun zetteldesk-ref-citar-find-ref-node ()
+  "Execute a filtered version of `citar-open-notes' in an org-roam UI.
 
-This does not exactly run `ivy-bibtex-with-notes' as that doesn't
-have a way to filter things.  It collects a list of nodes which
-are reference nodes linked to a bibtex entry through
-`zetteldesk-ref-node-from-refs' and passes it to
-`zetteldesk-ref-roam-node-read*' which is a modified version of
-`org-roam-node-read' which takes a list of nodes as an
+ It collects a list of nodes which are reference nodes linked to
+a bibtex entry through `zetteldesk-ref-citar-node-from-refs' and passes
+it to `zetteldesk-ref-roam-node-read*' which is a modified
+version of `org-roam-node-read' which takes a list of nodes as an
 argument.  Since this required a rewrite of `org-roam-node-read',
 finding the file is done indirectly and not through
 `org-roam-node-file'."
   (interactive)
-  (find-file (org-roam-node-file (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p))))
+  (find-file (org-roam-node-file (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs) nil #'zetteldesk-node-p))))
 
-(defun zetteldesk-ref-ivy-bibtex-with-notes (&optional arg)
-  "Search `zetteldesk-desktop' BibTeX entries with notes using `ivy-bibtex'.
+(defun zetteldesk-ref-citar-has-note ()
+  "Return predicate testing whether entry is associated to a zetteldesk node.
 
-This function builds on `ivy-bibtex-with-notes', meaning it shows
-a list of bibtex entries with notes, however its filtering
-includes only nodes in the `zetteldesk-desktop'.
+Return a function that takes arguments KEY and ENTRY and returns
+non-nil when the entry has associated notes in
+`citar-notes-paths` and that note is part of the current
+`zetteldesk-desktop'. This function builds on top of the
+behaviour of `citar-has-note' by making the predicate an `and'
+statement between the preexisting code of that function and a
+check that the citekey is a `member' of the list obtained from
+`zetteldesk-ref-citar-citekey-from-node'.
 
-With a prefix ARG the cache is invalidated and the bibliography
-reread."
-  (interactive "P")
-  (cl-letf* ((candidates (zetteldesk-ref-note-refs-p))
-	     ((symbol-function 'bibtex-completion-candidates)
-	      (lambda ()
-		(cl-loop for ref in candidates
-			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
-				    (zetteldesk-ref-citekey-from-node))
-			 collect ref))))
-    (ivy-bibtex arg)))
+Note: for performance reasons, this function should be called
+once per command; the function it returns can be called
+repeatedly."
+  ;; Call each function in `citar-has-note-functions` to get a list of predicates
+  (let ((preds (mapcar #'funcall citar-has-note-functions)))
+    ;; Return a predicate that checks if `citekey` and `entry` have a note
+    (lambda (citekey entry)
+      ;; Call each predicate with `citekey` and `entry`; return the first non-nil result
+      (and
+       (seq-some (lambda (pred) (funcall pred citekey entry)) preds)
+       (member (concat "cite:" citekey)
+	       (zetteldesk-ref-citar-citekey-from-node))))))
 
-(defun zetteldesk-ref-helm-bibtex-with-notes (&optional arg)
-  "Search `zetteldesk-desktop' BibTeX entries with notes using `helm-bibtex'.
+(defun zetteldesk-ref-citar-open-notes (key-entry)
+  "Run a filtered version of `citar-open-notes' in its own UI.
 
-This function builds on `helm-bibtex-with-notes', meaning it shows
-a list of bibtex entries with notes, however its filtering
-includes only nodes in the `zetteldesk-desktop'.
+The filter used is `zetteldesk-ref-citar-has-note' which is a
+predicate that checks if the entry is associated to a ref note
+that is part of the `zetteldesk-desktop'. This is similar to
+`'zetteldesk-ref-citar-find-ref-node' which however uses the
+`org-roam' completion UI.
 
-With a prefix ARG the cache is invalidated and the bibliography
-reread."
-  (interactive "P")
-  (cl-letf* ((candidates (zetteldesk-ref-note-refs-p))
-	     ((symbol-function 'bibtex-completion-candidates)
-	      (lambda ()
-		(cl-loop for ref in candidates
-			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
-				    (zetteldesk-ref-citekey-from-node))
-			 collect ref))))
-    (helm-bibtex arg)))
+With prefix, rebuild the cache before offering candidates."
+  (interactive (list (citar-select-ref
+		      :rebuild-cache current-prefix-arg
+		      :filter (zetteldesk-ref-citar-has-note))))
+  (let* ((key (car key-entry))
+	 (entry (cdr key-entry)))
+    (if (listp citar-open-note-functions)
+	(citar--open-notes key entry)
+      (error "Please change the value of 'citar-open-note-functions' to a list"))))
 
-(defun zetteldesk-ref-insert-ref-node-contents (&optional arg)
+(defun zetteldesk-ref-citar-insert-ref-node-contents (&optional arg)
   "Select a node that is part of the current `zetteldesk-desktop' and a ref node.
+
 Ref nodes are nodes that refer to reference material such as an
-article.  These are gathered with `zetteldesk-ref-node-from-refs' and
-shown to the user through `zetteldesk-ref-roam-node-read*' filtered
+article.  These are gathered with `zetteldesk-ref-citar-node-from-refs' and
+shown to the user through `zetteldesk-ref-citar-roam-node-read*' filtered
 according to `zetteldesk-node-p'.
 
 After selection, in the location determined by
@@ -239,7 +229,7 @@ implemented for when you don't want that. In this version, it
 made more sense to order it this way in my opinion."
   (interactive "P")
   (let* ((node
-	  (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p))
+	  (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs) nil #'zetteldesk-node-p))
 	 (file (org-roam-node-file node))
 	 (location (zetteldesk-insert-location))
 	 (citekey (concat "cite:" (car (org-roam-node-refs node)))))
@@ -261,5 +251,5 @@ made more sense to order it this way in my opinion."
 	    citekey))
   (zetteldesk-insert-switch-to-scratch arg))
 
-(provide 'zetteldesk-ref)
-;;; zetteldesk-ref.el ends here
+(provide 'zetteldesk-ref-citar)
+;;; zetteldesk-ref-citar.el ends here

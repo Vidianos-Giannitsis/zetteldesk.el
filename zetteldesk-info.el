@@ -1,7 +1,7 @@
 ;;; zetteldesk-info.el --- A zetteldesk extension for interacting with the info program   -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; Maintainer: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-info.el
 ;; Package-Requires: ((zetteldesk "0.4") (emacs "27.1"))
 ;; Created: 6th April 2022

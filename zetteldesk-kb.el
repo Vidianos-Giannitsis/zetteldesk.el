@@ -1,7 +1,7 @@
 ;;; zetteldesk-kb.el --- Keybindings for zetteldesk.el  -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; Maintainer: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-kb.el
 ;; Package-Requires: ((zetteldesk "1.0.1") (hydra "0.15") (major-mode-hydra "0.2") (emacs "24.1"))
 ;; Created: 3rd March 2022

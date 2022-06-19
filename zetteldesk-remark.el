@@ -1,7 +1,7 @@
 ;;; zetteldesk-remark.el --- Org-Remark integration for zetteldesk.el   -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; Maintainer: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk-remark.el
 ;; Package-Requires: ((zetteldesk "1.0") (org-remark "1.0") (emacs "27.2"))
 ;; Created: 22nd March 2022

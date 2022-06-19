@@ -1,7 +1,7 @@
 ;;; zetteldesk.el --- A revision and outlining tool for org-roam  -*- lexical-binding: t; -*-
 
 ;; Author: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
-;; Maintaner: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
+;; Maintainer: Vidianos Giannitsis <vidianosgiannitsis@gmail.com>
 ;; URL: https://github.com/Vidianos-Giannitsis/zetteldesk.el
 ;; Package-Requires: ((emacs "27.1") (org-roam "2.0"))
 ;; Tested on Emacs 27.2 and org-roam v2.2

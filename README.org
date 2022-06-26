@@ -3,13 +3,12 @@
  [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]]
  
 * Table of Contents                                                     :TOC:
-- [[#warning][WARNING]]
 - [[#introduction][Introduction]]
 - [[#installation][Installation]]
   - [[#using-doom-emacs][Using Doom Emacs]]
 - [[#sample-config][Sample Config]]
-  - [[#sample-full-config][Sample full config]]
   - [[#doom-emacs-configurations][Doom Emacs Configurations]]
+  - [[#sample-full-config][Sample full config]]
 - [[#optional-extensions-for-zetteldeskel][Optional Extensions for zetteldesk.el]]
 - [[#keybindings][Keybindings]]
 - [[#getting-started][Getting Started]]

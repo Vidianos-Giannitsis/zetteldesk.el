@@ -30,13 +30,11 @@
   If this sounds interesting to you, a small tutorial of the package can be found [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][here]], detailed documentation of the package can be found in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] and the most interesting part of the Wiki (at least in my opinion) is the description of my workflow with the package in the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][Sample Workflow]] section. Unfortunately, while this idea is mentioned in the book, it is never deeply discussed so I improvised a bit to make something I like, and I think you might find it helpful.
   
 * Installation
-  This package is on MELPA [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]] so just install it with ~M-x package-install~.
+  This package is on MELPA [[https://melpa.org/#/zetteldesk][file:https://melpa.org/packages/zetteldesk-badge.svg]] so just install it with ~M-x package-install~. All its extensions are also finally on MELPA as well!
 
-  The extensions ~zetteldesk-kb~ and ~zetteldesk-ref~ are currently also on MELPA and I am waiting for feedback on the rest. They should be there in at most a month. For everything not on MELPA, my current suggestion is to clone the repo and add the packages to the load path so you can load them to your config.
+  However, for other installation methods there is installing from source (for instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath)
 
-  For instructions on how to do that, refer to https://www.emacswiki.org/emacs/LoadPath
-
-  You can also install the package using straight.el with the following snippet
+  Or installing the package using straight.el with the following snippet
 #+BEGIN_SRC elisp
 (use-package zetteldesk
   :straight (zetteldesk
@@ -105,12 +103,16 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   Zetteldesk.el has 4 optional extensions. They are seperate packages because most of them are outside the scope of the general package and introduce unnecessary dependencies.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-kb.el][zetteldesk-kb.el]] creates a hydra with which I created the default keybindings of the package. It has dependencies on [[https://github.com/abo-abo/hydra][hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][pretty-hydra]] as I like the look of hydras generated with the ~pretty-hydra-define~ macro and decided to use them as the default of the package. You are free to not use them, but they are a helpful "starter" kit. There is also ~zetteldesk-kb-complete.el~, which is an enhancement of this including keybindings for all the other extensions. I use all the extensions so its helpful to have a keybindings extension that includes all extensions.
+  MELPA: [[https://melpa.org/#/zetteldesk-kb][file:https://melpa.org/packages/zetteldesk-kb-badge.svg]]
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-info.el][zetteldesk-info.el]], originally part of zetteldesk.el is an extension to use the features of zetteldesk.el with the Info documentation viewer built-in to Emacs. Its in my opinion a very helpful extension and does not introduce any dependencies, but its a case where its features are really outside the scope of zetteldesk.el
+  MELPA: [[https://melpa.org/#/zetteldesk-remark][file:https://melpa.org/packages/zetteldesk-info-badge.svg]]
 
-  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref.el][zetteldesk-ref.el]] is an extension for handling literature notes better. I make these with org-roam-bibtex and org-noter and it felt annoying to not have proper filtering and insertion functions (for what these mean, do read on). It relies on [[https://github.com/tmalsburg/helm-bibtex][bibtex-completion]], meaning either helm-bibtex or ivy-bibtex. If you manage your bibliography with [[https://github.com/emacs-citar/citar][Citar]] however, fear not, as the extension [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref-citar.el][zetteldesk-ref-citar.el]] has been implemented for using this extension of zetteldesk with Citar as its backend.
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref.el][zetteldesk-ref.el]] is an extension for handling literature notes better. I make these with org-roam-bibtex and org-noter and it felt annoying to not have proper filtering and insertion functions (for what these mean, do read on). It relies on [[https://github.com/tmalsburg/helm-bibtex][bibtex-completion]], meaning either helm-bibtex or ivy-bibtex. If you manage your bibliography with [[https://github.com/emacs-citar/citar][Citar]] however, fear not, as the extension [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-ref-citar.el][zetteldesk-ref-citar.el]] has been implemented for using this extension of zetteldesk with Citar as its backend. The Citar implementation is not yet on MELPA however.
+  MELPA: [[https://melpa.org/#/zetteldesk-ref][file:https://melpa.org/packages/zetteldesk-ref-badge.svg]]
    
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/zetteldesk-remark.el][zetteldesk-remark]] is an extension for integration between zetteldesk.el and [[https://github.com/nobiot/org-remark][org-remark]]. Org-remark is a package for creating margin notes in your org documents. Due to limitations of both packages, I had to write some functions to smooth out the integration of the two. This extension includes those functions.
+  MELPA: [[https://melpa.org/#/zetteldesk-remark][file:https://melpa.org/packages/zetteldesk-remark-badge.svg]]
 
   These are documented in the wiki, so feel free to check them out with more detail.
  

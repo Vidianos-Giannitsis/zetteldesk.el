@@ -32,7 +32,6 @@
 ;;; Code:
 
 (require 'zetteldesk)
-(require 'zetteldesk-kb)
 
 ;; -- Info Nodes --
 (defcustom zetteldesk-info-nodes '()

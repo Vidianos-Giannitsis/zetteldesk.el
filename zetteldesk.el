@@ -563,5 +563,88 @@ useful."
 	       (concat "pdf:" file "::" page)
 	       description)))))
 
+(defcustom zetteldesk-saved-states '()
+  "List of lists of buffers storing saved states of `zetteldesk-desktop'.
+
+Each item in the list is a list of buffers. The function
+`zetteldesk-save-state' inserts the code to add the list of
+buffers currently in the `zetteldesk-desktop' to this list."
+  :type 'list
+  :group 'zetteldesk)
+
+(defcustom zetteldesk-saved-state-file
+  (concat user-emacs-directory "libs/zetteldesk-saves.el")
+  "Location in which zetteldesk.el saves its desktops.
+
+Saving is done with `zetteldesk-save-state' and is stored in this
+file so it can be restored in later sessions with
+`zetteldesk-restore-desktop'."
+  :type 'string
+  :group 'zetteldesk)
+
+(defun zetteldesk-p* (BUFFER)
+  "Check if BUFFER is part of the current `zetteldesk-desktop'."
+  (not (equal zetteldesk-desktop-default
+	      (buffer-local-value 'zetteldesk-desktop BUFFER))))
+
+(defun zetteldesk-buffer-list ()
+  "Make a list of all buffers that are part of the current `zetteldesk-desktop'.
+
+Also prompt for the identifier of the desktop so it can be
+recognized. This function is not meant to be used directly but be
+passed to `zetteldesk-save-state'. The identifier is to be used
+when restoring the desktop with `zetteldesk-restore-desktop'."
+  (let ((identifier (read-string "Identifier for desktop: ")))
+    (cons identifier
+	  (cl-loop for buffer in (buffer-list)
+		   if (zetteldesk-p* buffer)
+		   collect (buffer-file-name buffer)))))
+
+(defun zetteldesk-save-state ()
+  "Save the state of the current `zetteldesk-desktop'.
+
+This function uses `zetteldesk-buffer-list' as its main helper
+function. It collects a list of files who are part of the curent
+`zetteldesk-desktop' and adds an identifier to them so the state
+can be later restored. What it does is insert an `add-to-list'
+statement to the file that `zetteldesk-saved-state-file' points
+to, which adds the contents of the list returned by
+`zetteldesk-buffer-list' to `zetteldesk-saved-states'.
+
+If `zetteldesk-saved-state-file' is required in your init.el,
+zetteldesk will remember your saved states and it will be able to
+restore them with `zetteldesk-restore-desktop'."
+  (interactive)
+  (with-current-buffer (find-file-noselect zetteldesk-saved-state-file)
+    (goto-char (point-max))
+    (previous-line)
+    (insert (format "%S" `(add-to-list 'zetteldesk-saved-states ',(zetteldesk-buffer-list))))
+    (newline)))
+
+(defun zetteldesk-add-file-to-desktop (FILE)
+  "Add FILE to the current `zetteldesk-desktop'.
+
+If FILE is not associated to a buffer, read it in a buffer and
+add the resulting buffer to the `zetteldesk-desktop'. This
+function is not meant to be used interactively as it would be
+impractical. It is primarily for use in
+`zetteldesk-restore-desktop'."
+  (let ((buffer (get-file-buffer FILE))
+	(org-startup-with-latex-preview nil))
+    (if buffer
+	(zetteldesk--add-buffer buffer)
+      (zetteldesk--add-buffer (find-file-noselect FILE)))))
+
+(defun zetteldesk-restore-desktop ()
+  "Restore a saved state of the `zetteldesk-desktop'.
+
+The state must be saved to `zetteldesk-saved-states' using
+`zetteldesk-save-state' and the user is prompted to select a
+state using its identifier."
+  (interactive)
+  (mapcar #'zetteldesk-add-file-to-desktop
+	  (cdr (assoc (completing-read "Save-State: " zetteldesk-saved-states)
+		      zetteldesk-saved-states))))
+
 (provide 'zetteldesk)
 ;;; zetteldesk.el ends here

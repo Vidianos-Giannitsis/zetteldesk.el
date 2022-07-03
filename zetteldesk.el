@@ -619,7 +619,8 @@ restore them with `zetteldesk-restore-desktop'."
     (goto-char (point-max))
     (previous-line)
     (insert (format "%S" `(add-to-list 'zetteldesk-saved-states ',(zetteldesk-buffer-list))))
-    (newline)))
+    (newline)
+    (save-buffer)))
 
 (defun zetteldesk-add-file-to-desktop (FILE)
   "Add FILE to the current `zetteldesk-desktop'.

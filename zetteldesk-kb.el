@@ -98,8 +98,11 @@
 
    "Inserting Things and *zetteldesk-scratch*"
    (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
-    ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
+    ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))
 
+   "Saving/Restoring the Desktop"
+   (("S" zetteldesk-save-state "Save the current zetteldesk-desktop")
+    ("R" zetteldesk-restore-desktop "Restore a saved zetteldesk-desktop"))))
 
 ;; Set up the keybinding to call the hydra
 

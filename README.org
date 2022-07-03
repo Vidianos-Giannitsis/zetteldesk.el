@@ -143,10 +143,13 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   6. Insert links to specific pages of a pdf, with a selection menu of only zetteldesk pdfs
   7. A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
   8. Integrating the zetteldesk-scratch buffer with org-remark so you can freely take margin notes from it albeit it not being associated with a buffer.
+  9. Save the current state of your zetteldesk to a file and be able to restore it in future sessions
 
      Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally.
 
-     From feature 7 and onwards (currently its just 7 and 8), these features come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be explained very briefly here. If you check the wiki, there will be ample info for these there. 
+     Features 7 and 8 come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be explained very briefly here. If you check the wiki, there will be ample info for these there.
+
+     Lastly, the 9th feature on saving the state of a zetteldesk and restoring it later is something that was implemented for the main package but a while after the rest.
 
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
@@ -159,8 +162,14 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/desktop.gif]]
 
-  The first function shown is ~zetteldesk-insert-node-contents-without-link~, which prompts for a node and inserts its contents to the zetteldesk-scratch. It specifies its without a link, as the one I primarily use ~zetteldesk-insert-node-contents~ also inserts an ID link to that node in the scratch buffer. My typical workflow (described shortly [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][here]]) includes me writing an outline of the subject, linking every subject I mention. These links are inserted with this function so their contents are added to the scratch. There is also ~zetteldesk-switch-to-scratch-buffer~ to open the scratch buffer in a split with the current buffer. The version that doesn't insert a link (shown in the gif) does that by default, but the original ~zetteldesk-insert-node-contents~ doesn't do that by default, so this function is generally useful. 
+  The first function shown is ~zetteldesk-insert-node-contents-without-link~, which prompts for a node and inserts its contents to the zetteldesk-scratch. It specifies its without a link, as the one I primarily use ~zetteldesk-insert-node-contents~ also inserts an ID link to that node in the scratch buffer. My typical workflow (described shortly [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/A-Sample-Workflow][here]]) includes me writing an outline of the subject, linking every subject I mention. These links are inserted with this function so their contents are added to the scratch. There is also ~zetteldesk-switch-to-scratch-buffer~ to open the scratch buffer in a split with the current buffer. The version that doesn't insert a link ~zetteldesk-insert-node-contents-without-link~ (shown in the gif) does that by default, but the original ~zetteldesk-insert-node-contents~ doesn't do that by default, so this function is generally useful.
 
+  If you are not done with everything you wanted to do, fear not, as you can save the state of your current ~zetteldesk-desktop~ and restore it in a future session. Saving a desktop can be done with the function ~zetteldesk-save-state~ and restoring it is with the function ~zetteldesk-restore-desktop~. To be able to restore it between sessions, it needs to write to an elisp file on your load path (as to not tinker with your init.el). The location of that file is controlled by the variable ~zetteldesk-saved-state-file~ and is by default "~/.emacs.d/libs/zetteldesk-saves.el". For this feature to work, that needs to be in your load path. Below are two demonstrative gifs on saving a zetteldesk-desktop and restoring it.
+
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/zetteldesk-save-desktop.gif]]
+
+  [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/zetteldesk-restore-desktop.gif]]
+ 
   Another thing I want to showcase is how this package interfaces with the Info program, the built-in documentation viewer of Emacs. Info buffers are unique in the way that there aren't multiple. There is a single persistent buffer for Info. So besides the use of info buffers in the zetteldesk, for its own purposes, it needs to define a way to save the info buffers you want to be viewing. And also as this package defines a lot of filter functions, it needs a way to allow you to select a single info node and jump to it (which is done through a ~completing-read~). This is in my opinion useful even on its own. Check the gif below for a demonstation of the feature.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info.gif]]

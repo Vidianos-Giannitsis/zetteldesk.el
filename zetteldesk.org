@@ -723,7 +723,8 @@ Saving the current state of the ~zetteldesk-desktop~ could be a very useful feat
       (goto-char (point-max))
       (previous-line)
       (insert (format "%S" `(add-to-list 'zetteldesk-saved-states ',(zetteldesk-buffer-list))))
-      (newline)))
+      (newline)
+      (save-buffer)))
 
   (defun zetteldesk-add-file-to-desktop (FILE)
     "Add FILE to the current `zetteldesk-desktop'.
@@ -749,7 +750,7 @@ Saving the current state of the ~zetteldesk-desktop~ could be a very useful feat
     (mapcar #'zetteldesk-add-file-to-desktop
 	    (cdr (assoc (completing-read "Save-State: " zetteldesk-saved-states)
 			zetteldesk-saved-states))))
-  
+
 #+END_SRC
    
 * Keybindings
@@ -857,8 +858,11 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
 
      "Inserting Things and *zetteldesk-scratch*"
      (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
-      ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
+      ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))
 
+     "Saving/Restoring the Desktop"
+     (("S" zetteldesk-save-state "Save the current zetteldesk-desktop")
+      ("R" zetteldesk-restore-desktop "Restore a saved zetteldesk-desktop"))))
 
   ;; Set up the keybinding to call the hydra
 
@@ -874,7 +878,7 @@ This section is for the default keybindings of zetteldesk.el, implemented in a s
   ;; Local variables:
   ;; byte-compile-docstring-max-column: 100
   ;; end:
-  
+
 #+END_SRC
 
    

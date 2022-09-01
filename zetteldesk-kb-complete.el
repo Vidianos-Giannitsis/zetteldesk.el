@@ -104,9 +104,13 @@
   "Keymap for zetteldesk.el")
 
 ;; zetteldesk-ref.el additions
+;; (Note) For the functions that use the org-roam UI and just need a
+;; bibliography backend, since both bibtex-completion and citar are
+;; implemented and able to be used, I load the ones in citar in this
+;; hydra as they appear to be faster by a small bit.
 (pretty-hydra-define+ zetteldesk-insert-hydra ()
   ("Org-Roam"
-   (("r" zetteldesk-ref-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
+   (("r" zetteldesk-ref-citar-insert-ref-node-contents "Link to citekey and Node Contents in *zetteldesk-scratch with special formatting"))))
 
 (pretty-hydra-define zetteldesk-literature-hydra (:color blue :title "Zetteldesk Literature Nodes")
   ("Org-Roam UI"
@@ -119,15 +123,15 @@
    (("i" zetteldesk-ref-ivy-bibtex-with-notes))
 
    "Citar UI"
-   (("c" zetteldesk-ref-citar-open-notes))))
+   (("c" zetteldesk-ref-citar-open-note))))
 
 (pretty-hydra-define+ zetteldesk-add-hydra ()
   ("Org-Roam"
-   (("l" zetteldesk-ref-add-node-to-desktop "Add Literature Node"))))
+   (("l" zetteldesk-ref-citar-add-node-to-desktop "Add Literature Node"))))
 
 (pretty-hydra-define+ zetteldesk-remove-hydra ()
   ("Org-Roam"
-   (("l" zetteldesk-ref-remove-node-from-desktop "Remove Literature Node"))))
+   (("l" zetteldesk-ref-citar-remove-node-from-desktop "Remove Literature Node"))))
 
 (pretty-hydra-define+ zetteldesk-main-hydra ()
   ("Filter Functions"

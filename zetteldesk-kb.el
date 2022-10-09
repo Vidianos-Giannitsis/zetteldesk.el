@@ -59,7 +59,7 @@
 (pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk")
   ("Org-Roam"
    (("n" zetteldesk-add-node-to-desktop "Add Node")
-    ("b" zetteldesk-add-backlinks-to-desktop "Add Node + All its backlinks")
+    ("b" zetteldesk-add-backlinks-to-desktop "Add Current Node + All its backlinks")
     ("p" zetteldesk-add-poi-or-moc-backlink-to-desktop "Select MOC or POI - Add one of its backlinks"))
 
    "Other"
@@ -68,7 +68,7 @@
 (pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk")
   ("Org-Roam"
    (("n" zetteldesk-remove-node-from-desktop "Remove Node")
-    ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
+    ("b" zetteldesk-remove-backlinks-from-desktop "Remove Current Node + All its backlinks"))
 
    "Other"
    (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))

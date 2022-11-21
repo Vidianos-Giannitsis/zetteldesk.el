@@ -98,10 +98,11 @@
   :type 'string
   :group 'zetteldesk)
 
-(defvar zetteldesk-map
-  (let ((km (make-sparse-keymap)))
-    (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km)
-  "Keymap for zetteldesk.el")
+(setq zetteldesk-kb-map `(zetteldesk-mode
+			  ,@(let ((km (make-sparse-keymap)))
+			      (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km)))
+
+(add-to-list 'minor-mode-map-alist zetteldesk-kb-map)
 
 ;; zetteldesk-ref.el additions
 ;; (Note) For the functions that use the org-roam UI and just need a

@@ -84,7 +84,7 @@ yourself, when the predicate function used cannot be inferred
 through a filter function of the form this function
 takes.  FILTER-FN and SORT-FN are the same as in
 `org-roam-node-read--completions'.  The resulting alist is to be
-used with `org-roam-node-read*'."
+used with `zetteldesk-ref-roam-node-read*'."
   (let* ((template (org-roam-node--process-display-format org-roam-node-display-template))
 	 (nodes node-list)
 	 (nodes (mapcar (lambda (node)

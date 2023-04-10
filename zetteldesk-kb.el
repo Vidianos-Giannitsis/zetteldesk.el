@@ -111,11 +111,9 @@
   :type 'string
   :group 'zetteldesk)
 
-(setq zetteldesk-kb-map `(zetteldesk-mode
-			  ,@(let ((km (make-sparse-keymap)))
-			      (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km)))
-
-(add-to-list 'minor-mode-map-alist zetteldesk-kb-map)
+(defvar zetteldesk-kb-map
+  (let ((km (make-sparse-keymap)))
+    (define-key km zetteldesk-kb-hydra-prefix #'zetteldesk-main-hydra/body) km))
 
 ;; Local variables:
 ;; byte-compile-docstring-max-column: 100

@@ -49,12 +49,21 @@ To install in a Doom configuration, you can also put the following declaration i
   :recipe (:host github :repo "Vidianos-Giannitsis/zetteldesk.el"))
 #+end_src
 
+Do note that if you want to install any of the extensions, they are separate packages, so this recipe won't install them. You need either separate ~package!~ calls or this snippet
+
+#+BEGIN_SRC elisp
+(package! zetteldesk
+  :recipe (:host github :repo "Vidianos-Giannitsis/zetteldesk.el" :files ("*.el")))
+#+END_SRC
+
 * Sample Config
   For those of you who are not so much the reading types and just want a working config, which you can explore later I will leave a config that sets everything up here. I have tried to make the keybinding hydra as self explanatory as possible, and if you check function docstrings you should be able to understand what this does, but for a better idea, you should (in my opinion) check [[https://github.com/Vidianos-Giannitsis/zetteldesk.el#getting-started][Getting Started]] and the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]]. But then again, I like reading docs, so if you don't, you may not agree.
 
   This assumes you have installed and setup [[https://github.com/org-roam/org-roam][org-roam]] (I would be surprised if you are checking this out without having setup org-roam though, this is mostly an org-roam extension with some other things on the side) and that you have installed [[https://github.com/abo-abo/hydra][Hydra]] and [[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][Pretty-Hydra]], as the package's default keybindings are made with a hydra using the ~pretty-hydra-define~ macro (which I find the most visually appealing way to write macros).
   
   They are all on Melpa so you shouldn't have trouble finding them.
+
+  Install zetteldesk and zetteldesk-kb from MELPA and then add this snippet.
 
   #+BEGIN_SRC elisp
 
@@ -67,23 +76,9 @@ To install in a Doom configuration, you can also put the following declaration i
 
   After setting these, just press C-c z (or any other keybinding you want if you change the value of ~zetteldesk-kb-hydra-prefix~) and explore the hydra.
 
-** Doom Emacs Configurations
-If you use Doom Emacs, fear not, we have some configuration options for it, courtesy of @jlcolbert.
-
-Put the one you want in your =config.el=.
-These are suggested keybindings, but feel free to change yours.
-
-The easiest configuration is to use the hydra keybindings:
-#+begin_src elisp
-(use-package! zetteldesk
-  :after org-roam
-  :config
-  (setq zetteldesk-kb-hydra-prefix (kbd "C-c z"))
-  (zetteldesk-mode)
-  (require 'zetteldesk-kb))
-#+end_src
-For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki/Doom-Configuration][Doom Configuration]] page in the Wiki.
-
+** Doom Emacs Configuration
+If you are having problems with Doom Emacs, feel free to check out [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/issues/8][this]] issue.
+ 
 ** Sample full config
   This package has a few extensions to it which enhance its features. These are by no means necessary and that's why the above example doesn't list them. This is the sample config that assumes you use all the add-ons. They are explained more in the next section of the config. This is the one I use personally.
   
@@ -257,6 +252,3 @@ For more options, go to the [[https://github.com/Vidianos-Giannitsis/zetteldesk.
   
 * COMMENT Things to do
 
-  Another thing I am thinking of is looking more into outliner software and if there is something I want to implement from those.
-
-  Saving the current state of the Zetteldesk. Although I have no clue how. Maybe if I am able to save the value of a buffer local variable between sessions its possible. 

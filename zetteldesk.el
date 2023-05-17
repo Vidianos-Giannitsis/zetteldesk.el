@@ -678,27 +678,21 @@ zetteldesk-scratch buffer, with the low-level
 (defun zetteldesk-store-active-scratch-and-switch (file)
   "Store the active zetteldesk-scratch buffer and switch to an inactive one.
 
-This function initializes identically to
-`zetteldesk-create-new-desktop' by writing the current
-`zetteldesk-scratch' and replacing it with a new one.  However,
-the new one doesn't remain empty.
+This function initializes with `zetteldesk-create-new-scratch'
+but inserts the contents of an inactive scratch to the newly
+initialized one instead of keeping it empty.
 
 The function prompts the user for an inactive zetteldesk-scratch
 stored in `zetteldesk-scratch-list' and inserts its contents to
 the new zetteldesk-scratch, making it the active
 zetteldesk-scratch buffer."
   (interactive "F")
-  (let* ((name (read-string "Name of old desktop: "))
-	 (cell (cons name file)))
-    (with-current-buffer "*zetteldesk-scratch*"
-      (write-file file))
-    (push cell zetteldesk-desktop-list)
-    (zetteldesk--create-scratch-buffer)
-    (with-current-buffer "*zetteldesk-scratch*"
-      (insert-file-contents (cdr (assoc
-				  (completing-read "Select desktop to activate: "
-						   zetteldesk-desktop-list)
-				  zetteldesk-desktop-list))))))
+  (zetteldesk-create-new-scratch file)
+  (with-current-buffer "*zetteldesk-scratch*"
+    (insert-file-contents (cdr (assoc
+				(completing-read "Select desktop to activate: "
+						 zetteldesk-desktop-list)
+				zetteldesk-desktop-list)))))
 
 (defun zetteldesk-delete-active-scratch-and-switch ()
   "Switch the active zetteldesk-scratch buffer deleting the current.
@@ -712,7 +706,9 @@ one selected from `zetteldesk-scratch-list'.
 This function is useful when the current zetteldesk-scratch has
 already been saved to `zetteldesk-scratch-list' and you want to
 switch to an inactive one as in that case there is no point to
-re-store it to `zetteldesk-scratch-list'."
+re-store it to `zetteldesk-scratch-list'.  Another reason to use
+this is if the scratch is currently empty and you want to fill it
+up."
   (interactive)
   (with-current-buffer "*zetteldesk-scratch*"
     (erase-buffer)

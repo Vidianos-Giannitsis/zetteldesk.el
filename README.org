@@ -129,7 +129,7 @@ If you are having problems with Doom Emacs, feel free to check out [[https://git
 
   Then, I have prepared a few demos of the main features of the package, for you to look at to get an idea. For more detailed documentation, check the [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/wiki][Wiki]] of the package and the function docstrings. This is a short showcase of the main features.
 
-  But first, here is a list of the main features of the package as seen below: 
+  But first, here is a list of the main features of the package as seen below, to get a top-level look at what the package provides: 
   1. Add/Remove Buffers or Org-Roam Nodes from the zetteldesk with various conveniences besides simple selection, such as selecting all backlinks of an org-roam node
   2. Use the contents of the zetteldesk to view filtered versions of core functions such as ~org-roam-node-find~, ~org-roam-node-insert~ and ~switch-to-buffer~
   3. Insert the contents of an org-roam node in the zetteldesk-scratch buffer, leaving a link to the node in the current buffer. The selection is filtered to nodes in the zetteldesk
@@ -139,12 +139,16 @@ If you are having problems with Doom Emacs, feel free to check out [[https://git
   7. A special behaviour for inserting reference nodes (nodes which are associated with a bibtex entry) as they have very different formatting than your typical org-roam node.
   8. Integrating the zetteldesk-scratch buffer with org-remark so you can freely take margin notes from it albeit it not being associated with a buffer.
   9. Save the current state of your zetteldesk to a file and be able to restore it in future sessions
+  10. Save the current zetteldesk-scratch buffer to a file and create a fresh one, inactivating it
+  11. Restore inactive zetteldesk-scratch buffers from the current session
 
-     Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally.
+      Feature number 4, referring to info buffers is one of the first things I made as I found it to be an interesting challenge. However, later on I decided to split it up from the main file, into the zetteldesk-info.el file. Since this is not the main feature of the package and its code follows a different model from the rest it made sense to do so, although I highly recommend it personally.
 
-     Features 7 and 8 come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be explained very briefly here. If you check the wiki, there will be ample info for these there.
+      Features 7 and 8 come in optional packages contained in this repository. They are not primary features of the package and they were created at a later time, however, they were added here for reference and because I find them very useful personally. Since this is a Getting Started which I do not want to keep too long, these will be explained very briefly here. If you check the wiki, there will be ample info for these there.
 
-     Lastly, the 9th feature on saving the state of a zetteldesk and restoring it later is something that was implemented for the main package but a while after the rest.
+      Features 9-11 were implemented for the main package but a while after the rest, due to a suggestion.
+
+      Let's look at them step-by-step
 
   First, we can look at how you add or remove an org-roam node from the zetteldesk. This is shown in the gifs below
 
@@ -164,7 +168,15 @@ If you are having problems with Doom Emacs, feel free to check out [[https://git
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/zetteldesk-save-desktop.gif]]
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/zetteldesk-restore-desktop.gif]]
- 
+
+  But the state of the ~zetteldesk-desktop~ variable is not the only one you may want to save state and restore later. The state of the zetteldesk-scratch buffer you tried so hard to organize is another thing you may want to save. There is ~write-file~ to store this, but in cases where you want to work with multiple desktops, its not a good idea to not have a buffer with the name ~*zetteldesk-desktop*~. For this reason, when you want to store your work and create a new desktop as well, there is the wrapper function ~zetteldesk-create-new-scratch~ which runs these 2 things. Here is a gif demonstrating this.
+
+  https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/new_scratch.gif
+
+  As you can see, this also prompts you for a name to give to the scratch besides the file name. This is to allow for another feature of the package, which is the ability to have multiple scratches in one session. This was proposed to me at issue #11 and I do find it logical so I implemented it. This identifier is used in a similar function to restoring the ~zetteldesk-desktop~ to identify each scratch with a name, for a better view when prompting for which scratch to activate. Restoring an inactive desktop is as simple as calling a function. In the case that you have an empty scratch or you don't want to save its contents, you should restore it with ~zetteldesk-delete-active-scratch-and-switch~. If you want to both save the current and restore an active one, run ~zetteldesk-store-active-scratch-and-switch~. It might help you understand if you see a gif of this behaviour.
+
+  https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/activate_scratch.gif
+    
   Another thing I want to showcase is how this package interfaces with the Info program, the built-in documentation viewer of Emacs. Info buffers are unique in the way that there aren't multiple. There is a single persistent buffer for Info. So besides the use of info buffers in the zetteldesk, for its own purposes, it needs to define a way to save the info buffers you want to be viewing. And also as this package defines a lot of filter functions, it needs a way to allow you to select a single info node and jump to it (which is done through a ~completing-read~). This is in my opinion useful even on its own. Check the gif below for a demonstation of the feature.
 
   [[https://github.com/Vidianos-Giannitsis/zetteldesk.el/blob/master/gifs/info.gif]]

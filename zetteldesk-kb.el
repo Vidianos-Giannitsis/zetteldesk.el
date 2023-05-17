@@ -85,6 +85,15 @@
     (("p" zetteldesk-insert-link-to-pdf "Link to PDF")
      ("o" zetteldesk-insert-org-file-contents "Org File Contents"))))
 
+(pretty-hydra-define zetteldesk-scratch-hydra (:color blue :title "Zetteldesk Scratch functions")
+  ("Switch to Existing Scratch"
+   (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*"))
+
+   "Manipulate the Zetteldesk-scratch"
+   (("c" zetteldesk-create-new-scratch "Create a new *zetteldesk-scratch*")
+    ("a" zetteldesk-store-active-scratch-and-switch "Switch to an inactive scratch storing the existing one")
+    ("d" zetteldesk-delete-active-scratch-and-switch "Switch to an inactive scratch deleting the existing one"))))
+
 ;; The Primary Hydra
 
 (pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra")
@@ -97,7 +106,7 @@
     ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
 
    "Inserting Things and *zetteldesk-scratch*"
-   (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
+   (("s" zetteldesk-scratch-hydra/body "Switch to *zetteldesk-scratch*")
     ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))
 
    "Saving/Restoring the Desktop"

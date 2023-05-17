@@ -106,7 +106,7 @@
     ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
 
    "Inserting Things and *zetteldesk-scratch*"
-   (("s" zetteldesk-scratch-hydra/body "Switch to *zetteldesk-scratch*")
+   (("s" zetteldesk-scratch-hydra/body "Run the Scratch Hydra")
     ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))
 
    "Saving/Restoring the Desktop"

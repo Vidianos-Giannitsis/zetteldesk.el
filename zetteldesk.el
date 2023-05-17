@@ -654,7 +654,9 @@ Each item in this list is added to it via the functions
 `zetteldesk-create-new-desktop' or
 `zetteldesk-store-active-desktop-and-switch' and is a buffer name
 of an inactive zetteldesk-scratch buffer that those functions
-saved.")
+saved."
+  :type 'list
+  :group 'zetteldesk)
 
 (defun zetteldesk-create-new-scratch (file)
   "Create a new zetteldesk-scratch buffer.
@@ -713,9 +715,7 @@ switch to an inactive one as in that case there is no point to
 re-store it to `zetteldesk-scratch-list'."
   (interactive)
   (with-current-buffer "*zetteldesk-scratch*"
-    (erase-buffer))
-  (zetteldesk--create-scratch-buffer)
-  (with-current-buffer "*zetteldesk-scratch*"
+    (erase-buffer)
     (insert-file-contents (cdr (assoc
 				(completing-read "Select desktop to activate: "
 						 zetteldesk-desktop-list)

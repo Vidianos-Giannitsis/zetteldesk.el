@@ -647,5 +647,79 @@ state using its identifier."
 	  (cdr (assoc (completing-read "Save-State: " zetteldesk-saved-states)
 		      zetteldesk-saved-states))))
 
+(defcustom zetteldesk-scratch-list '()
+  "List of saved zetteldesk-scratch buffers.
+
+Each item in this list is added to it via the functions
+`zetteldesk-create-new-desktop' or
+`zetteldesk-store-active-desktop-and-switch' and is a buffer name
+of an inactive zetteldesk-scratch buffer that those functions
+saved.")
+
+(defun zetteldesk-create-new-scratch (file)
+  "Create a new zetteldesk-scratch buffer.
+
+This function initially prompts for a file to write the current
+zetteldesk-scratch to so it is not lost when replacing it.  It
+then stores its name and file as a cons cell to
+`zetteldesk-scratch-list'.  Finally, it creates a new
+zetteldesk-scratch buffer, with the low-level
+`zetteldesk--create-scratch-buffer' function, which is empty."
+  (interactive "F")
+  (let* ((name (read-string "Name of old desktop: "))
+	 (cell (cons name file)))
+    (with-current-buffer "*zetteldesk-scratch*"
+      (write-file file))
+    (push cell zetteldesk-desktop-list)
+    (zetteldesk--create-scratch-buffer)))
+
+(defun zetteldesk-store-active-scratch-and-switch (file)
+  "Store the active zetteldesk-scratch buffer and switch to an inactive one.
+
+This function initializes identically to
+`zetteldesk-create-new-desktop' by writing the current
+`zetteldesk-scratch' and replacing it with a new one.  However,
+the new one doesn't remain empty.
+
+The function prompts the user for an inactive zetteldesk-scratch
+stored in `zetteldesk-scratch-list' and inserts its contents to
+the new zetteldesk-scratch, making it the active
+zetteldesk-scratch buffer."
+  (interactive "F")
+  (let* ((name (read-string "Name of old desktop: "))
+	 (cell (cons name file)))
+    (with-current-buffer "*zetteldesk-scratch*"
+      (write-file file))
+    (push cell zetteldesk-desktop-list)
+    (zetteldesk--create-scratch-buffer)
+    (with-current-buffer "*zetteldesk-scratch*"
+      (insert-file-contents (cdr (assoc
+				  (completing-read "Select desktop to activate: "
+						   zetteldesk-desktop-list)
+				  zetteldesk-desktop-list))))))
+
+(defun zetteldesk-delete-active-scratch-and-switch ()
+  "Switch the active zetteldesk-scratch buffer deleting the current.
+
+This function is a sister function of
+`zetteldesk-store-active-desktop-and-switch' with their main
+difference being that this function deletes the current
+zetteldesk-scratch with `erase-buffer' and replaces it with the
+one selected from `zetteldesk-scratch-list'.
+
+This function is useful when the current zetteldesk-scratch has
+already been saved to `zetteldesk-scratch-list' and you want to
+switch to an inactive one as in that case there is no point to
+re-store it to `zetteldesk-scratch-list'."
+  (interactive)
+  (with-current-buffer "*zetteldesk-scratch*"
+    (erase-buffer))
+  (zetteldesk--create-scratch-buffer)
+  (with-current-buffer "*zetteldesk-scratch*"
+    (insert-file-contents (cdr (assoc
+				(completing-read "Select desktop to activate: "
+						 zetteldesk-desktop-list)
+				zetteldesk-desktop-list)))))
+
 (provide 'zetteldesk)
 ;;; zetteldesk.el ends here

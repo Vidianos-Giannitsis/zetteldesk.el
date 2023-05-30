@@ -839,6 +839,9 @@ Multiple desktops means a few things:
 
 #+END_SRC
 
+#+RESULTS:
+: zetteldesk-delete-active-scratch-and-switch
+
 * Keybindings
 This section is for the default keybindings of zetteldesk.el, implemented in a seperate file zetteldesk-kb.el. I personally don't use these but they are very useful to have
 

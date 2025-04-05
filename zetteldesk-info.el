@@ -35,37 +35,37 @@
 
 ;; -- Info Nodes --
 (defcustom zetteldesk-info-nodes '()
-  "List of info nodes that are part of the zetteldesk.
+	"List of info nodes that are part of the zetteldesk.
 Initialised as an empty list"
-  :type 'list
-  :group 'zetteldesk)
+	:type 'list
+	:group 'zetteldesk)
 
 (defun zetteldesk-info-add-info-node-to-desktop ()
-  "Find the current info-node.
+	"Find the current info-node.
 Then add its name to the list of the variable
 `zetteldesk-info-nodes'"
-  (interactive)
-  (add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
+	(interactive)
+	(add-to-list 'zetteldesk-info-nodes (Info-copy-current-node-name)))
 
 (defun zetteldesk-info-remove-info-node-from-desktop ()
-  "Remove an info-node from the `zetteldesk-desktop'.
+	"Remove an info-node from the `zetteldesk-desktop'.
 The node is selected through a `completing-read' menu of
 `zetteldesk-info-nodes'"
-  (interactive)
-  (setq zetteldesk-info-nodes (remove
-			       (completing-read "Info Nodes: " zetteldesk-info-nodes)
-			       zetteldesk-info-nodes)))
+	(interactive)
+	(setq zetteldesk-info-nodes (remove
+				     (completing-read "Info Nodes: " zetteldesk-info-nodes)
+				     zetteldesk-info-nodes)))
 
 (defun zetteldesk-info-goto-node ()
-  "Zetteldesk filter function for `Info-goto-node'.
+	"Zetteldesk filter function for `Info-goto-node'.
 
 Prompts the user to select a node from the list
 `zetteldesk-info-nodes' and jumps to that node"
-  (interactive)
-  (Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
+	(interactive)
+	(Info-goto-node (completing-read "Nodes: " zetteldesk-info-nodes)))
 
 (defun zetteldesk-info-insert-contents (&optional arg)
-  "Select an info node that is part of the current `zetteldesk-desktop'.
+	"Select an info node that is part of the current `zetteldesk-desktop'.
 Uses a `completing-read' prompt for the selection.
 
 Then, in the *zetteldesk-scratch* buffer, go to the end of the
@@ -92,25 +92,25 @@ nodes of the manual you were reading.
 
 Optional argument ARG which is a `\\[universal-argument]' switch to the
 zetteldesk-scratch buffer in a split."
-  (interactive "P")
-  (let ((info_node (completing-read "Nodes: " zetteldesk-info-nodes))
-	(location (zetteldesk-insert-location))
-	(buffer (current-buffer)))
-    (Info-goto-node info_node)
-    (with-current-buffer location
-      (goto-char (point-max))
-      (newline)
-      (org-insert-heading)
-      (insert "Supportive Material - " info_node " (Info)")
-      (newline)
-      (save-excursion (insert-buffer-substring "*info*")
-		      (insert
-		       (org-link-make-string
-			(concat "elisp:(Info-goto-node \"" info_node "\")")
-			"See this node in its context")))
-      (kill-whole-line 2))
-    (switch-to-buffer buffer)
-    (zetteldesk-insert-switch-to-scratch arg)))
+	(interactive "P")
+	(let ((info_node (completing-read "Nodes: " zetteldesk-info-nodes))
+	      (location (zetteldesk-insert-location))
+	      (buffer (current-buffer)))
+	  (Info-goto-node info_node)
+	  (with-current-buffer location
+	    (goto-char (point-max))
+	    (newline)
+	    (org-insert-heading)
+	    (insert "Supportive Material - " info_node " (Info)")
+	    (newline)
+	    (save-excursion (insert-buffer-substring "*info*")
+			    (insert
+			     (org-link-make-string
+			      (concat "elisp:(Info-goto-node \"" info_node "\")")
+			      "See this node in its context")))
+	    (kill-whole-line 2))
+	  (switch-to-buffer buffer)
+	  (zetteldesk-insert-switch-to-scratch arg)))
 
 (provide 'zetteldesk-info)
 ;;; zetteldesk-info.el ends here

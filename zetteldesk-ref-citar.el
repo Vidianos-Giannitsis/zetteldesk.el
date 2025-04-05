@@ -47,17 +47,17 @@ citekeys which have an `org-roam-node' associated to them and
 through `org-roam-node-from-ref', the function returns the list
 of those nodes."
   (cl-loop for cand in (citar-org-roam-keys-with-notes)
-	   collect (org-roam-node-from-ref (concat "@" cand))))
+	     collect (org-roam-node-from-ref (concat "@" cand))))
 
 (defun zetteldesk-ref-citar-citekey-from-node ()
   "Collects the citekeys of org-roam-nodes in the `zetteldesk-desktop'.
 
 Ignores nodes for which `org-roam-node-refs' returns nil."
   (let* ((init-list (org-roam-node-list))
-	 (zetteldesk-nodes (cl-remove-if-not #'zetteldesk-node-p init-list)))
+	   (zetteldesk-nodes (cl-remove-if-not #'zetteldesk-node-p init-list)))
     (cl-loop for node in zetteldesk-nodes
-	     if (org-roam-node-refs node)
-	     collect (car (org-roam-node-refs node)))))
+	       if (org-roam-node-refs node)
+	       collect (car (org-roam-node-refs node)))))
 
 (defun zetteldesk-ref-citar-key-from-node ()
   "Remove the \"cite:\" prefix from a list of citekeys in `zetteldesk-desktop'.
@@ -67,7 +67,7 @@ collects, however, since Citar functions expect the citekeys to
 not have this prefix, this function takes that list and removes
 that prefix from the citekeys."
   (cl-loop for ref in (zetteldesk-ref-citar-citekey-from-node)
-	   collect (string-remove-prefix "cite:" ref)))
+	     collect (string-remove-prefix "cite:" ref)))
 
 (defun zetteldesk-ref-citar-roam-node-read--completions* (node-list &optional filter-fn sort-fn)
   "Run `org-roam-node-read--completions' with NODE-LIST being a list of nodes.
@@ -81,20 +81,20 @@ takes.  FILTER-FN and SORT-FN are the same as in
 `org-roam-node-read--completions'.  The resulting alist is to be
 used with `org-roam-node-read*'."
   (let* ((template (org-roam-node--process-display-format org-roam-node-display-template))
-	 (nodes node-list)
-	 (nodes (mapcar (lambda (node)
-			  (org-roam-node-read--to-candidate node template)) nodes))
-	 (nodes (if filter-fn
-		    (cl-remove-if-not
-		     (lambda (n) (funcall filter-fn (cdr n)))
-		     nodes)
-		  nodes))
-	 (sort-fn (or sort-fn
-		      (when org-roam-node-default-sort
-			(intern (concat "org-roam-node-read-sort-by-"
-					(symbol-name org-roam-node-default-sort))))))
-	 (nodes (if sort-fn (seq-sort sort-fn nodes)
-		  nodes)))
+	   (nodes node-list)
+	   (nodes (mapcar (lambda (node)
+			    (org-roam-node-read--to-candidate node template)) nodes))
+	   (nodes (if filter-fn
+		      (cl-remove-if-not
+		       (lambda (n) (funcall filter-fn (cdr n)))
+		       nodes)
+		    nodes))
+	   (sort-fn (or sort-fn
+			(when org-roam-node-default-sort
+			  (intern (concat "org-roam-node-read-sort-by-"
+					  (symbol-name org-roam-node-default-sort))))))
+	   (nodes (if sort-fn (seq-sort sort-fn nodes)
+		    nodes)))
     nodes))
 
 (defun zetteldesk-ref-citar-roam-node-read* (node-list &optional initial-input filter-fn sort-fn require-match prompt)
@@ -110,25 +110,25 @@ them in the way you want easily.
 INITIAL-INPUT, SORT-FN, FILTER-FN, REQUIRE-MATCH, PROMPT are the
 same as in `org-roam-node-read'."
   (let* ((nodes (zetteldesk-ref-citar-roam-node-read--completions* node-list filter-fn sort-fn))
-	 (prompt (or prompt "Node: "))
-	 (node (completing-read
-		prompt
-		(lambda (string pred action)
-		  (if (eq action 'metadata)
-		      `(metadata
-			;; Preserve sorting in the completion UI if a sort-fn is used
-			,@(when sort-fn
-			    '((display-sort-function . identity)
-			      (cycle-sort-function . identity)))
-			(annotation-function
-			 . ,(lambda (title)
-			      (funcall org-roam-node-annotation-function
-				       (get-text-property 0 'node title))))
-			(category . org-roam-node))
-		    (complete-with-action action nodes string pred)))
-		nil require-match initial-input 'org-roam-node-history)))
+	   (prompt (or prompt "Node: "))
+	   (node (completing-read
+		  prompt
+		  (lambda (string pred action)
+		    (if (eq action 'metadata)
+			`(metadata
+			  ;; Preserve sorting in the completion UI if a sort-fn is used
+			  ,@(when sort-fn
+			      '((display-sort-function . identity)
+				(cycle-sort-function . identity)))
+			  (annotation-function
+			   . ,(lambda (title)
+				(funcall org-roam-node-annotation-function
+					 (get-text-property 0 'node title))))
+			  (category . org-roam-node))
+		      (complete-with-action action nodes string pred)))
+		  nil require-match initial-input 'org-roam-node-history)))
     (or (cdr (assoc node nodes))
-	(org-roam-node-create :title node))))
+	  (org-roam-node-create :title node))))
 
 (defun zetteldesk-ref-citar-add-node-to-desktop (NODE)
   "Add NODE to the `zetteldesk-desktop'.
@@ -138,11 +138,11 @@ repository.  The list of such nodes is gathered with
 `zetteldesk-ref-citar-node-from-refs'."
   (interactive (list (zetteldesk-ref-citar-roam-node-read* (zetteldesk-ref-citar-node-from-refs))))
   (let ((buffer (org-roam-node-buffer NODE))
-	(file (org-roam-node-file NODE))
-	(org-startup-with-latex-preview nil))
+	  (file (org-roam-node-file NODE))
+	  (org-startup-with-latex-preview nil))
     (if buffer
-	(zetteldesk--add-buffer buffer)
-      (zetteldesk--add-buffer (find-file-noselect file)))))
+	  (zetteldesk--add-buffer buffer)
+	(zetteldesk--add-buffer (find-file-noselect file)))))
 
 (defun zetteldesk-ref-citar-remove-node-from-desktop (NODE)
   "Remove NODE from the `zetteldesk-desktop'.
@@ -176,8 +176,8 @@ collected through `zetteldesk-ref-citar-key-from-node' and the
 rest of the code functions just like the interactive version of
 `citar-open-notes'."
   (interactive (list (when-let* ((notes (citar-get-notes (zetteldesk-ref-citar-key-from-node)))
-				 (allnotes (delete-dups (apply #'append (hash-table-values notes)))))
-		       (cdr (citar--select-resource nil :notes allnotes))))))
+				   (allnotes (delete-dups (apply #'append (hash-table-values notes)))))
+			 (cdr (citar--select-resource nil :notes allnotes))))))
 
 (defun zetteldesk-ref-citar-insert-ref-node-contents (&optional arg)
   "Select a node that is part of the current `zetteldesk-desktop' and a ref node.
@@ -206,26 +206,26 @@ implemented for when you don't want that. In this version, it
 made more sense to order it this way in my opinion."
   (interactive "P")
   (let* ((node
-	  (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs) nil #'zetteldesk-node-p))
-	 (file (org-roam-node-file node))
-	 (location (zetteldesk-insert-location))
-	 (citekey (concat "cite:" (car (org-roam-node-refs node)))))
+	    (zetteldesk-ref-roam-node-read* (zetteldesk-ref-citar-node-from-refs) nil #'zetteldesk-node-p))
+	   (file (org-roam-node-file node))
+	   (location (zetteldesk-insert-location))
+	   (citekey (concat "cite:" (car (org-roam-node-refs node)))))
     (when (equal arg '(16))
-      (insert citekey))
+	(insert citekey))
     (set-buffer location)
     (goto-char (point-max))
     (save-excursion
-      (insert-file-contents file))
+	(insert-file-contents file))
     (kill-whole-line 4)
     (newline)
     (save-excursion
-      (while (not (org-next-visible-heading 1))
-	(org-metaright)))
+	(while (not (org-next-visible-heading 1))
+	  (org-metaright)))
     (zetteldesk--replace-title)
     (end-of-line 1)
     (newline)
     (insert "Bibtex entry for node: "
-	    citekey))
+	      citekey))
   (zetteldesk-insert-switch-to-scratch arg))
 
 (provide 'zetteldesk-ref-citar)

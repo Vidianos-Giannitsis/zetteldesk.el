@@ -44,8 +44,8 @@
 Checks if every candidate has the \"=has-note=\" tag using
 `assoc' and if it does, collects that candidate."
   (cl-loop for ref in (bibtex-completion-candidates)
-	   if (assoc "=has-note=" ref)
-	   collect ref))
+		if (assoc "=has-note=" ref)
+		collect ref))
 
 (defun zetteldesk-ref-citekey-from-refs ()
   "Find the \"=key=\" tag from a list of candidates.
@@ -53,17 +53,17 @@ Checks if every candidate has the \"=has-note=\" tag using
 The list is collected with `zetteldesk-ref-note-refs-p' which is a
 list of candidates that have notes. Collects it using `assoc'."
   (cl-loop for ref in (zetteldesk-ref-note-refs-p)
-	   collect (assoc "=key=" ref)))
+		collect (assoc "=key=" ref)))
 
 (defun zetteldesk-ref-citekey-from-node ()
   "Collects the citekeys of org-roam-nodes in the `zetteldesk-desktop'.
 
 Ignores nodes for which `org-roam-node-refs' returns nil."
   (let* ((init-list (org-roam-node-list))
-	 (zetteldesk-nodes (cl-remove-if-not #'zetteldesk-node-p init-list)))
-    (cl-loop for node in zetteldesk-nodes
-	     if (org-roam-node-refs node)
-	     collect (car (org-roam-node-refs node)))))
+	      (zetteldesk-nodes (cl-remove-if-not #'zetteldesk-node-p init-list)))
+	 (cl-loop for node in zetteldesk-nodes
+		  if (org-roam-node-refs node)
+		  collect (car (org-roam-node-refs node)))))
 
 (defun zetteldesk-ref-node-from-refs ()
   "Collects a list of ref nodes.
@@ -72,7 +72,7 @@ The nodes are collected from their citekey using
 `org-roam-node-from-ref', while the citekeys themselves are
 collected from `zetteldesk-ref-citekey-from-refs'."
   (cl-loop for ref in (zetteldesk-ref-citekey-from-refs)
-	   collect (org-roam-node-from-ref (concat "cite:" (cdr ref)))))
+		collect (org-roam-node-from-ref (concat "cite:" (cdr ref)))))
 
 (defun zetteldesk-ref-roam-node-read--completions* (node-list &optional filter-fn sort-fn)
   "Run `org-roam-node-read--completions' with NODE-LIST being a list of nodes.
@@ -86,21 +86,21 @@ takes.  FILTER-FN and SORT-FN are the same as in
 `org-roam-node-read--completions'.  The resulting alist is to be
 used with `zetteldesk-ref-roam-node-read*'."
   (let* ((template (org-roam-node--process-display-format org-roam-node-display-template))
-	 (nodes node-list)
-	 (nodes (mapcar (lambda (node)
-			  (org-roam-node-read--to-candidate node template)) nodes))
-	 (nodes (if filter-fn
-		    (cl-remove-if-not
-		     (lambda (n) (funcall filter-fn (cdr n)))
-		     nodes)
-		  nodes))
-	 (sort-fn (or sort-fn
-		      (when org-roam-node-default-sort
-			(intern (concat "org-roam-node-read-sort-by-"
-					(symbol-name org-roam-node-default-sort))))))
-	 (nodes (if sort-fn (seq-sort sort-fn nodes)
-		  nodes)))
-    nodes))
+	      (nodes node-list)
+	      (nodes (mapcar (lambda (node)
+			       (org-roam-node-read--to-candidate node template)) nodes))
+	      (nodes (if filter-fn
+			 (cl-remove-if-not
+			  (lambda (n) (funcall filter-fn (cdr n)))
+			  nodes)
+		       nodes))
+	      (sort-fn (or sort-fn
+			   (when org-roam-node-default-sort
+			     (intern (concat "org-roam-node-read-sort-by-"
+					     (symbol-name org-roam-node-default-sort))))))
+	      (nodes (if sort-fn (seq-sort sort-fn nodes)
+		       nodes)))
+	 nodes))
 
 (defun zetteldesk-ref-roam-node-read* (node-list &optional initial-input filter-fn sort-fn require-match prompt)
   "Run `org-roam-node-read' with the nodes supplied by NODE-LIST.
@@ -115,25 +115,25 @@ them in the way you want easily.
 INITIAL-INPUT, SORT-FN, FILTER-FN, REQUIRE-MATCH, PROMPT are the
 same as in `org-roam-node-read'."
   (let* ((nodes (zetteldesk-ref-roam-node-read--completions* node-list filter-fn sort-fn))
-	 (prompt (or prompt "Node: "))
-	 (node (completing-read
-		prompt
-		(lambda (string pred action)
-		  (if (eq action 'metadata)
-		      `(metadata
-			;; Preserve sorting in the completion UI if a sort-fn is used
-			,@(when sort-fn
-			    '((display-sort-function . identity)
-			      (cycle-sort-function . identity)))
-			(annotation-function
-			 . ,(lambda (title)
-			      (funcall org-roam-node-annotation-function
-				       (get-text-property 0 'node title))))
-			(category . org-roam-node))
-		    (complete-with-action action nodes string pred)))
-		nil require-match initial-input 'org-roam-node-history)))
-    (or (cdr (assoc node nodes))
-	(org-roam-node-create :title node))))
+	      (prompt (or prompt "Node: "))
+	      (node (completing-read
+		     prompt
+		     (lambda (string pred action)
+		       (if (eq action 'metadata)
+			   `(metadata
+			     ;; Preserve sorting in the completion UI if a sort-fn is used
+			     ,@(when sort-fn
+				 '((display-sort-function . identity)
+				   (cycle-sort-function . identity)))
+			     (annotation-function
+			      . ,(lambda (title)
+				   (funcall org-roam-node-annotation-function
+					    (get-text-property 0 'node title))))
+			     (category . org-roam-node))
+			 (complete-with-action action nodes string pred)))
+		     nil require-match initial-input 'org-roam-node-history)))
+	 (or (cdr (assoc node nodes))
+	     (org-roam-node-create :title node))))
 
 (defun zetteldesk-ref-add-node-to-desktop (NODE)
   "Add NODE to the `zetteldesk-desktop'.
@@ -143,11 +143,11 @@ repository.  The list of such nodes is gathered with
 `zetteldesk-ref-node-from-refs'."
   (interactive (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs))))
   (let ((buffer (org-roam-node-buffer NODE))
-	(file (org-roam-node-file NODE))
-	(org-startup-with-latex-preview nil))
-    (if buffer
-	(zetteldesk--add-buffer buffer)
-      (zetteldesk--add-buffer (find-file-noselect file)))))
+	     (file (org-roam-node-file NODE))
+	     (org-startup-with-latex-preview nil))
+	 (if buffer
+	     (zetteldesk--add-buffer buffer)
+	   (zetteldesk--add-buffer (find-file-noselect file)))))
 
 (defun zetteldesk-ref-remove-node-from-desktop (NODE)
   "Remove NODE from the `zetteldesk-desktop'.
@@ -156,9 +156,9 @@ NODE is a literature note that is currently part of the
 zetteldesk, meaning its part of the list generated by
 `zetteldesk-ref-node-from-refs'."
   (interactive
-   (list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p)))
+	(list (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p)))
   (let ((buffer (org-roam-node-buffer NODE)))
-    (zetteldesk--remove-buffer buffer)))
+	 (zetteldesk--remove-buffer buffer)))
 
 (defun zetteldesk-ref-find-ref-node ()
   "Execute a filtered version of `ivy-bibtex-with-notes' in an org-roam UI.
@@ -186,13 +186,13 @@ With a prefix ARG the cache is invalidated and the bibliography
 reread."
   (interactive "P")
   (cl-letf* ((candidates (zetteldesk-ref-note-refs-p))
-	     ((symbol-function 'bibtex-completion-candidates)
-	      (lambda ()
-		(cl-loop for ref in candidates
-			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
-				    (zetteldesk-ref-citekey-from-node))
-			 collect ref))))
-    (ivy-bibtex arg)))
+		  ((symbol-function 'bibtex-completion-candidates)
+		   (lambda ()
+		     (cl-loop for ref in candidates
+			      if (member (concat "cite:" (cdr (assoc "=key=" ref)))
+					 (zetteldesk-ref-citekey-from-node))
+			      collect ref))))
+	 (ivy-bibtex arg)))
 
 (defun zetteldesk-ref-helm-bibtex-with-notes (&optional arg)
   "Search `zetteldesk-desktop' BibTeX entries with notes using `helm-bibtex'.
@@ -205,13 +205,13 @@ With a prefix ARG the cache is invalidated and the bibliography
 reread."
   (interactive "P")
   (cl-letf* ((candidates (zetteldesk-ref-note-refs-p))
-	     ((symbol-function 'bibtex-completion-candidates)
-	      (lambda ()
-		(cl-loop for ref in candidates
-			 if (member (concat "cite:" (cdr (assoc "=key=" ref)))
-				    (zetteldesk-ref-citekey-from-node))
-			 collect ref))))
-    (helm-bibtex arg)))
+		  ((symbol-function 'bibtex-completion-candidates)
+		   (lambda ()
+		     (cl-loop for ref in candidates
+			      if (member (concat "cite:" (cdr (assoc "=key=" ref)))
+					 (zetteldesk-ref-citekey-from-node))
+			      collect ref))))
+	 (helm-bibtex arg)))
 
 (defun zetteldesk-ref-insert-ref-node-contents (&optional arg)
   "Select a node that is part of the current `zetteldesk-desktop' and a ref node.
@@ -239,26 +239,26 @@ implemented for when you don't want that. In this version, it
 made more sense to order it this way in my opinion."
   (interactive "P")
   (let* ((node
-	  (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p))
-	 (file (org-roam-node-file node))
-	 (location (zetteldesk-insert-location))
-	 (citekey (concat "cite:" (car (org-roam-node-refs node)))))
-    (when (equal arg '(16))
-      (insert citekey))
-    (set-buffer location)
-    (goto-char (point-max))
-    (save-excursion
-      (insert-file-contents file))
-    (kill-whole-line 4)
-    (newline)
-    (save-excursion
-      (while (not (org-next-visible-heading 1))
-	(org-metaright)))
-    (zetteldesk--replace-title)
-    (end-of-line 1)
-    (newline)
-    (insert "Bibtex entry for node: "
-	    citekey))
+	       (zetteldesk-ref-roam-node-read* (zetteldesk-ref-node-from-refs) nil #'zetteldesk-node-p))
+	      (file (org-roam-node-file node))
+	      (location (zetteldesk-insert-location))
+	      (citekey (concat "cite:" (car (org-roam-node-refs node)))))
+	 (when (equal arg '(16))
+	   (insert citekey))
+	 (set-buffer location)
+	 (goto-char (point-max))
+	 (save-excursion
+	   (insert-file-contents file))
+	 (kill-whole-line 4)
+	 (newline)
+	 (save-excursion
+	   (while (not (org-next-visible-heading 1))
+	     (org-metaright)))
+	 (zetteldesk--replace-title)
+	 (end-of-line 1)
+	 (newline)
+	 (insert "Bibtex entry for node: "
+		 citekey))
   (zetteldesk-insert-switch-to-scratch arg))
 
 (provide 'zetteldesk-ref)

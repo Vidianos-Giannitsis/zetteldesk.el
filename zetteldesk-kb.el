@@ -60,7 +60,8 @@
   ("Org-Roam"
    (("n" zetteldesk-add-node-to-desktop "Add Node")
     ("b" zetteldesk-add-backlinks-to-desktop "Add Current Node + All its backlinks")
-    ("p" zetteldesk-add-poi-or-moc-backlink-to-desktop "Select MOC or POI - Add one of its backlinks"))
+    ("p" zetteldesk-add-poi-or-moc-backlink-to-desktop "Select MOC or POI - Add one of its backlinks")
+    ("r" zetteldesk-add-ref-backlinks-to-desktop "Prompt for Node - Add all its ref backlinks"))
 
    "Other"
    (("a" zetteldesk-add-to-desktop "Add Buffer"))))
